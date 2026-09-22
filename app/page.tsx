@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import QRScanner from '@/components/QRScanner'
 
 export default function HomePage() {
   const router = useRouter()
@@ -21,18 +22,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="scanCard">
-          <h2>Register by QR Code</h2>
-          <p>Scan the QR code printed on your OLITEC inverter to automatically identify your product.</p>
-          <button className="scanBtn" onClick={() => setScannerOpen(true)}>▣ Scan QR Code</button>
-          {scannerOpen && (
-            <div style={{marginTop:14}}>
-              <div id="qrReader" style={{display:'block',minHeight:180}} />
-              <p className="scanHint">Camera scanning will be enabled in the next build. You can also test a product directly using the registration URL.</p>
-              <button className="scanSecondary" onClick={() => router.push('/register/OL5K2609001234')}>Test with sample OLITEC product</button>
-            </div>
-          )}
-        </section>
+        {!scannerOpen ? (
+          <section className="scanCard">
+            <h2>Register by QR Code</h2>
+            <p>Scan the QR code printed on your OLITEC inverter to automatically identify your product.</p>
+            <button className="scanBtn" onClick={() => setScannerOpen(true)}>▣ Scan QR Code</button>
+          </section>
+        ) : (
+          <QRScanner onClose={() => setScannerOpen(false)} />
+        )}
 
         <section className="card">
           <span className="badge">✓ OLITEC Product Registration</span>
