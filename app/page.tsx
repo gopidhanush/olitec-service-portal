@@ -16,8 +16,12 @@ function ServiceIcon({ type }: { type: 'scan' | 'shield' | 'wrench' | 'document'
   return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h15l7 7v29H14Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round"/><path d="M29 6v9h9M20 23h10M20 29h10M20 35h7" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
 }
 
+function HeadsetIcon() {
+  return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 25a16 16 0 0 1 32 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/><path d="M8 25v8a4 4 0 0 0 4 4h3V25h-3a4 4 0 0 0-4 4M40 25v8a4 4 0 0 1-4 4h-3V25h3a4 4 0 0 1 4 4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round"/><path d="M32 37c0 3-2 5-6 5h-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
+}
+
 function Feature({ type, children }: { type: 'shield' | 'wrench' | 'headset'; children: string }) {
-  return <div className="portalFeature"><span className="portalFeatureIcon">{type === 'headset' ? '◉' : <ServiceIcon type={type} />}</span><span>{children}</span></div>
+  return <div className="portalFeature"><span className="portalFeatureIcon">{type === 'headset' ? <HeadsetIcon /> : <ServiceIcon type={type} />}</span><span>{children}</span></div>
 }
 
 export default function HomePage() {
