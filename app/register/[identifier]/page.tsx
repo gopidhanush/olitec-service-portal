@@ -2,104 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
-type Product = {
-  product_id: string
-  serial_number: string
-  qr_code: string
-  model_code: string
-  product_name: string
-  capacity_kw: number
-  manufacturing_date: string | null
-  warranty_months: number
-}
+type Product = { product_id:string; serial_number:string; qr_code:string; model_code:string; product_name:string; capacity_kw:number; manufacturing_date:string|null; warranty_months:number }
 
 export default function RegisterProductPage() {
-  const params = useParams<{ identifier: string }>()
-  const router = useRouter()
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    const identifier = decodeURIComponent(params.identifier)
-
-    async function load() {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-      const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-
-      if (!supabaseUrl || !publishableKey) {
-        setError('Product verification is temporarily unavailable. Please try again later.')
-        setLoading(false)
-        return
-      }
-
-      try {
-        const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_product_for_registration`, {
-          method: 'POST',
-          headers: {
-            apikey: publishableKey,
-            Authorization: `Bearer ${publishableKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ identifier }),
-        })
-
-        const body = await response.json().catch(() => null)
-
-        if (!response.ok) {
-          console.error('Product RPC failed:', response.status, body)
-          setError('We could not verify this product. Please try again.')
-        } else if (!Array.isArray(body) || body.length === 0) {
-          setError('Product not found. Please check the QR code and try again.')
-        } else {
-          setProduct(body[0] as Product)
-        }
-      } catch (e) {
-        console.error('Product verification request failed:', e)
-        setError('Unable to connect to the product verification service. Please try again.')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    load()
-  }, [params.identifier])
-
-  return (
-    <div className="app">
-      <header>
-        <div style={{fontWeight:800,fontSize:28,letterSpacing:1,color:'#172033'}}>OLITEC</div>
-        <div className="lang">English⌄</div>
-      </header>
-      <main>
-        <button className="back" onClick={() => router.push('/')}>← Back</button>
-        <div className="hero"><div className="heroText"><h1>Product Verification</h1><p>We are checking the OLITEC product linked to this QR code.</p></div></div>
-
-        {loading && <section className="card"><p>Verifying product…</p></section>}
-        {!loading && error && <section className="card"><h2>Product Not Verified</h2><p>{error}</p><button className="btn secondary" onClick={() => router.push('/')}>Scan Again</button></section>}
-        {!loading && product && (
-          <>
-            <section className="card">
-              <div className="product">
-                <div className="productImg">OLITEC<br/>Solar<br/>Inverter</div>
-                <div>
-                  <span className="badge">✓ Genuine OLITEC Product</span>
-                  <h2 style={{marginTop:10}}>{product.model_code}</h2>
-                  <p>{product.capacity_kw} kW {product.product_name}</p>
-                </div>
-              </div>
-              <div className="meta">
-                <div><small>Serial Number</small><b>{product.serial_number}</b></div>
-                <div><small>Manufactured</small><b>{product.manufacturing_date ? new Date(product.manufacturing_date + 'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'}</b></div>
-              </div>
-              <div className="note">This product was identified from its unique QR code. You do not need to enter the serial number manually.</div>
-            </section>
-            <button className="btn primary" onClick={() => router.push(`/register/${encodeURIComponent(product.serial_number)}/purchase`)}>Register Purchase →</button>
-          </>
-        )}
-      </main>
-      <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
-    </div>
-  )
+  const params=useParams<{identifier:string}>(); const router=useRouter(); const [product,setProduct]=useState<Product|null>(null); const [loading,setLoading]=useState(true); const [error,setError]=useState('')
+  useEffect(()=>{const identifier=decodeURIComponent(params.identifier);fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/rpc/get_product_for_registration`,{method:'POST',headers:{apikey:process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||'',Authorization:`Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||''}`,'Content-Type':'application/json'},body:JSON.stringify({identifier}),cache:'no-store'}).then(async response=>{const body=await response.json().catch(()=>null);if(!response.ok||!Array.isArray(body)||!body.length)throw new Error('Product not found. Please check the QR code and try again.');setProduct(body[0] as Product)}).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to verify this product.')).finally(()=>setLoading(false))},[params.identifier])
+  return <div className="app customerPage"><PortalHeader/><main className="customerMain"><button className="customerBack" type="button" onClick={()=>router.push('/')}>← OLITEC Home</button><section className="customerHero compactHero"><span className="customerEyebrow">PRODUCT VERIFICATION</span><h1>Verify your OLITEC product.</h1><p>We are checking the product linked to this QR code.</p></section>{loading&&<section className="customerSection"><p className="customerStatus">Verifying product…</p></section>}{!loading&&error&&<section className="customerSection"><span className="customerBadge customerBadgeWarning">Product not verified</span><h2>We could not verify this product.</h2><p>{error}</p><button className="customerButton customerButtonPrimary" type="button" onClick={()=>router.push('/')}>Scan Again <span>→</span></button></section>}{!loading&&product&&<section className="customerSection"><span className="customerBadge customerBadgeSuccess">✓ Genuine OLITEC Product</span><h2>{product.model_code}</h2><p>{product.capacity_kw} kW {product.product_name}</p><div className="customerInfoGrid"><div><small>Serial number</small><strong>{product.serial_number}</strong></div><div><small>Manufactured</small><strong>{product.manufacturing_date?new Date(product.manufacturing_date+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—'}</strong></div></div><button className="customerButton customerButtonPrimary" type="button" onClick={()=>router.push(`/register/${encodeURIComponent(product.serial_number)}/purchase`)}>Register Purchase <span>→</span></button></section>}</main><PortalFooter/></div>
 }
