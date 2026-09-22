@@ -42,8 +42,6 @@ alter table public.warranty_registrations enable row level security;
 revoke all on public.warranty_registrations from anon, authenticated;
 
 -- Product verification RPC used by the QR registration page.
--- This is separate from warranty registration so a customer can verify a
--- factory product before entering purchase details.
 create or replace function public.get_product_for_registration(identifier text)
 returns table (
   product_id uuid,
@@ -67,7 +65,7 @@ as $$
     pm.product_name,
     pm.capacity_kw,
     p.manufacturing_date,
-    p.warranty_months
+    pm.warranty_months
   from public.products p
   join public.product_models pm on pm.id = p.model_id
   where p.serial_number = identifier or p.qr_code = identifier
@@ -85,7 +83,7 @@ declare
   v_serial text; v_model_code text; v_product_name text; v_capacity_kw numeric; v_warranty_months integer;
   v_purchase_date date; v_registration_number text; v_existing text; v_id bigint;
 begin
-  select p.serial_number, pm.model_code, pm.product_name, pm.capacity_kw, p.warranty_months
+  select p.serial_number, pm.model_code, pm.product_name, pm.capacity_kw, pm.warranty_months
     into v_serial, v_model_code, v_product_name, v_capacity_kw, v_warranty_months
   from public.products p join public.product_models pm on pm.id = p.model_id
   where p.serial_number = identifier or p.qr_code = identifier limit 1;
