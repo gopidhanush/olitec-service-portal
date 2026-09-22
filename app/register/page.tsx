@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import QRScanner from '@/components/QRScanner'
-import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
+import { PortalFooter, PortalHeader, PortalIcon } from '@/components/PortalChrome'
 
 type Product = { product_id: string; serial_number: string; qr_code: string; model_code: string; product_name: string; capacity_kw: number; manufacturing_date: string | null; warranty_months: number }
 
@@ -23,7 +23,7 @@ export default function RegisterLookupPage() {
   function submit(event:FormEvent){event.preventDefault();const value=serial.trim().toUpperCase();if(value)router.push(`/register?identifier=${encodeURIComponent(value)}`)}
   return <div className="app customerPage portalProductPage"><PortalHeader/><main className="customerMain">
     <button className="customerBack" type="button" onClick={()=>router.push('/')}>← OLITEC Home</button>
-    <section className="customerHero compactHero"><span className="customerEyebrow">PRODUCT REGISTRATION</span><h1>Product Registration</h1><p>Scan the QR code on your inverter or enter the serial number manually.</p></section>
+    <section className="customerHero compactHero"><div className="customerHeroIcon"><PortalIcon type="scan"/></div><span className="customerEyebrow">PRODUCT REGISTRATION</span><h1>Product Registration</h1><p>Scan the QR code on your inverter or enter the serial number manually.</p></section>
     {!product&&<section className="customerSection"><span className="customerBadge">Identify your product</span><h2>Choose how to continue</h2>
       {scannerOpen?<div className="customerScannerWrap"><QRScanner onClose={()=>setScannerOpen(false)}/></div>:<button className="customerButton customerButtonPrimary" type="button" onClick={()=>setScannerOpen(true)}>Scan QR Code <span>→</span></button>}
       <div className="customerDivider"><span>OR</span></div>
