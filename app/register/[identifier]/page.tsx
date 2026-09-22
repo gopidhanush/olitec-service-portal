@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseConfigError } from '@/lib/supabase'
 
 type Product = {
   product_id: string
@@ -25,16 +25,28 @@ export default function RegisterProductPage() {
   useEffect(() => {
     const identifier = decodeURIComponent(params.identifier)
     async function load() {
-      const { data, error } = await supabase.rpc('get_product_for_registration', { identifier })
-      if (error) {
-        console.error(error)
-        setError('We could not verify this product. Please try again.')
-      } else if (!data?.length) {
-        setError('Product not found. Please check the QR code and try again.')
-      } else {
-        setProduct(data[0] as Product)
+      if (supabaseConfigError) {
+        setError(supabaseConfigError)
+        setLoading(false)
+        return
       }
-      setLoading(false)
+
+      try {
+        const { data, error } = await supabase.rpc('get_product_for_registration', { identifier })
+        if (error) {
+          console.error(error)
+          setError('We could not verify this product. Please try again.')
+        } else if (!data?.length) {
+          setError('Product not found. Please check the QR code and try again.')
+        } else {
+          setProduct(data[0] as Product)
+        }
+      } catch (e) {
+        console.error(e)
+        setError('Unable to connect to the product verification service. Please try again.')
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [params.identifier])
