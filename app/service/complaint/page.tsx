@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 type ServiceContext = {
@@ -50,7 +50,7 @@ async function createComplaint(registration: string, form: ComplaintForm) {
 
 const fmt = (v: string) => v ? new Date(v + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
 
-export default function ComplaintPage() {
+function ComplaintPageContent() {
   const params = useSearchParams()
   const registration = params.get('registration') || ''
   const [context, setContext] = useState<ServiceContext | null>(null)
@@ -113,4 +113,12 @@ export default function ComplaintPage() {
     {error && <div className="note">{error}</div>}<button className="btn primary" disabled={saving}>{saving ? 'Registering complaint…' : 'Submit Service Complaint →'}</button>
     </form>
   </main><footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer></div>
+}
+
+function ComplaintPageFallback() {
+  return <div className="app"><main><section className="card"><p>Loading service complaint form…</p></section></main></div>
+}
+
+export default function ComplaintPage() {
+  return <Suspense fallback={<ComplaintPageFallback />}><ComplaintPageContent /></Suspense>
 }
