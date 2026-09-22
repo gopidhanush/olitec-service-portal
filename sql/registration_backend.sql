@@ -35,117 +35,80 @@ create table if not exists public.warranty_registrations (
   created_at timestamptz not null default now()
 );
 
-create index if not exists warranty_registrations_mobile_idx
-  on public.warranty_registrations (mobile);
-
-create index if not exists warranty_registrations_registration_idx
-  on public.warranty_registrations (registration_number);
+create index if not exists warranty_registrations_mobile_idx on public.warranty_registrations (mobile);
+create index if not exists warranty_registrations_registration_idx on public.warranty_registrations (registration_number);
 
 alter table public.warranty_registrations enable row level security;
-
--- Customers do not get direct table access. The public registration RPC below
--- performs the controlled insert as a security-definer function.
 revoke all on public.warranty_registrations from anon, authenticated;
 
-create or replace function public.register_product_purchase(
-  identifier text,
-  registration jsonb
-)
-returns table (
-  registration_number text,
-  serial_number text,
-  model_code text,
-  warranty_start_date date,
-  warranty_end_date date,
-  status text
-)
-language plpgsql
-security definer
-set search_path = public
+create or replace function public.register_product_purchase(identifier text, registration jsonb)
+returns table (registration_number text, serial_number text, model_code text, warranty_start_date date, warranty_end_date date, status text)
+language plpgsql security definer set search_path = public
 as $$
 declare
-  v_serial text;
-  v_model_code text;
-  v_product_name text;
-  v_capacity_kw numeric;
-  v_warranty_months integer;
-  v_purchase_date date;
-  v_registration_number text;
-  v_existing text;
-  v_id bigint;
+  v_serial text; v_model_code text; v_product_name text; v_capacity_kw numeric; v_warranty_months integer;
+  v_purchase_date date; v_registration_number text; v_existing text; v_id bigint;
 begin
-  -- Resolve by either the printed serial or QR value.
   select p.serial_number, pm.model_code, pm.product_name, pm.capacity_kw, p.warranty_months
     into v_serial, v_model_code, v_product_name, v_capacity_kw, v_warranty_months
-  from public.products p
-  join public.product_models pm on pm.id = p.model_id
-  where p.serial_number = identifier or p.qr_code = identifier
-  limit 1;
+  from public.products p join public.product_models pm on pm.id = p.model_id
+  where p.serial_number = identifier or p.qr_code = identifier limit 1;
 
-  if v_serial is null then
-    raise exception 'PRODUCT_NOT_FOUND';
-  end if;
+  if v_serial is null then raise exception 'PRODUCT_NOT_FOUND'; end if;
 
   if exists (select 1 from public.warranty_registrations wr where wr.serial_number = v_serial and wr.status <> 'cancelled') then
-    select wr.registration_number into v_existing
-    from public.warranty_registrations wr
-    where wr.serial_number = v_serial and wr.status <> 'cancelled'
-    limit 1;
+    select wr.registration_number into v_existing from public.warranty_registrations wr
+    where wr.serial_number = v_serial and wr.status <> 'cancelled' limit 1;
     raise exception 'PRODUCT_ALREADY_REGISTERED:%', v_existing;
   end if;
 
   v_purchase_date := nullif(registration->>'purchase_date','')::date;
-  if v_purchase_date is null then
-    raise exception 'PURCHASE_DATE_REQUIRED';
-  end if;
+  if v_purchase_date is null then raise exception 'PURCHASE_DATE_REQUIRED'; end if;
 
-  if nullif(registration->>'full_name','') is null
-     or nullif(registration->>'mobile','') is null
-     or nullif(registration->>'address','') is null
-     or nullif(registration->>'city','') is null
-     or nullif(registration->>'state','') is null
-     or nullif(registration->>'pin_code','') is null
+  if nullif(registration->>'full_name','') is null or nullif(registration->>'mobile','') is null
+     or nullif(registration->>'address','') is null or nullif(registration->>'city','') is null
+     or nullif(registration->>'state','') is null or nullif(registration->>'pin_code','') is null
      or nullif(registration->>'dealer_name','') is null then
     raise exception 'REQUIRED_CUSTOMER_FIELDS_MISSING';
   end if;
 
-  -- Global sequential registration number: OLR-YYYY-000001
   select 'OLR-' || to_char(current_date, 'YYYY') || '-' || lpad((coalesce(max(id),0) + 1)::text, 6, '0')
-    into v_registration_number
-  from public.warranty_registrations;
+    into v_registration_number from public.warranty_registrations;
 
   insert into public.warranty_registrations (
-    registration_number, serial_number, model_code, product_name, capacity_kw,
-    warranty_months, warranty_start_date, warranty_end_date,
-    full_name, mobile, email, address, city, state, pin_code,
-    purchase_date, invoice_number, dealer_name, purchase_type,
-    installation_date, installation_type, installer_name, installer_mobile,
-    installation_address, installation_city, installation_state, installation_pin,
-    status
+    registration_number, serial_number, model_code, product_name, capacity_kw, warranty_months,
+    warranty_start_date, warranty_end_date, full_name, mobile, email, address, city, state, pin_code,
+    purchase_date, invoice_number, dealer_name, purchase_type, installation_date, installation_type,
+    installer_name, installer_mobile, installation_address, installation_city, installation_state, installation_pin, status
   ) values (
-    v_registration_number, v_serial, v_model_code, v_product_name, v_capacity_kw,
-    v_warranty_months, v_purchase_date,
-    (v_purchase_date + make_interval(months => v_warranty_months))::date - 1,
-    registration->>'full_name', registration->>'mobile', nullif(registration->>'email',''),
-    registration->>'address', registration->>'city', registration->>'state', registration->>'pin_code',
-    v_purchase_date, nullif(registration->>'invoice_number',''), registration->>'dealer_name', registration->>'purchase_type',
-    nullif(registration->>'installation_date','')::date, registration->>'installation_type',
-    nullif(registration->>'installer_name',''), nullif(registration->>'installer_mobile',''),
-    nullif(registration->>'installation_address',''), nullif(registration->>'installation_city',''),
-    nullif(registration->>'installation_state',''), nullif(registration->>'installation_pin',''),
-    'active'
+    v_registration_number, v_serial, v_model_code, v_product_name, v_capacity_kw, v_warranty_months,
+    v_purchase_date, (v_purchase_date + make_interval(months => v_warranty_months))::date - 1,
+    registration->>'full_name', registration->>'mobile', nullif(registration->>'email',''), registration->>'address',
+    registration->>'city', registration->>'state', registration->>'pin_code', v_purchase_date,
+    nullif(registration->>'invoice_number',''), registration->>'dealer_name', registration->>'purchase_type',
+    nullif(registration->>'installation_date','')::date, registration->>'installation_type', nullif(registration->>'installer_name',''),
+    nullif(registration->>'installer_mobile',''), nullif(registration->>'installation_address',''), nullif(registration->>'installation_city',''),
+    nullif(registration->>'installation_state',''), nullif(registration->>'installation_pin',''), 'active'
   ) returning id into v_id;
 
-  return query
-  select wr.registration_number, wr.serial_number, wr.model_code,
-         wr.warranty_start_date, wr.warranty_end_date, wr.status
-  from public.warranty_registrations wr
-  where wr.id = v_id;
-exception
-  when unique_violation then
-    raise exception 'REGISTRATION_CONFLICT';
+  return query select wr.registration_number, wr.serial_number, wr.model_code, wr.warranty_start_date, wr.warranty_end_date, wr.status
+  from public.warranty_registrations wr where wr.id = v_id;
+exception when unique_violation then raise exception 'REGISTRATION_CONFLICT';
 end;
 $$;
-
 revoke all on function public.register_product_purchase(text, jsonb) from public;
 grant execute on function public.register_product_purchase(text, jsonb) to anon, authenticated;
+
+create or replace function public.get_warranty_verification(p_registration_number text)
+returns table (registration_number text, serial_number text, model_code text, product_name text, capacity_kw numeric,
+  warranty_months integer, warranty_start_date date, warranty_end_date date, status text)
+language sql security definer set search_path = public
+as $$
+  select registration_number, serial_number, model_code, product_name, capacity_kw, warranty_months,
+         warranty_start_date, warranty_end_date, status
+  from public.warranty_registrations
+  where registration_number = p_registration_number and status <> 'cancelled'
+  limit 1;
+$$;
+revoke all on function public.get_warranty_verification(text) from public;
+grant execute on function public.get_warranty_verification(text) to anon, authenticated;
