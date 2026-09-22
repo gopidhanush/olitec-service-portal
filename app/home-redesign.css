@@ -1,0 +1,39 @@
+/* OLITEC customer homepage — matches the approved inverter-support visual */
+.customerHome{max-width:1120px!important;margin:0 auto!important;min-height:100vh;background:#fff!important;box-shadow:none!important;color:#0a1a3d;overflow:hidden}
+.customerHome .customerHeader{padding:28px 64px 18px!important;background:#fff!important;display:flex!important;align-items:flex-start!important;justify-content:flex-start!important}
+.customerHome .customerLogo{color:#0a1a3d!important;text-decoration:none!important}
+.customerHome .portalBrand{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+.customerHome .portalBrand>span:first-child{font-size:34px;font-weight:850;letter-spacing:.025em;color:#0a1a3d}
+.customerHome .portalTagline{margin-top:8px;font-size:9px;letter-spacing:.28em;color:#5e7291;font-weight:650}
+.customerHome .customerMain{padding:0 48px 46px!important}
+.customerHome .portalHomeHero{position:relative;min-height:560px;border:0;border-radius:0;overflow:hidden;background:linear-gradient(90deg,#fff 0%,#fbfcfd 54%,#f0f3f4 100%);display:grid;grid-template-columns:1.04fr .96fr;margin:0 0 30px}
+.customerHome .portalHomeCopy{padding:60px 18px 44px 16px;display:flex;flex-direction:column;justify-content:center;z-index:2}
+.customerHome .portalEyebrow{display:block;margin-bottom:18px;font-size:16px;line-height:1;letter-spacing:.34em;font-weight:700;color:#607595}
+.customerHome .portalHomeCopy h1{font-size:58px;line-height:1.02;letter-spacing:-.045em;margin:0 0 22px;color:#091a40;font-weight:800}
+.customerHome .portalHomeCopy>p{max-width:510px;font-size:21px;line-height:1.45;color:#536a89;margin:0}
+.customerHome .portalAccent{display:block;width:56px;height:5px;border-radius:6px;background:#24ad58;margin-top:28px}
+.customerHome .portalFeatures{display:flex;gap:36px;margin-top:48px}
+.customerHome .portalFeature{display:flex;align-items:center;gap:12px;color:#526987;font-size:16px;line-height:1.35;max-width:145px}
+.customerHome .portalFeatureIcon{width:32px;height:32px;display:grid;place-items:center;color:#607895;flex:0 0 auto}
+.customerHome .portalFeatureIcon svg{width:31px;height:31px}
+.customerHome .portalProductVisual{position:relative;min-height:560px;overflow:hidden;background:radial-gradient(circle at 50% 46%,#e0e7e8 0,#f0f3f4 45%,#f7f8f9 75%,transparent 100%)}
+.customerHome .portalProductVisual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+.customerHome .portalHomeCards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.customerHome .portalTile{min-height:300px;border:0;border-radius:28px;padding:34px 38px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;cursor:pointer;position:relative;transition:transform .16s ease,box-shadow .16s ease;box-shadow:none;color:#0a1a3d}
+.customerHome .portalTile:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(15,38,72,.08)}
+.customerHome .portalTileGreen{background:linear-gradient(145deg,#f2fbf5,#f8fcfa)}
+.customerHome .portalTileBlue{background:linear-gradient(145deg,#f2f7ff,#f7fbff)}
+.customerHome .portalTileOrange{background:linear-gradient(145deg,#fff7ef,#fffaf6)}
+.customerHome .portalTilePurple{background:linear-gradient(145deg,#f7f1ff,#fbf9ff)}
+.customerHome .portalTileIcon{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin-bottom:26px}
+.customerHome .portalTileIcon svg{width:38px;height:38px}
+.customerHome .portalTileGreen .portalTileIcon{background:#c5efd3;color:#0a9a48}
+.customerHome .portalTileBlue .portalTileIcon{background:#d0e1ff;color:#1769df}
+.customerHome .portalTileOrange .portalTileIcon{background:#ffe1c7;color:#ea6508}
+.customerHome .portalTilePurple .portalTileIcon{background:#e0cdfd;color:#7030d3}
+.customerHome .portalTile h2{font-size:28px;line-height:1.12;letter-spacing:-.035em;margin:0 0 12px;color:#0a1a3d;font-weight:800}
+.customerHome .portalTile p{max-width:390px;font-size:18px;line-height:1.5;color:#536a89;margin:0;padding-right:42px}
+.customerHome .portalTileArrow{position:absolute;right:32px;bottom:34px;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.68);display:grid;place-items:center;font-weight:500;font-size:31px;line-height:1}
+.customerHome .portalTileGreen .portalTileArrow{color:#129b4c}.customerHome .portalTileBlue .portalTileArrow{color:#1769df}.customerHome .portalTileOrange .portalTileArrow{color:#ea6508}.customerHome .portalTilePurple .portalTileArrow{color:#7030d3}
+@media(max-width:900px){.customerHome .customerHeader{padding:24px 28px 16px!important}.customerHome .customerMain{padding:0 28px 34px!important}.customerHome .portalHomeHero{min-height:0;grid-template-columns:1fr}.customerHome .portalHomeCopy{padding:48px 8px 34px}.customerHome .portalHomeCopy h1{font-size:46px}.customerHome .portalHomeCopy>p{font-size:18px}.customerHome .portalProductVisual{min-height:440px}.customerHome .portalHomeCards{gap:16px}.customerHome .portalTile{min-height:260px;padding:28px}.customerHome .portalTile h2{font-size:24px}.customerHome .portalTile p{font-size:16px}.customerHome .portalFeatures{margin-top:34px;gap:24px}}
+@media(max-width:620px){.customerHome{max-width:560px!important}.customerHome .customerHeader{padding:20px 18px 14px!important}.customerHome .portalBrand>span:first-child{font-size:30px}.customerHome .portalTagline{font-size:8px}.customerHome .customerMain{padding:0 16px 28px!important}.customerHome .portalHomeHero{margin:0 -16px 20px}.customerHome .portalHomeCopy{padding:38px 22px 28px}.customerHome .portalEyebrow{font-size:12px;letter-spacing:.28em;margin-bottom:15px}.customerHome .portalHomeCopy h1{font-size:39px;margin-bottom:16px}.customerHome .portalHomeCopy>p{font-size:17px;line-height:1.45}.customerHome .portalAccent{margin-top:22px}.customerHome .portalFeatures{gap:15px;margin-top:30px;justify-content:space-between}.customerHome .portalFeature{font-size:12px;gap:7px;max-width:105px}.customerHome .portalFeatureIcon{width:27px;height:27px}.customerHome .portalFeatureIcon svg{width:27px;height:27px}.customerHome .portalProductVisual{min-height:390px}.customerHome .portalHomeCards{grid-template-columns:1fr;gap:12px}.customerHome .portalTile{min-height:225px;border-radius:22px;padding:26px}.customerHome .portalTileIcon{width:62px;height:62px;margin-bottom:20px}.customerHome .portalTileIcon svg{width:34px;height:34px}.customerHome .portalTile h2{font-size:23px}.customerHome .portalTile p{font-size:15px;line-height:1.45}.customerHome .portalTileArrow{right:24px;bottom:24px;width:46px;height:46px;font-size:27px}}
