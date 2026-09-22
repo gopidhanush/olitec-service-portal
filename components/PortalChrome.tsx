@@ -3,7 +3,9 @@ import Link from 'next/link'
 export function PortalHeader() {
   return (
     <header className="customerHeader">
-      <Link href="/" className="customerLogo" aria-label="OLITEC home">OLITEC</Link>
+      <Link href="/" className="customerLogo" aria-label="OLITEC home">
+        <span className="portalBrand"><span>OLITEC</span><span className="portalTagline">POWERING A BETTER TOMORROW</span></span>
+      </Link>
     </header>
   )
 }
