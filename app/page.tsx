@@ -9,64 +9,93 @@ export default function HomePage() {
   const [scannerOpen, setScannerOpen] = useState(false)
 
   return (
-    <div className="app">
-      <header>
-        <div style={{ fontWeight: 800, fontSize: 28, letterSpacing: 1, color: '#172033' }}>OLITEC</div>
-        <div className="lang">English⌄</div>
+    <div className="app portalHome">
+      <header className="portalHeader">
+        <div>
+          <div className="portalLogo">OLITEC</div>
+          <div className="portalTagline">POWERING A BETTER TOMORROW</div>
+        </div>
+        <button className="lang" type="button">◎&nbsp; English⌄</button>
       </header>
 
-      <main>
-        <section className="hero">
-          <div className="heroText">
-            <h1>OLITEC Service Portal</h1>
-            <p>Register your product, check warranty and get service support.</p>
+      <main className="portalMain">
+        <section className="portalHero">
+          <div className="heroCopy">
+            <span className="heroEyebrow">SERVICE PORTAL</span>
+            <h1>Your OLITEC<br />Inverter Support</h1>
+            <p>Register, check warranty and get service support — all in one place.</p>
+            <span className="heroAccent" />
+            <div className="heroBenefits">
+              <span>✓ Genuine Support</span>
+              <span>✓ Quick Service</span>
+              <span>✓ Reliable Assistance</span>
+            </div>
+          </div>
+          <div className="inverterVisual" aria-hidden="true">
+            <div className="inverterBody">
+              <div className="inverterBrand">OLITEC</div>
+              <div className="inverterPanel"><span>◦</span><span>⌁</span><span>△</span></div>
+              <div className="inverterText">CLEAN ENERGY<br /><small>BRIGHTER TOMORROW</small></div>
+              <div className="inverterPorts"><i /><i /><i /></div>
+            </div>
           </div>
         </section>
 
-        {!scannerOpen ? (
-          <section className="card" style={{ marginBottom: 14 }}>
-            <span className="badge">Product Registration</span>
-            <h2 style={{ marginTop: 12 }}>Register your OLITEC product</h2>
-            <p>Scan the QR code on your inverter to identify the product and activate your warranty.</p>
-            <button className="btn primary" style={{ marginTop: 8 }} onClick={() => setScannerOpen(true)}>
-              ▣ Scan QR Code
-            </button>
+        {scannerOpen ? (
+          <section className="portalScanner">
+            <QRScanner onClose={() => setScannerOpen(false)} />
           </section>
-        ) : (
-          <QRScanner onClose={() => setScannerOpen(false)} />
-        )}
+        ) : null}
 
-        <div className="homeActions">
-          <section className="card homeActionCard">
-            <span className="badge">Warranty</span>
-            <h2 style={{ marginTop: 12 }}>Warranty Status</h2>
-            <p>Check whether your OLITEC warranty is active.</p>
-            <button className="btn secondary" onClick={() => router.push('/warranty')}>
-              Check Warranty →
-            </button>
-          </section>
+        <section className="portalActions">
+          <button className="portalAction registration" type="button" onClick={() => setScannerOpen(true)}>
+            <span className="actionIcon">⌗</span>
+            <span className="actionContent">
+              <strong>Product Registration</strong>
+              <small>Scan the QR code on your inverter to register and activate warranty.</small>
+            </span>
+            <span className="actionArrow">→</span>
+          </button>
 
-          <section className="card homeActionCard">
-            <span className="badge">Service</span>
-            <h2 style={{ marginTop: 12 }}>Register Complaint</h2>
-            <p>Report a problem with your registered OLITEC product.</p>
-            <button className="btn secondary" onClick={() => router.push('/service/complaint/start')}>
-              Register Complaint →
-            </button>
-          </section>
+          <button className="portalAction warranty" type="button" onClick={() => router.push('/warranty')}>
+            <span className="actionIcon">♢</span>
+            <span className="actionContent">
+              <strong>Warranty Status</strong>
+              <small>Check your product warranty using your registration number.</small>
+            </span>
+            <span className="actionArrow">→</span>
+          </button>
 
-          <section className="card homeActionCard">
-            <span className="badge">Service Support</span>
-            <h2 style={{ marginTop: 12 }}>Complaint Status</h2>
-            <p>Track the latest status of an existing service complaint.</p>
-            <button className="btn primary" onClick={() => router.push('/service/track')}>
-              Track Complaint →
-            </button>
-          </section>
-        </div>
+          <button className="portalAction complaint" type="button" onClick={() => router.push('/service/complaint/start')}>
+            <span className="actionIcon">⌕</span>
+            <span className="actionContent">
+              <strong>Register Complaint</strong>
+              <small>Report a problem with your registered OLITEC product.</small>
+            </span>
+            <span className="actionArrow">→</span>
+          </button>
+
+          <button className="portalAction tracking" type="button" onClick={() => router.push('/service/track')}>
+            <span className="actionIcon">≡</span>
+            <span className="actionContent">
+              <strong>Complaint Status</strong>
+              <small>Track the latest status of your service complaint.</small>
+            </span>
+            <span className="actionArrow">→</span>
+          </button>
+        </section>
+
+        <section className="portalHelp">
+          <span className="helpIcon">♧</span>
+          <div>
+            <strong>Need Help?</strong>
+            <p>Contact our service support team.</p>
+          </div>
+          <span className="helpArrow">View Support Details&nbsp; →</span>
+        </section>
       </main>
 
-      <footer>OLITEC · Clean Energy · Reliable Performance</footer>
+      <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
     </div>
   )
 }
