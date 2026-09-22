@@ -37,6 +37,15 @@ export default function HomePage() {
           <h2 style={{marginTop:12}}>Protect your product</h2>
           <p>Register your purchase to keep your warranty and service information connected to your inverter serial number.</p>
         </section>
+
+        <section className="card" style={{marginTop:16}}>
+          <span className="badge">Service Support</span>
+          <h2 style={{marginTop:12}}>Already registered a complaint?</h2>
+          <p>Check the latest status of your OLITEC service request using your complaint number.</p>
+          <button className="btn primary" style={{marginTop:8}} onClick={() => router.push('/service/track')}>
+            Track Service Complaint →
+          </button>
+        </section>
       </main>
       <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
     </div>
