@@ -6,6 +6,13 @@ import { supabase } from '@/lib/supabase'
 
 type Product = { product_id: string; serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number }
 
+type RegistrationForm = {
+  full_name: string; mobile: string; email: string; address: string; city: string; state: string; pin_code: string
+  purchase_date: string; invoice_number: string; dealer_name: string; purchase_type: string
+  installation_date: string; installation_type: string; installer_name: string; installer_mobile: string
+  installation_address: string; installation_city: string; installation_state: string; installation_pin: string
+}
+
 export default function PurchaseRegistrationPage() {
   const params = useParams<{ identifier: string }>()
   const router = useRouter()
@@ -13,33 +20,37 @@ export default function PurchaseRegistrationPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<RegistrationForm>({
     full_name: '', mobile: '', email: '', address: '', city: '', state: '', pin_code: '',
     purchase_date: '', invoice_number: '', dealer_name: '', purchase_type: 'Dealer',
     installation_date: '', installation_type: 'Professional', installer_name: '', installer_mobile: '',
     installation_address: '', installation_city: '', installation_state: '', installation_pin: ''
   })
 
+  const storageKey = `olitec-registration-${decodeURIComponent(params.identifier)}`
+
   useEffect(() => {
     async function load() {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) {
+        try { setForm(JSON.parse(saved) as RegistrationForm) } catch { localStorage.removeItem(storageKey) }
+      }
       const { data, error } = await supabase.rpc('get_product_for_registration', { identifier: decodeURIComponent(params.identifier) })
       if (error || !data?.length) setError('Product could not be verified. Please go back and scan again.')
       else setProduct(data[0] as Product)
       setLoading(false)
     }
     load()
-  }, [params.identifier])
+  }, [params.identifier, storageKey])
 
-  const update = (key: keyof typeof form, value: string) => setForm(prev => ({ ...prev, [key]: value }))
+  const update = (key: keyof RegistrationForm, value: string) => setForm(prev => ({ ...prev, [key]: value }))
 
   async function submit(e: FormEvent) {
     e.preventDefault()
     if (!product) return
     setError('')
     setSaving(true)
-
-    // The form UI is ready. Database write will be enabled after the protected
-    // registration RPC and storage policy are added in the next backend step.
+    localStorage.setItem(storageKey, JSON.stringify(form))
     setSaving(false)
     router.push(`/register/${encodeURIComponent(product.serial_number)}/review`)
   }
