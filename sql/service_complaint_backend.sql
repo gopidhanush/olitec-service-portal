@@ -56,11 +56,25 @@ returns table (
 )
 language sql security definer set search_path = public
 as $$
-  select registration_number, serial_number, model_code, product_name, capacity_kw,
-         full_name, mobile, email, address, city, state, pin_code, purchase_date,
-         warranty_start_date, warranty_end_date, status
-  from public.warranty_registrations
-  where registration_number = p_registration_number
+  select
+    wr.registration_number,
+    wr.serial_number,
+    wr.model_code,
+    wr.product_name,
+    wr.capacity_kw,
+    wr.full_name,
+    wr.mobile,
+    wr.email,
+    wr.address,
+    wr.city,
+    wr.state,
+    wr.pin_code,
+    wr.purchase_date,
+    wr.warranty_start_date,
+    wr.warranty_end_date,
+    wr.status
+  from public.warranty_registrations as wr
+  where wr.registration_number = p_registration_number
   limit 1;
 $$;
 revoke all on function public.get_service_context(text) from public;
@@ -71,25 +85,32 @@ returns table (complaint_number text, registration_number text, serial_number te
 language plpgsql security definer set search_path = public
 as $$
 declare
-  v_registration warranty_registrations%rowtype;
+  v_registration public.warranty_registrations%rowtype;
   v_complaint_number text;
   v_id bigint;
 begin
-  select * into v_registration
-  from public.warranty_registrations
-  where registration_number = p_registration_number and status <> 'cancelled'
+  select wr.* into v_registration
+  from public.warranty_registrations as wr
+  where wr.registration_number = p_registration_number
+    and wr.status <> 'cancelled'
   limit 1;
 
   if v_registration.id is null then
     raise exception 'REGISTRATION_NOT_FOUND';
   end if;
 
-  if nullif(p_complaint->>'complaint_type','') is null then raise exception 'COMPLAINT_TYPE_REQUIRED'; end if;
-  if nullif(p_complaint->>'problem_description','') is null then raise exception 'PROBLEM_DESCRIPTION_REQUIRED'; end if;
+  if nullif(p_complaint->>'complaint_type','') is null then
+    raise exception 'COMPLAINT_TYPE_REQUIRED';
+  end if;
 
-  select 'OLC-' || to_char(current_date, 'YYYY') || '-' || lpad((coalesce(max(id),0) + 1)::text, 6, '0')
+  if nullif(p_complaint->>'problem_description','') is null then
+    raise exception 'PROBLEM_DESCRIPTION_REQUIRED';
+  end if;
+
+  select 'OLC-' || to_char(current_date, 'YYYY') || '-' ||
+         lpad((coalesce(max(sc.id),0) + 1)::text, 6, '0')
     into v_complaint_number
-  from public.service_complaints;
+  from public.service_complaints as sc;
 
   insert into public.service_complaints (
     complaint_number, registration_number, serial_number, model_code, product_name,
@@ -97,11 +118,21 @@ begin
     problem_description, purchase_date, preferred_visit_date, preferred_contact_time,
     service_address, service_city, service_state, service_pin, status
   ) values (
-    v_complaint_number, v_registration.registration_number, v_registration.serial_number,
-    v_registration.model_code, v_registration.product_name, v_registration.full_name,
-    v_registration.mobile, v_registration.email, v_registration.address, v_registration.city,
-    v_registration.state, v_registration.pin_code, p_complaint->>'complaint_type',
-    p_complaint->>'problem_description', v_registration.purchase_date,
+    v_complaint_number,
+    v_registration.registration_number,
+    v_registration.serial_number,
+    v_registration.model_code,
+    v_registration.product_name,
+    v_registration.full_name,
+    v_registration.mobile,
+    v_registration.email,
+    v_registration.address,
+    v_registration.city,
+    v_registration.state,
+    v_registration.pin_code,
+    p_complaint->>'complaint_type',
+    p_complaint->>'problem_description',
+    v_registration.purchase_date,
     nullif(p_complaint->>'preferred_visit_date','')::date,
     nullif(p_complaint->>'preferred_contact_time',''),
     coalesce(nullif(p_complaint->>'service_address',''), v_registration.address),
@@ -111,11 +142,15 @@ begin
     'received'
   ) returning id into v_id;
 
-  return query select sc.complaint_number, sc.registration_number, sc.serial_number, sc.status
-  from public.service_complaints sc where sc.id = v_id;
+  return query
+    select sc.complaint_number, sc.registration_number, sc.serial_number, sc.status
+    from public.service_complaints as sc
+    where sc.id = v_id;
+
 exception when unique_violation then
   raise exception 'COMPLAINT_CONFLICT';
 end;
 $$;
+
 revoke all on function public.create_service_complaint(text, jsonb) from public;
 grant execute on function public.create_service_complaint(text, jsonb) to anon, authenticated;
