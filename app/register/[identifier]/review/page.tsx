@@ -18,10 +18,7 @@ const emptyForm: RegistrationForm = {
 }
 
 const displayDate = (value: string) => value ? new Date(value + 'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'
-
-function Row({label, value}: {label:string; value:string}) {
-  return <div className="reviewRow"><span>{label}</span><b>{value || '—'}</b></div>
-}
+function Row({label, value}: {label:string; value:string}) { return <div className="reviewRow"><span>{label}</span><b>{value || '—'}</b></div> }
 
 export default function RegistrationReviewPage() {
   const params = useParams<{ identifier: string }>()
@@ -31,6 +28,8 @@ export default function RegistrationReviewPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [form, setForm] = useState<RegistrationForm>(emptyForm)
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey)
@@ -43,6 +42,42 @@ export default function RegistrationReviewPage() {
     })
   }, [serial, storageKey])
 
+  async function confirmRegistration() {
+    if (!product) return
+    setSubmitting(true)
+    setError('')
+    const { data, error: rpcError } = await supabase.rpc('register_product_purchase', {
+      identifier: serial,
+      registration: form,
+    })
+
+    if (rpcError) {
+      console.error(rpcError)
+      const message = rpcError.message || ''
+      if (message.includes('PRODUCT_ALREADY_REGISTERED:')) {
+        setError(`This product is already registered. Registration number: ${message.split('PRODUCT_ALREADY_REGISTERED:')[1]}`)
+      } else if (message.includes('PRODUCT_NOT_FOUND')) {
+        setError('The product could not be verified. Please scan the product QR code again.')
+      } else if (message.includes('REQUIRED_CUSTOMER_FIELDS_MISSING')) {
+        setError('Please return to the form and complete all required customer and dealer details.')
+      } else {
+        setError('Registration could not be completed. Please try again.')
+      }
+      setSubmitting(false)
+      return
+    }
+
+    const result = data?.[0]
+    if (!result?.registration_number) {
+      setError('Registration was not completed. Please try again.')
+      setSubmitting(false)
+      return
+    }
+
+    localStorage.removeItem(storageKey)
+    router.push(`/register/${encodeURIComponent(serial)}/success?registration=${encodeURIComponent(result.registration_number)}&start=${encodeURIComponent(result.warranty_start_date)}&end=${encodeURIComponent(result.warranty_end_date)}`)
+  }
+
   if (loading) return <div className="app"><main><section className="card"><p>Loading review…</p></section></main></div>
 
   return <div className="app">
@@ -50,19 +85,13 @@ export default function RegistrationReviewPage() {
     <main>
       <button className="back" onClick={() => router.push(`/register/${encodeURIComponent(serial)}/purchase`)}>← Edit details</button>
       <div className="steps"><div className="step active"><div className="dot">✓</div>Product</div><div className="step active"><div className="dot">✓</div>Details</div><div className="step active"><div className="dot">3</div>Review</div><div className="step"><div className="dot">4</div>Complete</div></div>
-
       <section className="card"><span className="badge">Review before submission</span><h2 style={{marginTop:12}}>Check your details</h2><p>Please confirm that the information below is correct before completing your OLITEC registration.</p></section>
-
       <section className="card"><h2>Product</h2><Row label="Model" value={product?.model_code || ''}/><Row label="Serial number" value={product?.serial_number || serial}/><Row label="Warranty" value={product?.warranty_months ? `${product.warranty_months / 12} years` : ''}/></section>
-
       <section className="card"><h2>Customer details</h2><Row label="Full name" value={form.full_name}/><Row label="Mobile" value={form.mobile}/><Row label="Email" value={form.email}/><Row label="Address" value={form.address}/><Row label="City" value={form.city}/><Row label="State" value={form.state}/><Row label="PIN code" value={form.pin_code}/></section>
-
       <section className="card"><h2>Purchase details</h2><Row label="Purchase date" value={displayDate(form.purchase_date)}/><Row label="Dealer / seller" value={form.dealer_name}/><Row label="Invoice number" value={form.invoice_number}/><Row label="Purchase type" value={form.purchase_type}/><Row label="Invoice" value="Will be uploaded with registration"/></section>
-
       <section className="card"><h2>Installation details</h2><Row label="Installation date" value={displayDate(form.installation_date)}/><Row label="Installation type" value={form.installation_type}/><Row label="Installer" value={form.installer_name}/><Row label="Installer mobile" value={form.installer_mobile}/><Row label="Installation address" value={form.installation_address}/></section>
-
-      <div className="note">Your information will be used to create the product registration and warranty record. Final database submission will be enabled in the next backend step.</div>
-      <button className="btn primary" style={{marginTop:12}} onClick={() => router.push(`/register/${encodeURIComponent(serial)}/success`)}>Confirm Registration →</button>
+      {error && <div className="note" style={{marginTop:12,color:'#9d2d22'}}>{error}</div>}
+      <button className="btn primary" style={{marginTop:12}} disabled={submitting} onClick={confirmRegistration}>{submitting ? 'Registering…' : 'Confirm Registration →'}</button>
     </main>
     <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
   </div>
