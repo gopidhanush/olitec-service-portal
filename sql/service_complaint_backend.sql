@@ -154,3 +154,49 @@ $$;
 
 revoke all on function public.create_service_complaint(text, jsonb) from public;
 grant execute on function public.create_service_complaint(text, jsonb) to anon, authenticated;
+
+-- Customer-safe complaint tracking lookup.
+-- It intentionally returns service-tracking fields only; it does not expose
+-- customer phone, email, or full address through this public RPC.
+create or replace function public.get_complaint_tracking(p_complaint_number text)
+returns table (
+  complaint_number text,
+  registration_number text,
+  serial_number text,
+  model_code text,
+  product_name text,
+  complaint_type text,
+  problem_description text,
+  status text,
+  preferred_visit_date date,
+  preferred_contact_time text,
+  service_city text,
+  service_state text,
+  created_at timestamptz
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    sc.complaint_number,
+    sc.registration_number,
+    sc.serial_number,
+    sc.model_code,
+    sc.product_name,
+    sc.complaint_type,
+    sc.problem_description,
+    sc.status,
+    sc.preferred_visit_date,
+    sc.preferred_contact_time,
+    sc.service_city,
+    sc.service_state,
+    sc.created_at
+  from public.service_complaints as sc
+  where upper(trim(sc.complaint_number)) = upper(trim(p_complaint_number))
+    and sc.status <> 'cancelled'
+  limit 1;
+$$;
+
+revoke all on function public.get_complaint_tracking(text) from public;
+grant execute on function public.get_complaint_tracking(text) to anon, authenticated;
