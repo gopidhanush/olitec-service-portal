@@ -51,7 +51,11 @@ export default function HomePage() {
             </div>
           </div>
           <div className="portalProductVisual">
-            <img src="/olitec-inverter-hero.svg" alt="OLITEC solar inverter" />
+            <img
+              src="/olitec-inverter-hero.svg"
+              alt="OLITEC solar inverter"
+              className="portalProductImage"
+            />
           </div>
         </section>
 
@@ -66,6 +70,43 @@ export default function HomePage() {
           ))}
         </section>
       </main>
+
+      <style jsx global>{`
+        /* Keep the complete inverter visible instead of using a cropped cover image. */
+        .portalProductVisual {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          overflow: hidden !important;
+        }
+
+        .portalProductImage {
+          display: block !important;
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
+          object-fit: contain !important;
+          object-position: center center !important;
+        }
+
+        @media (max-width: 620px) {
+          .portalHomeHero {
+            overflow: hidden !important;
+          }
+
+          .portalProductVisual {
+            height: 250px !important;
+            min-height: 250px !important;
+          }
+
+          .portalProductImage {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
