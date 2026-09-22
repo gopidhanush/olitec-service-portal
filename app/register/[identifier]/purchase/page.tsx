@@ -2,7 +2,6 @@
 
 import { FormEvent, useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 
 type Product = { product_id: string; serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number }
 
@@ -11,6 +10,23 @@ type RegistrationForm = {
   purchase_date: string; invoice_number: string; dealer_name: string; purchase_type: string
   installation_date: string; installation_type: string; installer_name: string; installer_mobile: string
   installation_address: string; installation_city: string; installation_state: string; installation_pin: string
+}
+
+async function getProduct(identifier: string): Promise<Product> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  if (!supabaseUrl || !publishableKey) throw new Error('Product verification is not configured.')
+  const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_product_for_registration`, {
+    method: 'POST',
+    headers: { apikey: publishableKey, Authorization: `Bearer ${publishableKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifier }),
+    cache: 'no-store',
+  })
+  const body = await response.text()
+  if (!response.ok) throw new Error(`Product verification failed (${response.status}).`)
+  const data = body ? JSON.parse(body) as Product[] : []
+  if (!data.length) throw new Error('Product could not be verified. Please go back and scan again.')
+  return data[0]
 }
 
 export default function PurchaseRegistrationPage() {
@@ -27,21 +43,28 @@ export default function PurchaseRegistrationPage() {
     installation_address: '', installation_city: '', installation_state: '', installation_pin: ''
   })
 
-  const storageKey = `olitec-registration-${decodeURIComponent(params.identifier)}`
+  const serial = decodeURIComponent(params.identifier)
+  const storageKey = `olitec-registration-${serial}`
 
   useEffect(() => {
+    let cancelled = false
     async function load() {
       const saved = localStorage.getItem(storageKey)
       if (saved) {
         try { setForm(JSON.parse(saved) as RegistrationForm) } catch { localStorage.removeItem(storageKey) }
       }
-      const { data, error } = await supabase.rpc('get_product_for_registration', { identifier: decodeURIComponent(params.identifier) })
-      if (error || !data?.length) setError('Product could not be verified. Please go back and scan again.')
-      else setProduct(data[0] as Product)
-      setLoading(false)
+      try {
+        const item = await getProduct(serial)
+        if (!cancelled) setProduct(item)
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Product could not be verified.')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
     }
     load()
-  }, [params.identifier, storageKey])
+    return () => { cancelled = true }
+  }, [serial, storageKey])
 
   const update = (key: keyof RegistrationForm, value: string) => setForm(prev => ({ ...prev, [key]: value }))
 
