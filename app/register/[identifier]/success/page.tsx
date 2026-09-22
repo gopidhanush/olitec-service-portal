@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import QRCode from 'qrcode'
-import { jsPDF } from 'jspdf'
 import { supabase } from '@/lib/supabase'
 
 type Product = { serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number; manufacturing_date: string | null }
@@ -22,38 +20,43 @@ export default function RegistrationSuccessPage() {
   const serial = decodeURIComponent(params.identifier)
 
   useEffect(() => {
+    let active = true
     async function load() {
       try {
         const params = new URLSearchParams(window.location.search)
         const registration = params.get('registration') || ''
         const start = params.get('start') || ''
         const end = params.get('end') || ''
+        if (!active) return
         setRegistrationNumber(registration)
         setWarrantyStart(start)
         setWarrantyEnd(end)
 
         const { data } = await supabase.rpc('get_product_for_registration', { identifier: serial })
         const p = data?.[0] as Product | undefined
-        if (p) setProduct(p)
+        if (active && p) setProduct(p)
 
-        if (registration) {
+        if (registration && active) {
+          const QRCode = (await import('qrcode')).default
           const url = `${window.location.origin}/warranty/${encodeURIComponent(registration)}`
           const qr = await QRCode.toDataURL(url, { width: 420, margin: 2, errorCorrectionLevel: 'M' })
-          setQrDataUrl(qr)
+          if (active) setQrDataUrl(qr)
         }
       } catch (error) {
         console.error('Warranty card initialization failed:', error)
       } finally {
-        setLoading(false)
+        if (active) setLoading(false)
       }
     }
     load()
+    return () => { active = false }
   }, [serial])
 
   async function downloadWarrantyCard() {
     if (!qrDataUrl || !registrationNumber) return
     setDownloading(true)
     try {
+      const { jsPDF } = await import('jspdf')
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a5' })
       doc.setFillColor(255,255,255); doc.rect(0,0,210,148,'F')
       doc.setDrawColor(232,158,20); doc.setLineWidth(1.2); doc.roundedRect(8,8,194,132,6,6,'S')
@@ -72,6 +75,9 @@ export default function RegistrationSuccessPage() {
       doc.setFont('helvetica','bold'); doc.setTextColor(23,32,51); doc.text('OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow',16,129)
       doc.addImage(qrDataUrl,'PNG',153,42,38,38); doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(105,112,125); doc.text('Registration QR',172,85,{align:'center'})
       doc.save(`${registrationNumber}-OLITEC-Warranty-Card.pdf`)
+    } catch (error) {
+      console.error('Warranty card download failed:', error)
+      alert('Unable to create the warranty card. Please try again.')
     } finally { setDownloading(false) }
   }
 
