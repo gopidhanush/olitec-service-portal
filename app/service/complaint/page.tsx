@@ -2,6 +2,7 @@
 
 import { FormEvent, Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
 type ServiceContext = {
   registration_number: string
@@ -43,22 +44,12 @@ type SubmittedComplaint = {
 async function getServiceContext(registration: string): Promise<ServiceContext | null> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-
   if (!url || !key) throw new Error('Service portal is not configured.')
-
   const response = await fetch(`${url}/rest/v1/rpc/get_service_context`, {
-    method: 'POST',
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ p_registration_number: registration }),
-    cache: 'no-store',
+    method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_registration_number: registration }), cache: 'no-store',
   })
-
   if (!response.ok) throw new Error(`Warranty lookup failed (${response.status}).`)
-
   const data = await response.json()
   return data?.[0] ?? null
 }
@@ -66,298 +57,158 @@ async function getServiceContext(registration: string): Promise<ServiceContext |
 async function createComplaint(registration: string, form: ComplaintForm): Promise<SubmittedComplaint> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-
   if (!url || !key) throw new Error('Service portal is not configured.')
-
   const response = await fetch(`${url}/rest/v1/rpc/create_service_complaint`, {
-    method: 'POST',
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      p_registration_number: registration,
-      p_complaint: form,
-    }),
-    cache: 'no-store',
+    method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_registration_number: registration, p_complaint: form }), cache: 'no-store',
   })
-
   const body = await response.text()
   if (!response.ok) throw new Error(body || `Complaint submission failed (${response.status}).`)
-
   const data = body ? JSON.parse(body) : []
   if (!data?.[0]) throw new Error('Complaint number was not returned. Please try again.')
-
   return data[0] as SubmittedComplaint
 }
 
-const fmt = (value: string) => {
-  if (!value) return '—'
-  return new Date(`${value}T00:00:00`).toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
-}
+const fmt = (value: string) => value ? new Date(`${value}T00:00:00`).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
 
 function ComplaintPageContent() {
   const params = useSearchParams()
   const registration = params.get('registration') || ''
-
   const [context, setContext] = useState<ServiceContext | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState<SubmittedComplaint | null>(null)
-
   const [form, setForm] = useState<ComplaintForm>({
-    complaint_type: 'Product not working',
-    problem_description: '',
-    preferred_visit_date: '',
-    preferred_contact_time: 'Any time',
-    service_address: '',
-    service_city: '',
-    service_state: '',
-    service_pin: '',
+    complaint_type: 'Product not working', problem_description: '', preferred_visit_date: '', preferred_contact_time: 'Any time',
+    service_address: '', service_city: '', service_state: '', service_pin: '',
   })
 
   useEffect(() => {
-    if (!registration) {
-      setError('Warranty registration number is missing.')
-      setLoading(false)
-      return
-    }
-
-    getServiceContext(registration)
-      .then((data) => {
-        if (!data) throw new Error('Warranty registration not found.')
-        setContext(data)
-        setForm((previous) => ({
-          ...previous,
-          service_address: data.address || '',
-          service_city: data.city || '',
-          service_state: data.state || '',
-          service_pin: data.pin_code || '',
-        }))
-      })
-      .catch((reason) => {
-        setError(reason instanceof Error ? reason.message : 'Unable to load warranty details.')
-      })
-      .finally(() => setLoading(false))
+    if (!registration) { setError('Warranty registration number is missing.'); setLoading(false); return }
+    getServiceContext(registration).then(data => {
+      if (!data) throw new Error('Warranty registration not found.')
+      setContext(data)
+      setForm(previous => ({ ...previous, service_address: data.address || '', service_city: data.city || '', service_state: data.state || '', service_pin: data.pin_code || '' }))
+    }).catch(reason => setError(reason instanceof Error ? reason.message : 'Unable to load warranty details.')).finally(() => setLoading(false))
   }, [registration])
 
-  const update = (key: keyof ComplaintForm, value: string) => {
-    setForm((previous) => ({ ...previous, [key]: value }))
-  }
+  const update = (key: keyof ComplaintForm, value: string) => setForm(previous => ({ ...previous, [key]: value }))
 
   async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setError('')
-    setSaving(true)
-
-    try {
-      const result = await createComplaint(registration, form)
-      setSubmitted(result)
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Unable to register complaint.')
-    } finally {
-      setSaving(false)
-    }
+    event.preventDefault(); setError(''); setSaving(true)
+    try { setSubmitted(await createComplaint(registration, form)) }
+    catch (reason) { setError(reason instanceof Error ? reason.message : 'Unable to register complaint.') }
+    finally { setSaving(false) }
   }
 
-  if (loading) {
-    return (
-      <div className="app">
-        <main>
-          <section className="card"><p>Loading warranty details…</p></section>
-        </main>
-      </div>
-    )
-  }
+  if (loading) return <div className="app customerPage"><PortalHeader /><main className="customerMain"><section className="customerSection"><p className="customerStatus">Loading warranty details…</p></section></main><PortalFooter /></div>
 
-  if (submitted) {
-    return (
-      <div className="app">
-        <header>
-          <div style={{ fontWeight: 800, fontSize: 28, letterSpacing: 1 }}>OLITEC</div>
-          <div className="lang">Service Support</div>
-        </header>
-        <main>
-          <section className="card success">
-            <div className="check">✓</div>
-            <span className="badge">Complaint received</span>
-            <h1 style={{ marginTop: 16 }}>We're on it</h1>
-            <p>Your service complaint has been registered successfully.</p>
+  if (submitted) return (
+    <div className="app customerPage">
+      <PortalHeader />
+      <main className="customerMain">
+        <section className="customerSection customerSuccess">
+          <div className="customerCheck">✓</div>
+          <span className="customerBadge customerBadgeSuccess">Complaint received</span>
+          <h1>We're on it.</h1>
+          <p>Your service complaint has been registered successfully.</p>
+          <div className="customerNumberBox"><span>Complaint Number</span><strong>{submitted.complaint_number}</strong><small>Keep this number for tracking and future communication.</small></div>
+          <div className="customerInfoList">
+            <div><span>Registration</span><strong>{registration}</strong></div>
+            <div><span>Serial number</span><strong>{context?.serial_number}</strong></div>
+            <div><span>Status</span><strong>{submitted.status || 'Received'}</strong></div>
+          </div>
+          <button className="customerButton customerButtonPrimary" type="button" onClick={() => { window.location.href = `/service/track?complaint=${encodeURIComponent(submitted.complaint_number)}` }}>Track Complaint <span>→</span></button>
+          <button className="customerButton customerButtonSecondary" type="button" onClick={() => { window.location.href = `/warranty/${encodeURIComponent(registration)}` }}>Back to Warranty <span>→</span></button>
+        </section>
+      </main>
+      <PortalFooter />
+    </div>
+  )
 
-            <div className="note" style={{ marginTop: 18 }}>
-              <b>Complaint Number</b><br />
-              <strong style={{ fontSize: 24 }}>{submitted.complaint_number}</strong><br />
-              <small>Keep this number for tracking and future communication.</small>
-            </div>
-
-            <div className="note" style={{ marginTop: 12, textAlign: 'left' }}>
-              <div className="reviewRow"><span>Registration</span><b>{registration}</b></div>
-              <div className="reviewRow"><span>Serial number</span><b>{context?.serial_number}</b></div>
-              <div className="reviewRow"><span>Status</span><b>{submitted.status || 'Received'}</b></div>
-            </div>
-
-            <button
-              className="btn primary"
-              style={{ marginTop: 18 }}
-              onClick={() => { window.location.href = `/service/track?complaint=${encodeURIComponent(submitted.complaint_number)}` }}
-            >
-              Track This Complaint →
-            </button>
-            <button
-              className="btn"
-              style={{ marginTop: 10 }}
-              onClick={() => { window.location.href = `/warranty/${encodeURIComponent(registration)}` }}
-            >
-              Back to Warranty
-            </button>
-          </section>
-        </main>
-        <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
-      </div>
-    )
-  }
-
-  if (error || !context) {
-    return (
-      <div className="app">
-        <main>
-          <section className="card">
-            <span className="badge">Service Support</span>
-            <h1 style={{ marginTop: 14 }}>Unable to continue</h1>
-            <p>{error || 'Warranty details could not be loaded.'}</p>
-          </section>
-        </main>
-      </div>
-    )
-  }
+  if (error || !context) return (
+    <div className="app customerPage">
+      <PortalHeader />
+      <main className="customerMain">
+        <button className="customerBack" type="button" onClick={() => { window.location.href = '/' }}>← OLITEC Home</button>
+        <section className="customerSection">
+          <span className="customerBadge customerBadgeWarning">Service Support</span>
+          <h1>Unable to continue.</h1>
+          <p>{error || 'Warranty details could not be loaded.'}</p>
+          <button className="customerButton customerButtonPrimary" type="button" onClick={() => window.location.reload()}>Try Again <span>→</span></button>
+        </section>
+      </main>
+      <PortalFooter />
+    </div>
+  )
 
   return (
-    <div className="app">
-      <header>
-        <div style={{ fontWeight: 800, fontSize: 28, letterSpacing: 1 }}>OLITEC</div>
-        <div className="lang">Service Support</div>
-      </header>
+    <div className="app customerPage">
+      <PortalHeader />
+      <main className="customerMain">
+        <button className="customerBack" type="button" onClick={() => window.history.back()}>← Warranty Verification</button>
+        <section className="customerHero compactHero">
+          <span className="customerEyebrow">SERVICE SUPPORT</span>
+          <h1>Register a complaint.</h1>
+          <p>Tell us what is happening and our service team will follow up.</p>
+        </section>
 
-      <main>
-        <button className="back" onClick={() => window.history.back()}>← Warranty Verification</button>
-
-        <div className="steps">
-          <div className="step active"><div className="dot">1</div>Product</div>
-          <div className="step active"><div className="dot">2</div>Complaint</div>
-          <div className="step"><div className="dot">3</div>Submitted</div>
-        </div>
-
-        <section className="card">
-          <span className="badge">✓ Warranty registration verified</span>
-          <h2 style={{ marginTop: 12 }}>Register a service complaint</h2>
-          <p>Tell us what is happening and our service team can follow up.</p>
-
-          <div className="note" style={{ marginTop: 14, textAlign: 'left' }}>
-            <div className="reviewRow"><span>Product</span><b>{context.model_code}</b></div>
-            <div className="reviewRow"><span>Serial number</span><b>{context.serial_number}</b></div>
-            <div className="reviewRow"><span>Warranty</span><b>{fmt(context.warranty_start_date)} – {fmt(context.warranty_end_date)}</b></div>
+        <section className="customerSection">
+          <span className="customerBadge customerBadgeSuccess">✓ Warranty verified</span>
+          <h2>{context.model_code}</h2>
+          <p>{context.capacity_kw} kW {context.product_name}</p>
+          <div className="customerInfoGrid">
+            <div><small>Serial number</small><strong>{context.serial_number}</strong></div>
+            <div><small>Warranty</small><strong>{fmt(context.warranty_start_date)} – {fmt(context.warranty_end_date)}</strong></div>
           </div>
         </section>
 
         <form onSubmit={submit}>
-          <section className="card">
-            <h2>Complaint details</h2>
-
+          <section className="customerSection">
+            <span className="customerBadge">Complaint details</span>
+            <h2>What is the problem?</h2>
             <label>Complaint type <span className="req">*</span></label>
-            <select required value={form.complaint_type} onChange={(event) => update('complaint_type', event.target.value)}>
-              <option>Product not working</option>
-              <option>Low / no output</option>
-              <option>Charging problem</option>
-              <option>Display / indicator issue</option>
-              <option>Noise / overheating</option>
-              <option>Installation issue</option>
-              <option>Physical damage</option>
-              <option>Other</option>
+            <select className="customerInput" required value={form.complaint_type} onChange={event => update('complaint_type', event.target.value)}>
+              <option>Product not working</option><option>Low / no output</option><option>Charging problem</option><option>Display / indicator issue</option><option>Noise / overheating</option><option>Installation issue</option><option>Physical damage</option><option>Other</option>
             </select>
-
             <label>Describe the problem <span className="req">*</span></label>
-            <textarea
-              required
-              minLength={10}
-              value={form.problem_description}
-              onChange={(event) => update('problem_description', event.target.value)}
-              placeholder="Please describe the issue, when it started and any error indication..."
-            />
-
+            <textarea className="customerInput customerTextarea" required minLength={10} value={form.problem_description} onChange={event => update('problem_description', event.target.value)} placeholder="Describe the issue, when it started and any error indication..." />
             <label>Preferred service visit date</label>
-            <input type="date" value={form.preferred_visit_date} onChange={(event) => update('preferred_visit_date', event.target.value)} />
-
+            <input className="customerInput" type="date" value={form.preferred_visit_date} onChange={event => update('preferred_visit_date', event.target.value)} />
             <label>Preferred contact time</label>
-            <select value={form.preferred_contact_time} onChange={(event) => update('preferred_contact_time', event.target.value)}>
-              <option>Any time</option>
-              <option>9 AM – 12 PM</option>
-              <option>12 PM – 3 PM</option>
-              <option>3 PM – 6 PM</option>
-              <option>6 PM – 8 PM</option>
+            <select className="customerInput" value={form.preferred_contact_time} onChange={event => update('preferred_contact_time', event.target.value)}>
+              <option>Any time</option><option>9 AM – 12 PM</option><option>12 PM – 3 PM</option><option>3 PM – 6 PM</option><option>6 PM – 8 PM</option>
             </select>
           </section>
 
-          <section className="card">
-            <h2>Service location</h2>
-            <p>We have pre-filled the registered address. Change it if the product is currently at another location.</p>
-
+          <section className="customerSection">
+            <span className="customerBadge">Service location</span>
+            <h2>Where should we visit?</h2>
+            <p>Your registered address is pre-filled. Change it if the product is elsewhere.</p>
             <label>Address <span className="req">*</span></label>
-            <textarea required value={form.service_address} onChange={(event) => update('service_address', event.target.value)} />
-
-            <div className="meta">
-              <div>
-                <label>City <span className="req">*</span></label>
-                <input required value={form.service_city} onChange={(event) => update('service_city', event.target.value)} />
-              </div>
-              <div>
-                <label>PIN code <span className="req">*</span></label>
-                <input
-                  required
-                  inputMode="numeric"
-                  pattern="[0-9]{6}"
-                  value={form.service_pin}
-                  onChange={(event) => update('service_pin', event.target.value.replace(/\D/g, ''))}
-                />
-              </div>
+            <textarea className="customerInput customerTextarea" required value={form.service_address} onChange={event => update('service_address', event.target.value)} />
+            <div className="customerFormGrid">
+              <div><label>City <span className="req">*</span></label><input className="customerInput" required value={form.service_city} onChange={event => update('service_city', event.target.value)} /></div>
+              <div><label>PIN code <span className="req">*</span></label><input className="customerInput" required inputMode="numeric" pattern="[0-9]{6}" value={form.service_pin} onChange={event => update('service_pin', event.target.value.replace(/\D/g, ''))} /></div>
             </div>
-
             <label>State <span className="req">*</span></label>
-            <input required value={form.service_state} onChange={(event) => update('service_state', event.target.value)} />
+            <input className="customerInput" required value={form.service_state} onChange={event => update('service_state', event.target.value)} />
           </section>
 
-          {error && <div className="note">{error}</div>}
-
-          <button className="btn primary" disabled={saving}>
-            {saving ? 'Registering complaint…' : 'Submit Service Complaint →'}
-          </button>
+          {error && <div className="customerError">{error}</div>}
+          <button className="customerButton customerButtonPrimary customerSubmit" disabled={saving} type="submit">{saving ? 'Registering complaint…' : 'Submit Service Complaint'} <span>→</span></button>
         </form>
       </main>
-
-      <footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
+      <PortalFooter />
     </div>
   )
 }
 
 function ComplaintPageFallback() {
-  return (
-    <div className="app">
-      <main>
-        <section className="card"><p>Loading service complaint form…</p></section>
-      </main>
-    </div>
-  )
+  return <div className="app customerPage"><PortalHeader /><main className="customerMain"><section className="customerSection"><p className="customerStatus">Loading service complaint form…</p></section></main><PortalFooter /></div>
 }
 
 export default function ComplaintPage() {
-  return (
-    <Suspense fallback={<ComplaintPageFallback />}>
-      <ComplaintPageContent />
-    </Suspense>
-  )
+  return <Suspense fallback={<ComplaintPageFallback />}><ComplaintPageContent /></Suspense>
 }
