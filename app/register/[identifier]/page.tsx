@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabase, supabaseConfigError } from '@/lib/supabase'
 
 type Product = {
   product_id: string
@@ -24,30 +23,46 @@ export default function RegisterProductPage() {
 
   useEffect(() => {
     const identifier = decodeURIComponent(params.identifier)
+
     async function load() {
-      if (supabaseConfigError) {
-        setError(supabaseConfigError)
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+
+      if (!supabaseUrl || !publishableKey) {
+        setError('Product verification is temporarily unavailable. Please try again later.')
         setLoading(false)
         return
       }
 
       try {
-        const { data, error } = await supabase.rpc('get_product_for_registration', { identifier })
-        if (error) {
-          console.error(error)
+        const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_product_for_registration`, {
+          method: 'POST',
+          headers: {
+            apikey: publishableKey,
+            Authorization: `Bearer ${publishableKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ identifier }),
+        })
+
+        const body = await response.json().catch(() => null)
+
+        if (!response.ok) {
+          console.error('Product RPC failed:', response.status, body)
           setError('We could not verify this product. Please try again.')
-        } else if (!data?.length) {
+        } else if (!Array.isArray(body) || body.length === 0) {
           setError('Product not found. Please check the QR code and try again.')
         } else {
-          setProduct(data[0] as Product)
+          setProduct(body[0] as Product)
         }
       } catch (e) {
-        console.error(e)
+        console.error('Product verification request failed:', e)
         setError('Unable to connect to the product verification service. Please try again.')
       } finally {
         setLoading(false)
       }
     }
+
     load()
   }, [params.identifier])
 
