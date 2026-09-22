@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
 type Warranty = {
   registration_number: string
@@ -41,12 +42,62 @@ export default function WarrantyVerificationPage() {
     return () => { active = false }
   }, [registration])
 
-  return <div className="app"><header><div style={{fontWeight:800,fontSize:28,letterSpacing:1}}>OLITEC</div><div className="lang">Warranty Verification</div></header><main>
-    {loading ? <section className="card"><p>Verifying warranty registration…</p></section> : error ? <section className="card"><span className="badge">Verification unavailable</span><h1 style={{marginTop:14}}>Please try again</h1><p>{error}</p></section> : !data ? <section className="card"><span className="badge">Not verified</span><h1 style={{marginTop:14}}>Registration not found</h1><p>Please check the QR code or registration number and try again.</p></section> : <section className="card success">
-      <div className="check">✓</div><span className="badge">Verified OLITEC Registration</span><h1 style={{marginTop:16}}>Warranty verified</h1>
-      <div className="note" style={{marginTop:18,textAlign:'left'}}><div className="reviewRow"><span>Registration</span><b>{data.registration_number}</b></div><div className="reviewRow"><span>Serial number</span><b>{data.serial_number}</b></div><div className="reviewRow"><span>Model</span><b>{data.model_code}</b></div><div className="reviewRow"><span>Capacity</span><b>{data.capacity_kw} kW</b></div><div className="reviewRow"><span>Warranty period</span><b>{fmt(data.warranty_start_date)} – {fmt(data.warranty_end_date)}</b></div><div className="reviewRow"><span>Status</span><b>{data.status === 'active' ? 'Active' : data.status}</b></div></div>
-      <p style={{marginTop:18}}>This page verifies that the registration number is recorded in the OLITEC warranty system.</p>
-      <button className="btn primary" style={{marginTop:10}} onClick={() => window.location.href = `/service/complaint?registration=${encodeURIComponent(data.registration_number)}`}>Register a Service Complaint →</button>
-    </section>}
-  </main><footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer></div>
+  return (
+    <div className="app customerPage">
+      <PortalHeader />
+      <main className="customerMain">
+        <button className="customerBack" type="button" onClick={() => (window.location.href = '/warranty')}>← Warranty Lookup</button>
+        <section className="customerHero compactHero">
+          <span className="customerEyebrow">WARRANTY VERIFICATION</span>
+          <h1>Warranty status.</h1>
+          <p>Here is the current warranty information for this OLITEC registration.</p>
+        </section>
+
+        {loading && <section className="customerSection"><p className="customerStatus">Verifying warranty registration…</p></section>}
+
+        {!loading && error && (
+          <section className="customerSection">
+            <span className="customerBadge customerBadgeWarning">Verification unavailable</span>
+            <h2>We could not verify this registration.</h2>
+            <p>{error}</p>
+            <button className="customerButton customerButtonPrimary" type="button" onClick={() => window.location.reload()}>Try Again <span>→</span></button>
+          </section>
+        )}
+
+        {!loading && !error && !data && (
+          <section className="customerSection">
+            <span className="customerBadge">Not verified</span>
+            <h2>Registration not found.</h2>
+            <p>Please check the QR code or registration number and try again.</p>
+            <button className="customerButton customerButtonPrimary" type="button" onClick={() => (window.location.href = '/warranty')}>Check Another Registration <span>→</span></button>
+          </section>
+        )}
+
+        {!loading && !error && data && (
+          <>
+            <section className="customerSection warrantyResult">
+              <div className="customerCheck">✓</div>
+              <span className="customerBadge customerBadgeSuccess">Verified OLITEC Registration</span>
+              <h2>Warranty verified</h2>
+              <p>Your registration is recorded in the OLITEC warranty system.</p>
+
+              <div className="customerInfoList">
+                <div><span>Registration</span><strong>{data.registration_number}</strong></div>
+                <div><span>Serial number</span><strong>{data.serial_number}</strong></div>
+                <div><span>Model</span><strong>{data.model_code}</strong></div>
+                <div><span>Capacity</span><strong>{data.capacity_kw} kW</strong></div>
+                <div><span>Warranty period</span><strong>{fmt(data.warranty_start_date)} – {fmt(data.warranty_end_date)}</strong></div>
+                <div><span>Status</span><strong className="statusActive">{data.status === 'active' ? 'Active' : data.status}</strong></div>
+              </div>
+
+              <button className="customerButton customerButtonPrimary" type="button" onClick={() => window.location.href = `/service/complaint?registration=${encodeURIComponent(data.registration_number)}`}>
+                Register a Service Complaint <span>→</span>
+              </button>
+            </section>
+          </>
+        )}
+      </main>
+      <PortalFooter />
+    </div>
+  )
 }
