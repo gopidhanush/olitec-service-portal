@@ -13,6 +13,7 @@ export default function QRScanner({ onClose }: { onClose?: () => void }) {
 
   useEffect(() => {
     let mounted = true
+    let handled = false
     const reader = new BrowserQRCodeReader()
 
     async function start() {
@@ -22,8 +23,10 @@ export default function QRScanner({ onClose }: { onClose?: () => void }) {
           { video: { facingMode: { ideal: 'environment' } } },
           videoRef.current,
           (result) => {
-            if (!mounted || !result) return
-            let identifier = result.getText()
+            if (!mounted || !result || handled) return
+            handled = true
+
+            let identifier = result.getText().trim()
             try {
               const url = new URL(identifier)
               const parts = url.pathname.split('/').filter(Boolean)
@@ -32,8 +35,9 @@ export default function QRScanner({ onClose }: { onClose?: () => void }) {
                 ? parts[i + 1]
                 : url.searchParams.get('qr') || url.searchParams.get('serial') || identifier
             } catch {}
+
             controlsRef.current?.stop()
-            router.push(`/register/${encodeURIComponent(identifier)}`)
+            router.push(`/register?identifier=${encodeURIComponent(identifier)}`)
           }
         )
         controlsRef.current = controls
