@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import './customer-portal.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
