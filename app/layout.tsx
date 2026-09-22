@@ -4,6 +4,7 @@ import './customer-portal.css'
 import './portal-final-overrides.css'
 import './home-redesign.css'
 import './mobile-home.css'
+import './supporting-pages.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
