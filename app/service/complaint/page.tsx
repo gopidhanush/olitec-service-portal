@@ -88,7 +88,7 @@ function ComplaintPageContent() {
 
   if (loading) return <div className="app"><main><section className="card"><p>Loading warranty details…</p></section></main></div>
 
-  if (submitted) return <div className="app"><header><div style={{fontWeight:800,fontSize:28,letterSpacing:1}}>OLITEC</div><div className="lang">Service Support</div></header><main><section className="card success"><div className="check">✓</div><span className="badge">Complaint received</span><h1 style={{marginTop:16}}>We're on it</h1><p>Your service complaint has been registered successfully.</p><div className="note" style={{marginTop:18}}><b>Complaint Number</b><br/><strong style={{fontSize:24}}>{submitted.complaint_number}</strong><br/><small>Keep this number for tracking and future communication.</small></div><div className="note" style={{marginTop:12,textAlign:'left'}}><div className="reviewRow"><span>Registration</span><b>{registration}</b></div><div className="reviewRow"><span>Serial number</span><b>{context?.serial_number}</b></div><div className="reviewRow"><span>Status</span><b>Received</b></div></div><button className="btn primary" style={{marginTop:18}} onClick={() => window.location.href = `/warranty/${encodeURIComponent(registration)}`}>Back to Warranty</button></section></main><footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer></div>
+  if (submitted) return <div className="app"><header><div style={{fontWeight:800,fontSize:28,letterSpacing:1}}>OLITEC</div><div className="lang">Service Support</div></header><main><section className="card success"><div className="check">✓</div><span className="badge">Complaint received</span><h1 style={{marginTop:16}}>We're on it</h1><p>Your service complaint has been registered successfully.</p><div className="note" style={{marginTop:18}}><b>Complaint Number</b><br/><strong style={{fontSize:24}}>{submitted.complaint_number}</strong><br/><small>Keep this number for tracking and future communication.</small></div><div className="note" style={{marginTop:12,textAlign:'left'}}><div className="reviewRow"><span>Registration</span><b>{registration}</b></div><div className="reviewRow"><span>Serial number</span><b>{context?.serial_number}</b></div><div className="reviewRow"><span>Status</span><b>Received</b></div></div><button className="btn primary" style={{marginTop:18}} onClick={() => window.location.href = `/service/track?complaint=${encodeURIComponent(submitted.complaint_number)}`}>Track This Complaint →</button><button className="btn" style={{marginTop:10}} onClick={() => window.location.href = `/warranty/${encodeURIComponent(registration)}`}>Back to Warranty</button></section></main><footer>OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer></div>
 
   if (error || !context) return <div className="app"><main><section className="card"><span className="badge">Service Support</span><h1 style={{marginTop:14}}>Unable to continue</h1><p>{error}</p></section></main></div>
 
@@ -116,7 +116,7 @@ function ComplaintPageContent() {
 }
 
 function ComplaintPageFallback() {
-  return <div className="app"><main><section className="card"><p>Loading service complaint form…</p></section></main></div>
+  return <div className="app"><main><section className="card"><p>Loading service complaint form…</p></section></div>
 }
 
 export default function ComplaintPage() {
