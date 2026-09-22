@@ -156,8 +156,6 @@ revoke all on function public.create_service_complaint(text, jsonb) from public;
 grant execute on function public.create_service_complaint(text, jsonb) to anon, authenticated;
 
 -- Customer-safe complaint tracking lookup.
--- It intentionally returns service-tracking fields only; it does not expose
--- customer phone, email, or full address through this public RPC.
 create or replace function public.get_complaint_tracking(p_complaint_number text)
 returns table (
   complaint_number text,
@@ -200,3 +198,112 @@ $$;
 
 revoke all on function public.get_complaint_tracking(text) from public;
 grant execute on function public.get_complaint_tracking(text) to anon, authenticated;
+
+-- ============================================================
+-- Protected OLITEC service-admin access
+-- ============================================================
+
+create table if not exists public.service_admins (
+  email text primary key,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table public.service_admins enable row level security;
+revoke all on public.service_admins from anon, authenticated;
+
+create or replace function public.get_service_admin_complaints()
+returns table (
+  complaint_number text,
+  registration_number text,
+  serial_number text,
+  model_code text,
+  product_name text,
+  full_name text,
+  mobile text,
+  complaint_type text,
+  problem_description text,
+  status text,
+  preferred_visit_date date,
+  preferred_contact_time text,
+  service_city text,
+  service_state text,
+  created_at timestamptz
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1
+    from public.service_admins as sa
+    where lower(sa.email) = lower(auth.email())
+      and sa.active = true
+  ) then
+    raise exception 'SERVICE_ADMIN_UNAUTHORIZED';
+  end if;
+
+  return query
+    select
+      sc.complaint_number,
+      sc.registration_number,
+      sc.serial_number,
+      sc.model_code,
+      sc.product_name,
+      sc.full_name,
+      sc.mobile,
+      sc.complaint_type,
+      sc.problem_description,
+      sc.status,
+      sc.preferred_visit_date,
+      sc.preferred_contact_time,
+      sc.service_city,
+      sc.service_state,
+      sc.created_at
+    from public.service_complaints as sc
+    where sc.status <> 'cancelled'
+    order by sc.created_at desc;
+end;
+$$;
+
+revoke all on function public.get_service_admin_complaints() from public;
+grant execute on function public.get_service_admin_complaints() to authenticated;
+
+create or replace function public.update_service_complaint_status(
+  p_complaint_number text,
+  p_status text
+)
+returns table (
+  complaint_number text,
+  status text
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1
+    from public.service_admins as sa
+    where lower(sa.email) = lower(auth.email())
+      and sa.active = true
+  ) then
+    raise exception 'SERVICE_ADMIN_UNAUTHORIZED';
+  end if;
+
+  if p_status not in ('received','assigned','technician_visit','under_service','resolved','closed') then
+    raise exception 'INVALID_SERVICE_STATUS';
+  end if;
+
+  return query
+    update public.service_complaints as sc
+    set status = p_status
+    where upper(trim(sc.complaint_number)) = upper(trim(p_complaint_number))
+      and sc.status <> 'cancelled'
+    returning sc.complaint_number, sc.status;
+end;
+$$;
+
+revoke all on function public.update_service_complaint_status(text, text) from public;
+grant execute on function public.update_service_complaint_status(text, text) to authenticated;
