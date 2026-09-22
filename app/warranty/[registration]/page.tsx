@@ -11,12 +11,8 @@ export default function WarrantyVerificationPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase
-      .from('warranty_registrations')
-      .select('registration_number,serial_number,model_code,product_name,capacity_kw,warranty_months,warranty_start_date,warranty_end_date,status')
-      .eq('registration_number', registration)
-      .maybeSingle()
-      .then(({ data }) => { setData(data); setLoading(false) })
+    supabase.rpc('get_warranty_verification', { p_registration_number: registration })
+      .then(({ data }) => { setData(data?.[0] || null); setLoading(false) })
   }, [registration])
 
   const fmt = (v: string) => v ? new Date(v + 'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'
