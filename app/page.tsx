@@ -13,29 +13,50 @@ export default function HomePage() {
     <div className="app customerPage customerHome">
       <PortalHeader />
       <main className="customerMain">
-        <section className="customerHero">
-          <span className="customerEyebrow">OLITEC SERVICE PORTAL</span>
-          <h1>Product care, made simple.</h1>
-          <p>Register your inverter, check warranty and get service support in a few simple steps.</p>
+        <section className="portalHomeHero">
+          <div className="portalHomeCopy">
+            <h1>Your Inverter<br />Support Portal</h1>
+            <p>Register, check warranty and get service support — all in one place.</p>
+            <span className="portalAccent" />
+          </div>
+          <div className="portalProductVisual" aria-hidden="true">
+            <div className="portalPlant" />
+            <div className="portalInverter"><div className="portalScreen" /></div>
+          </div>
         </section>
-        <section className="customerSection customerRegistrationCard">
-          <span className="customerBadge">Product Registration</span>
-          <h2>Register your OLITEC product</h2>
-          <p>Scan the QR code on your inverter to identify your product and activate warranty.</p>
-          {scannerOpen ? <div className="customerScannerWrap"><QRScanner onClose={() => setScannerOpen(false)} /></div> : <button className="customerButton customerButtonPrimary" type="button" onClick={() => setScannerOpen(true)}>Scan QR Code <span>→</span></button>}
-          <button className="customerTextButton" type="button" onClick={() => router.push('/register')}>Enter serial number manually</button>
+
+        <section className="portalHomeCards" aria-label="OLITEC customer services">
+          <button className="portalTile portalTileGreen" type="button" onClick={() => router.push('/register')}>
+            <span className="portalTileIcon">⌗</span>
+            <h2>Product Registration</h2>
+            <p>Scan QR code or enter serial number</p>
+            <span className="portalTileArrow">→</span>
+          </button>
+          <button className="portalTile portalTileBlue" type="button" onClick={() => router.push('/warranty')}>
+            <span className="portalTileIcon">♢</span>
+            <h2>Warranty Status</h2>
+            <p>Check your warranty details</p>
+            <span className="portalTileArrow">→</span>
+          </button>
+          <button className="portalTile portalTileOrange" type="button" onClick={() => router.push('/service/complaint/start')}>
+            <span className="portalTileIcon">⌁</span>
+            <h2>Register Complaint</h2>
+            <p>Report a problem with your product</p>
+            <span className="portalTileArrow">→</span>
+          </button>
+          <button className="portalTile portalTilePurple" type="button" onClick={() => router.push('/service/track')}>
+            <span className="portalTileIcon">▤</span>
+            <h2>Complaint Status</h2>
+            <p>Track your service complaint</p>
+            <span className="portalTileArrow">→</span>
+          </button>
         </section>
-        <div className="customerGrid">
-          <button className="customerSection customerActionCard" type="button" onClick={() => router.push('/warranty')}>
-            <span className="customerBadge">Warranty</span><h2>Warranty Status</h2><p>Check whether your OLITEC warranty is active.</p><span className="customerButton customerButtonSecondary">Check Warranty <span>→</span></span>
-          </button>
-          <button className="customerSection customerActionCard" type="button" onClick={() => router.push('/service/complaint/start')}>
-            <span className="customerBadge">Service</span><h2>Register Complaint</h2><p>Report a problem with your registered OLITEC product.</p><span className="customerButton customerButtonSecondary">Register Complaint <span>→</span></span>
-          </button>
-          <button className="customerSection customerActionCard customerActionWide" type="button" onClick={() => router.push('/service/track')}>
-            <span className="customerBadge">Service Support</span><h2>Complaint Status</h2><p>Track the latest status of an existing service complaint.</p><span className="customerButton customerButtonPrimary">Track Complaint <span>→</span></span>
-          </button>
-        </div>
+
+        {scannerOpen && (
+          <section className="customerSection customerScannerWrap">
+            <QRScanner onClose={() => setScannerOpen(false)} />
+          </section>
+        )}
       </main>
       <PortalFooter />
     </div>
