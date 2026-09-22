@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import QRCode from 'qrcode'
 import { jsPDF } from 'jspdf'
 import { supabase } from '@/lib/supabase'
@@ -12,25 +12,43 @@ const fmt = (v: string) => v ? new Date(v + 'T00:00:00').toLocaleDateString('en-
 export default function RegistrationSuccessPage() {
   const router = useRouter()
   const params = useParams<{ identifier: string }>()
-  const searchParams = useSearchParams()
   const [product, setProduct] = useState<Product | null>(null)
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [downloading, setDownloading] = useState(false)
+  const [registrationNumber, setRegistrationNumber] = useState('')
+  const [warrantyStart, setWarrantyStart] = useState('')
+  const [warrantyEnd, setWarrantyEnd] = useState('')
+  const [loading, setLoading] = useState(true)
   const serial = decodeURIComponent(params.identifier)
-  const registrationNumber = searchParams.get('registration') || ''
-  const warrantyStart = searchParams.get('start') || ''
-  const warrantyEnd = searchParams.get('end') || ''
-  const registrationUrl = typeof window !== 'undefined' && registrationNumber ? `${window.location.origin}/warranty/${encodeURIComponent(registrationNumber)}` : ''
 
   useEffect(() => {
     async function load() {
-      const { data } = await supabase.rpc('get_product_for_registration', { identifier: serial })
-      const p = data?.[0] as Product | undefined
-      if (p) setProduct(p)
-      if (registrationUrl) setQrDataUrl(await QRCode.toDataURL(registrationUrl, { width: 420, margin: 2, errorCorrectionLevel: 'M' }))
+      try {
+        const params = new URLSearchParams(window.location.search)
+        const registration = params.get('registration') || ''
+        const start = params.get('start') || ''
+        const end = params.get('end') || ''
+        setRegistrationNumber(registration)
+        setWarrantyStart(start)
+        setWarrantyEnd(end)
+
+        const { data } = await supabase.rpc('get_product_for_registration', { identifier: serial })
+        const p = data?.[0] as Product | undefined
+        if (p) setProduct(p)
+
+        if (registration) {
+          const url = `${window.location.origin}/warranty/${encodeURIComponent(registration)}`
+          const qr = await QRCode.toDataURL(url, { width: 420, margin: 2, errorCorrectionLevel: 'M' })
+          setQrDataUrl(qr)
+        }
+      } catch (error) {
+        console.error('Warranty card initialization failed:', error)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
-  }, [registrationUrl, serial])
+  }, [serial])
 
   async function downloadWarrantyCard() {
     if (!qrDataUrl || !registrationNumber) return
@@ -52,11 +70,12 @@ export default function RegistrationSuccessPage() {
       doc.setDrawColor(225,225,225); doc.line(16,96,128,96)
       doc.setFontSize(8.5); doc.setTextColor(105,112,125); doc.text('Scan the QR code to verify this registration.',16,105); doc.text('Keep this warranty card and your purchase invoice safely.',16,111)
       doc.setFont('helvetica','bold'); doc.setTextColor(23,32,51); doc.text('OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow',16,129)
-      doc.addImage(qrDataUrl,'PNG',153,42,38,38); doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(105,112,125); doc.text('Registration QR',163,85,{align:'center'})
+      doc.addImage(qrDataUrl,'PNG',153,42,38,38); doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(105,112,125); doc.text('Registration QR',172,85,{align:'center'})
       doc.save(`${registrationNumber}-OLITEC-Warranty-Card.pdf`)
     } finally { setDownloading(false) }
   }
 
+  if (loading) return <div className="app"><main><section className="card"><p>Preparing your warranty registration…</p></section></main></div>
   if (!registrationNumber) return <div className="app"><main><section className="card"><h2>Registration details unavailable</h2><p>Please complete the registration again.</p><button className="btn primary" onClick={() => router.push(`/register/${encodeURIComponent(serial)}/purchase`)}>Register Product</button></section></main></div>
 
   return <div className="app"><header><div style={{fontWeight:800,fontSize:28,letterSpacing:1}}>OLITEC</div></header><main>
