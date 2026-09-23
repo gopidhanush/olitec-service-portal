@@ -1,0 +1,46 @@
+/* Final customer portal layout pass — desktop spacing, shared header and compact status pages. */
+
+/* Remove the legacy support block that was being injected by the old layout CSS. */
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::before,
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Consistent desktop boundary spacing for every customer-facing tab. */
+.customerPage:not(.customerHome){
+  box-sizing:border-box;
+  padding-inline:20px;
+}
+.customerPage:not(.customerHome) .customerHeader,
+.customerPage:not(.customerHome) .customerMain{
+  width:min(1100px,100%)!important;
+}
+.customerPage:not(.customerHome) .customerHeader{height:72px!important}
+.customerPage:not(.customerHome) .customerMain{padding-bottom:34px!important}
+.customerPage:not(.customerHome) .customerSplitLayout{gap:18px!important}
+
+/* Complaint-status page should grow only to its actual content. */
+.portalTrackPage .customerSection.customerFormPanel{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+  padding-bottom:28px!important;
+}
+.portalTrackPage .customerSection.customerFormPanel form{margin-top:14px!important}
+.portalTrackPage .customerResults{margin-top:18px!important}
+.portalTrackPage .customerStatusCard{min-height:0!important}
+
+/* Result/detail cards use the same compact vertical rhythm. */
+.portalWarrantyPage .warrantyResult,
+.portalTrackPage .cleanPageCard,
+.portalComplaintPage .cleanPageCard{min-height:0!important}
+
+.customerPage:not(.customerHome) .customerLogo img{display:block!important}
+
+@media(max-width:900px){
+  .customerPage:not(.customerHome){padding-inline:12px}
+  .customerPage:not(.customerHome) .customerHeader{height:64px!important}
+  .customerPage:not(.customerHome) .customerMain{padding-bottom:24px!important}
+}
+@media(max-width:600px){.customerPage:not(.customerHome){padding-inline:0}}
