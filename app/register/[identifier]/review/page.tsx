@@ -90,7 +90,7 @@ export default function RegistrationReviewPage() {
   }
 
   if(loading) return <div className="rrPage"><PortalHeader/><main className="rrMain"><div className="rrCard rrLoading">Loading review…</div></main></div>
-  if(error&&!product) return <div className="rrPage"><PortalHeader/><main className="rrMain"><section className="rrCard"><span className="rrBadge rrBadgeWarn">Unable to continue</span><h2>Review could not be loaded.</h2><p>{error}</p><button className="rrButton" onClick={()=>router.back()}>Go Back <span>→</span></button></section></main></div>
+  if(error&&!product) return <div className="rrPage"><PortalHeader/><main className="rrMain"><section className="rrCard"><span className="rrBadge rrBadgeWarn">Unable to continue</span><h2>Review could not be loaded.</h2><p>{error}</p><button className="rrConfirm" onClick={()=>router.back()}>Go Back <span>→</span></button></section></main></div>
 
   return <div className="rrPage">
     <PortalHeader/>

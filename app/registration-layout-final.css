@@ -6,10 +6,10 @@
 .customerSteps{width:100%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;align-items:start!important;gap:8px!important;margin:0 0 16px!important}
 .customerSteps span{display:block!important;min-width:0!important;text-align:center!important;line-height:1.25!important;white-space:nowrap!important}
 
-.customerHero,.customerHero.compactHero{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;box-sizing:border-box!important;overflow:visible!important;padding:26px 28px 28px!important;margin:0 0 16px!important;border-radius:22px!important}
-.customerHero .customerEyebrow{display:inline-flex!important;width:max-content!important;max-width:100%!important;white-space:nowrap!important}
-.customerHero h1{display:block!important;width:100%!important;max-width:760px!important;font-size:48px!important;line-height:1.02!important;letter-spacing:-.045em!important;margin:12px 0 10px!important;overflow:visible!important;white-space:normal!important}
-.customerHero p{display:block!important;width:100%!important;max-width:680px!important;font-size:15px!important;line-height:1.5!important;margin:0!important;overflow:visible!important}
+.customerHero.compactHero{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;box-sizing:border-box!important;overflow:visible!important;padding:26px 28px 28px!important;margin:0 0 16px!important;border-radius:22px!important}
+.customerHero.compactHero .customerEyebrow{display:inline-flex!important;width:max-content!important;max-width:100%!important;white-space:nowrap!important}
+.customerHero.compactHero h1{display:block!important;width:100%!important;max-width:760px!important;font-size:48px!important;line-height:1.02!important;letter-spacing:-.045em!important;margin:12px 0 10px!important;overflow:visible!important;white-space:normal!important}
+.customerHero.compactHero p{display:block!important;width:100%!important;max-width:680px!important;font-size:15px!important;line-height:1.5!important;margin:0!important;overflow:visible!important}
 
 .customerSection{width:100%!important;box-sizing:border-box!important;padding:22px!important;margin:0 0 14px!important;overflow:visible!important;border-radius:20px!important}
 .customerSection>.customerBadge{display:inline-flex!important;width:max-content!important;max-width:100%!important;justify-self:start!important;align-self:start!important;white-space:nowrap!important;line-height:1.2!important}
@@ -53,9 +53,9 @@
 
 @media(max-width:640px){
   .customerMain{width:calc(100% - 24px)!important;padding-bottom:28px!important}
-  .customerHero,.customerHero.compactHero,.customerSection{padding:18px!important;border-radius:17px!important}
-  .customerHero h1{font-size:36px!important;line-height:1.04!important;letter-spacing:-.04em!important}
-  .customerHero p{font-size:14px!important}
+  .customerHero.compactHero,.customerSection{padding:18px!important;border-radius:17px!important}
+  .customerHero.compactHero h1{font-size:36px!important;line-height:1.04!important;letter-spacing:-.04em!important}
+  .customerHero.compactHero p{font-size:14px!important}
   .customerFormGrid{grid-template-columns:1fr!important;gap:0!important}
   .customerProductSummary{grid-template-columns:1fr!important;grid-template-rows:auto!important;gap:9px!important;text-align:left!important}
   .customerProductSummary .customerProductImage{grid-column:1!important;grid-row:auto!important;margin:0 auto 2px!important}

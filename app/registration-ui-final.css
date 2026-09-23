@@ -11,9 +11,9 @@
 /* Keep the registration content in a predictable vertical flow. */
 .customerPage .customerMain{width:min(860px,calc(100% - 32px))!important;margin:0 auto!important;padding:8px 0 32px!important}
 .customerPage .customerBack{position:static!important;display:block!important;width:max-content!important;max-width:100%!important;margin:0 0 12px!important;padding:4px 0 8px!important;line-height:1.35!important}
-.customerPage .customerHero,.customerPage .customerHero.compactHero{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0 0 16px!important;padding:26px 28px 28px!important;overflow:visible!important;box-sizing:border-box!important}
-.customerPage .customerHero h1{width:100%!important;max-width:760px!important;margin:12px 0 10px!important;font-size:48px!important;line-height:1.02!important;overflow:visible!important;white-space:normal!important;word-break:normal!important}
-.customerPage .customerHero p{width:100%!important;max-width:680px!important;margin:0!important;font-size:15px!important;line-height:1.5!important;overflow:visible!important}
+.customerPage .customerHero.compactHero{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0 0 16px!important;padding:26px 28px 28px!important;overflow:visible!important;box-sizing:border-box!important}
+.customerPage .customerHero.compactHero h1{width:100%!important;max-width:760px!important;margin:12px 0 10px!important;font-size:48px!important;line-height:1.02!important;overflow:visible!important;white-space:normal!important;word-break:normal!important}
+.customerPage .customerHero.compactHero p{width:100%!important;max-width:680px!important;margin:0!important;font-size:15px!important;line-height:1.5!important;overflow:visible!important}
 
 /* Every form card gets a stable box model. */
 .customerPage .customerSection{position:relative!important;width:100%!important;box-sizing:border-box!important;margin:0 0 14px!important;padding:22px!important;overflow:visible!important}
@@ -60,9 +60,9 @@
 
 @media(max-width:640px){
   .customerPage .customerMain{width:calc(100% - 24px)!important;padding-bottom:24px!important}
-  .customerPage .customerHero,.customerPage .customerHero.compactHero,.customerPage .customerSection{padding:18px!important;border-radius:17px!important}
-  .customerPage .customerHero h1{font-size:36px!important;line-height:1.04!important}
-  .customerPage .customerHero p{font-size:14px!important}
+  .customerPage .customerHero.compactHero,.customerPage .customerSection{padding:18px!important;border-radius:17px!important}
+  .customerPage .customerHero.compactHero h1{font-size:36px!important;line-height:1.04!important}
+  .customerPage .customerHero.compactHero p{font-size:14px!important}
   .customerPage .customerFormGrid{grid-template-columns:1fr!important;gap:0!important}
   .customerPage .customerProductSummary{grid-template-columns:1fr!important;grid-template-rows:auto auto auto auto auto!important;grid-template-areas:"image" "badge" "title" "description" "warranty";gap:9px!important;text-align:left!important}
   .customerPage .customerProductSummary .customerProductImage{width:132px!important;height:132px!important;min-width:132px!important;margin:0 auto!important}

@@ -6,9 +6,9 @@
 .customerMain{width:min(860px,calc(100% - 32px));margin:0 auto!important;padding:8px 0 36px!important}
 .customerBack{margin:0 0 10px!important;padding:4px 0 10px!important}
 .customerSteps{margin:2px 0 14px!important}
-.customerHero,.customerHero.compactHero{min-height:0!important;height:auto!important;padding:24px 26px!important;margin-bottom:14px!important;overflow:visible!important}
-.customerHero h1{max-width:720px;margin:10px 0 7px!important;line-height:1.08!important;overflow:visible!important}
-.customerHero p{max-width:650px}
+.customerHero.compactHero{min-height:0!important;height:auto!important;padding:24px 26px!important;margin-bottom:14px!important;overflow:visible!important}
+.customerHero.compactHero h1{max-width:720px;margin:10px 0 7px!important;line-height:1.08!important;overflow:visible!important}
+.customerHero.compactHero p{max-width:650px}
 .customerSection{padding:22px!important;margin-bottom:14px!important;overflow:visible!important}
 .customerSection h2{margin:9px 0 7px!important;line-height:1.18!important;overflow:visible!important}
 .customerSection label{margin-top:13px!important}
@@ -50,4 +50,4 @@
 .portalProductPage .customerHeroImage img{width:100%;height:100%;min-height:280px;display:block;object-fit:cover;object-position:center}
 .portalProductPage .customerFormPanel{align-self:start}
 @media(max-width:900px){.portalProductPage .customerSplitLayout{grid-template-columns:1fr}.portalProductPage .customerHeroImage{min-height:240px}.portalProductPage .customerHeroImage img{min-height:240px}}
-@media(max-width:640px){.customerHeader{width:calc(100% - 28px);padding:14px 0 10px!important}.customerHeaderRight{gap:10px!important}.olitecExactPortal{display:none!important}.customerMain{width:calc(100% - 24px);padding-bottom:24px!important}.customerHero,.customerHero.compactHero,.customerSection{padding:18px!important;border-radius:17px!important}.customerVerificationCard,.customerProductSummary{grid-template-columns:1fr!important}.customerVerificationImage{width:150px;height:150px;margin:0 auto 2px}.customerProductSummary .customerProductImage{grid-row:auto;margin:0 auto 4px}.customerProductSummary .customerBadge,.customerProductSummary h2,.customerProductSummary p{grid-column:1}.customerInfoList strong,.customerInfoListRow strong{max-width:58%}.customerSuccessProduct{grid-template-columns:72px minmax(0,1fr)}.customerSuccessProductImage{width:72px;height:72px}}
+@media(max-width:640px){.customerHeader{width:calc(100% - 28px);padding:14px 0 10px!important}.customerHeaderRight{gap:10px!important}.olitecExactPortal{display:none!important}.customerMain{width:calc(100% - 24px);padding-bottom:24px!important}.customerHero.compactHero,.customerSection{padding:18px!important;border-radius:17px!important}.customerVerificationCard,.customerProductSummary{grid-template-columns:1fr!important}.customerVerificationImage{width:150px;height:150px;margin:0 auto 2px}.customerProductSummary .customerProductImage{grid-row:auto;margin:0 auto 4px}.customerProductSummary .customerBadge,.customerProductSummary h2,.customerProductSummary p{grid-column:1}.customerInfoList strong,.customerInfoListRow strong{max-width:58%}.customerSuccessProduct{grid-template-columns:72px minmax(0,1fr)}.customerSuccessProductImage{width:72px;height:72px}}
