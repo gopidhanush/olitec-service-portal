@@ -1,27 +1,300 @@
-/* Final visual consistency for registration / purchase / review / success screens */
-.app:not(.adminPage):not(.customerPage){max-width:720px!important;margin:0 auto!important;min-height:100vh;background:#fff!important;box-shadow:none!important;color:#07183d}.app:not(.adminPage):not(.customerPage)>header{padding:24px 30px 14px!important;background:#fff!important;border:0!important}.app:not(.adminPage):not(.customerPage)>header .lang{display:none!important}.app:not(.adminPage):not(.customerPage)>header:after{content:'POWERING A BETTER TOMORROW';display:block;position:absolute;margin:31px 0 0 1px;font-size:7px;letter-spacing:.23em;color:#58708d;font-weight:700}.app:not(.adminPage):not(.customerPage)>main{padding:12px 30px 38px!important}.app:not(.adminPage):not(.customerPage) .card{border:1px solid #dfe7ee!important;border-radius:20px!important;background:#fff!important;box-shadow:0 8px 24px rgba(9,32,68,.035)!important;padding:22px!important;margin:0 0 16px!important}.app:not(.adminPage):not(.customerPage) .steps{margin:8px 0 20px}.app:not(.adminPage):not(.customerPage) .btn.primary{background:linear-gradient(90deg,#ff7600,#ff9800)!important;border-radius:13px!important}.app:not(.adminPage):not(.customerPage) .btn.secondary{border-radius:13px!important}.app:not(.adminPage):not(.customerPage) label{color:#405572!important;font-weight:800}.app:not(.adminPage):not(.customerPage) input,.app:not(.adminPage):not(.customerPage) select,.app:not(.adminPage):not(.customerPage) textarea{border-color:#d9e2ea!important;border-radius:13px!important;padding:13px 14px!important}.app:not(.adminPage):not(.customerPage) footer{padding:16px 12px 24px!important;color:#9aa1ac!important;font-size:10px!important;text-align:center}.app:not(.adminPage):not(.customerPage) .hero,.app:not(.adminPage):not(.customerPage) .scanCard{border:0!important;border-radius:26px!important;background:#eef8f1!important}.app:not(.adminPage):not(.customerPage) .success{padding:34px 18px!important}.app:not(.adminPage):not(.customerPage) .success .check{background:#20a957!important}
-@media(max-width:760px){.app:not(.adminPage):not(.customerPage){max-width:560px!important}.app:not(.adminPage):not(.customerPage)>header{padding:20px 18px 14px!important}.app:not(.adminPage):not(.customerPage)>main{padding:8px 16px 28px!important}.app:not(.adminPage):not(.customerPage) .card{padding:18px!important}}
+/* OLITEC portal visual system — final responsive layer */
 
-/* Single OLITEC logo asset used everywhere in the customer portal. */
+/* Keep the existing registration workflow screens clean without changing their functionality. */
+.app:not(.adminPage):not(.customerPage){max-width:720px!important;margin:0 auto!important;min-height:100vh;background:#fff!important;box-shadow:none!important;color:#07183d}
+.app:not(.adminPage):not(.customerPage)>header{padding:24px 30px 14px!important;background:#fff!important;border:0!important}
+.app:not(.adminPage):not(.customerPage)>header .lang{display:none!important}
+.app:not(.adminPage):not(.customerPage)>header:after{content:'POWERING A BETTER TOMORROW';display:block;position:absolute;margin:31px 0 0 1px;font-size:7px;letter-spacing:.23em;color:#58708d;font-weight:700}
+.app:not(.adminPage):not(.customerPage)>main{padding:12px 30px 38px!important}
+.app:not(.adminPage):not(.customerPage) .card{border:1px solid #dfe7ee!important;border-radius:20px!important;background:#fff!important;box-shadow:0 8px 24px rgba(9,32,68,.035)!important;padding:22px!important;margin:0 0 16px!important}
+.app:not(.adminPage):not(.customerPage) .btn.primary{background:linear-gradient(90deg,#ff7600,#ff9800)!important;border-radius:13px!important}
+.app:not(.adminPage):not(.customerPage) .btn.secondary{border-radius:13px!important}
+.app:not(.adminPage):not(.customerPage) input,.app:not(.adminPage):not(.customerPage) select,.app:not(.adminPage):not(.customerPage) textarea{border-color:#d9e2ea!important;border-radius:13px!important;padding:13px 14px!important}
+.app:not(.adminPage):not(.customerPage) footer{padding:16px 12px 24px!important;color:#9aa1ac!important;font-size:10px!important;text-align:center}
+
+/* Official logo asset. */
 .olitecBrandName,.olitecBrandTagline{display:none!important}
-.olitecBrand{width:178px!important;height:39px!important;display:block!important;background:url('/olitec-logo.svg') left top / 178px 39px no-repeat!important;color:transparent!important}
-.olitecOfficialLogo{display:block!important;width:178px!important;height:auto!important;max-width:none!important}
+.olitecBrand{display:block!important;background:none!important;color:transparent!important}
+.olitecOfficialLogo{display:block!important;width:158px!important;height:auto!important;max-width:none!important}
 
-/* Customer portal: full-width desktop composition with a real Home control. */
-.customerPage{width:100%!important;max-width:1360px!important;min-height:100svh!important;margin:0 auto!important;background:#fff!important;box-shadow:none!important;overflow:visible!important}
-.customerHeader{width:100%!important;min-height:76px!important;padding:18px 8px 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;background:#fff!important}
-.customerLogo{display:block!important;width:178px!important;height:auto!important;line-height:0!important}
-.customerLogo .olitecOfficialLogo{width:178px!important;height:auto!important}
-.customerHomeButton{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:96px!important;height:42px!important;padding:0 16px!important;border:1px solid #dfe7ee!important;border-radius:999px!important;background:#fff!important;color:#10213b!important;text-decoration:none!important;font-size:13px!important;font-weight:800!important;box-shadow:0 5px 16px rgba(9,32,68,.06)!important;transition:all .16s ease!important}
-.customerHomeButton:hover{transform:translateY(-1px)!important;border-color:#bfcddd!important;box-shadow:0 9px 22px rgba(9,32,68,.1)!important}.customerHomeButton svg{width:17px!important;height:17px!important;display:block!important}
-.customerMain{width:100%!important;padding:8px 8px 24px!important}.customerSplitLayout{display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(430px,.9fr)!important;gap:18px!important;align-items:stretch!important;min-height:650px!important}
-.customerHero.customerHeroVisual{position:relative!important;min-height:650px!important;margin:0!important;padding:0!important;border:1px solid #e1e8ee!important;border-radius:28px!important;overflow:hidden!important;display:grid!important;grid-template-columns:1fr .95fr!important;background:#eef8f1!important;box-shadow:0 16px 45px rgba(9,32,68,.06)!important}
-.customerHeroCopy{position:relative!important;z-index:2!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;padding:48px 42px!important}.customerHeroIcon{width:54px!important;height:54px!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#d9f3e2!important;color:#11a34b!important;margin-bottom:22px!important}.customerHeroIcon svg{width:29px!important;height:29px!important}.customerHero h1{font-size:clamp(38px,3.3vw,58px)!important;line-height:.98!important;letter-spacing:-.055em!important;margin:14px 0 14px!important;color:#07183d!important;max-width:570px!important}.customerHero p{font-size:17px!important;line-height:1.5!important;max-width:520px!important;margin:0!important;color:#536784!important}.customerEyebrow{padding:7px 11px!important;font-size:10px!important;letter-spacing:.18em!important}.customerHeroPoints{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin-top:28px!important;color:#536784!important;font-size:11px!important;font-weight:700!important}.customerHeroPoints span{padding:9px 11px!important;border-radius:999px!important;background:rgba(255,255,255,.72)!important;border:1px solid rgba(216,228,235,.9)!important}
-.customerHeroImage{position:relative!important;min-width:0!important;min-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(220,232,228,.4))!important}.customerHeroImage:after{content:''!important;position:absolute!important;inset:0!important;background:linear-gradient(90deg,rgba(238,248,241,.55),transparent 24%,transparent 80%,rgba(210,225,218,.16))!important;pointer-events:none!important}.customerHeroImage img{position:relative!important;z-index:1!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;padding:20px!important}
-.customerFormPanel{min-height:650px!important;margin:0!important;padding:42px!important;border:1px solid #dfe7ee!important;border-radius:28px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;background:#fff!important;box-shadow:0 16px 45px rgba(9,32,68,.055)!important}.customerFormPanel h2{font-size:31px!important;line-height:1.08!important;margin:15px 0 8px!important;letter-spacing:-.04em!important}.customerFormPanel>p{font-size:14px!important;line-height:1.55!important;margin:0 0 10px!important}.customerFormPanel form{margin-top:8px!important}.customerFormPanel .customerButton{min-height:52px!important;margin-top:14px!important}.customerMiniNote{display:flex!important;align-items:center!important;gap:10px!important;margin-top:24px!important;padding:13px 14px!important;border-radius:14px!important;background:#f7fafb!important;border:1px solid #e5ebf0!important;color:#63748b!important;font-size:11px!important;line-height:1.4!important}.customerMiniNote svg{width:20px!important;height:20px!important;flex:0 0 auto!important;color:#20a957!important}.customerResults{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin-top:18px!important}.customerResults .customerSection:last-child{grid-column:1/-1!important}.customerFooter{padding:16px 8px 22px!important;text-align:center!important;color:#9aa1ac!important;font-size:10px!important}
+/* Shared customer-page canvas */
+.customerPage{
+  width:min(1280px,calc(100% - 40px))!important;
+  max-width:none!important;
+  min-height:100svh!important;
+  margin:0 auto!important;
+  background:#fff!important;
+  box-shadow:none!important;
+  color:#081b3d!important;
+  overflow:visible!important;
+}
 
-/* Keep the home page large enough to use the browser viewport instead of leaving a large blank area. */
-.olitecHomeHeader,.olitecHomeMain{width:min(1360px,calc(100% - 32px))!important}.olitecHomeHeader{padding-top:14px!important;padding-bottom:12px!important}.olitecHomeLayout{height:min(820px,calc(100svh - 105px))!important;min-height:620px!important;gap:18px!important}.olitecHero{border-radius:28px!important}.olitecServices{gap:18px!important}.olitecServiceCard{border-radius:23px!important;padding:24px!important}
+.customerHeader{
+  width:100%!important;
+  height:76px!important;
+  padding:14px 0 10px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  background:#fff!important;
+}
 
-@media(max-width:900px){.customerPage{max-width:760px!important}.customerHeader{padding:16px 18px 10px!important}.customerMain{padding:8px 18px 24px!important}.customerSplitLayout{grid-template-columns:1fr!important;min-height:0!important}.customerHero.customerHeroVisual{min-height:540px!important;grid-template-columns:1fr .85fr!important}.customerFormPanel{min-height:0!important;padding:30px!important}.customerResults{grid-template-columns:1fr!important}.customerResults .customerSection:last-child{grid-column:auto!important}.olitecHomeHeader,.olitecHomeMain{width:calc(100% - 24px)!important}.olitecHomeLayout{height:auto!important;min-height:0!important;grid-template-columns:1fr!important}.olitecHero{min-height:520px!important}}
-@media(max-width:620px){.customerHeader{min-height:68px!important;padding:14px 16px 9px!important}.customerLogo,.customerLogo .olitecOfficialLogo{width:150px!important}.customerHomeButton{min-width:42px!important;width:42px!important;padding:0!important;height:40px!important}.customerHomeButton span{display:none!important}.customerMain{padding:6px 12px 18px!important}.customerHero.customerHeroVisual{min-height:0!important;display:flex!important;flex-direction:column!important}.customerHeroCopy{padding:30px 24px 24px!important}.customerHero h1{font-size:36px!important}.customerHero p{font-size:14px!important}.customerHeroImage{min-height:270px!important;max-height:310px!important}.customerHeroPoints{margin-top:20px!important;gap:7px!important}.customerHeroPoints span{font-size:10px!important;padding:7px 9px!important}.customerFormPanel{padding:24px!important;border-radius:22px!important}.customerFormPanel h2{font-size:25px!important}.customerSplitLayout{gap:12px!important}.customerResults{gap:12px!important}.olitecHomeHeader,.olitecHomeMain{width:calc(100% - 20px)!important}.olitecHomeHeader{padding-top:10px!important}.olitecHomeLayout{gap:12px!important}.olitecHero{min-height:620px!important;grid-template-columns:1fr!important}.olitecHeroImage{min-height:300px!important;order:2}.olitecHeroCopy{padding:28px!important}.olitecServices{gap:12px!important}.olitecServiceCard{padding:18px!important}}
+.customerLogo{display:block!important;width:158px!important;height:auto!important;line-height:0!important;text-decoration:none!important}
+.customerLogo .olitecOfficialLogo{width:158px!important}
+
+.customerHomeButton{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-width:92px!important;
+  height:40px!important;
+  padding:0 15px!important;
+  border:1px solid #dfe7ee!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  color:#10213b!important;
+  text-decoration:none!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  box-shadow:0 6px 18px rgba(9,32,68,.06)!important;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important;
+}
+.customerHomeButton:hover{transform:translateY(-1px)!important;border-color:#c5d2df!important;box-shadow:0 10px 24px rgba(9,32,68,.09)!important}
+.customerHomeButton svg{width:16px!important;height:16px!important;display:block!important}
+
+.customerMain{width:100%!important;padding:0 0 26px!important}
+.customerBack{display:none!important}
+
+.customerSplitLayout{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.58fr) minmax(410px,.92fr)!important;
+  gap:18px!important;
+  align-items:stretch!important;
+  min-height:620px!important;
+}
+
+/* Left visual panel */
+.customerHero.customerHeroVisual{
+  position:relative!important;
+  min-width:0!important;
+  min-height:620px!important;
+  height:calc(100svh - 102px)!important;
+  max-height:690px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid #e2e9ee!important;
+  border-radius:26px!important;
+  overflow:hidden!important;
+  display:grid!important;
+  grid-template-columns:1fr .92fr!important;
+  background:#eef8f1!important;
+  box-shadow:0 18px 48px rgba(9,32,68,.065)!important;
+  text-align:left!important;
+}
+
+.customerHeroCopy{
+  position:relative!important;
+  z-index:2!important;
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:flex-start!important;
+  padding:48px 38px!important;
+}
+
+.customerHeroIcon{
+  width:50px!important;
+  height:50px!important;
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+  margin:0 0 19px!important;
+  border-radius:50%!important;
+}
+.customerHeroIcon svg{width:27px!important;height:27px!important;display:block!important}
+
+.customerPage.portalProductPage .customerHero{background:linear-gradient(145deg,#eefaf2,#f8fcf9)!important}
+.customerPage.portalWarrantyPage .customerHero{background:linear-gradient(145deg,#eef5ff,#f7faff)!important}
+.customerPage.portalComplaintPage .customerHero{background:linear-gradient(145deg,#fff5ea,#fffbf6)!important}
+.customerPage.portalTrackPage .customerHero{background:linear-gradient(145deg,#f5efff,#fbf9ff)!important}
+.customerPage.portalProductPage .customerHeroIcon{background:#d3f3df!important;color:#12a64b!important}
+.customerPage.portalWarrantyPage .customerHeroIcon{background:#d8e8ff!important;color:#1469d8!important}
+.customerPage.portalComplaintPage .customerHeroIcon{background:#ffe2c1!important;color:#e96900!important}
+.customerPage.portalTrackPage .customerHeroIcon{background:#e8d5ff!important;color:#7130d0!important}
+
+.customerEyebrow{
+  display:block!important;
+  margin:0 0 14px!important;
+  padding:0!important;
+  color:#637590!important;
+  background:transparent!important;
+  font-size:10px!important;
+  line-height:1!important;
+  font-weight:800!important;
+  letter-spacing:.32em!important;
+}
+.customerPage.portalProductPage .customerEyebrow{color:#099246!important}
+.customerPage.portalWarrantyPage .customerEyebrow{color:#1768dd!important}
+.customerPage.portalComplaintPage .customerEyebrow{color:#e9650a!important}
+.customerPage.portalTrackPage .customerEyebrow{color:#7332d5!important}
+
+.customerHero h1{
+  margin:0 0 16px!important;
+  color:#071a3d!important;
+  font-size:clamp(42px,3.8vw,60px)!important;
+  line-height:.94!important;
+  letter-spacing:-.055em!important;
+  font-weight:800!important;
+  max-width:510px!important;
+}
+.customerHero p{
+  max-width:475px!important;
+  margin:0!important;
+  color:#566b87!important;
+  font-size:16px!important;
+  line-height:1.43!important;
+}
+
+.customerHeroPoints{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:8px!important;
+  margin-top:24px!important;
+  color:#536784!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+.customerHeroPoints span{
+  padding:8px 10px!important;
+  border:1px solid rgba(216,228,235,.9)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.74)!important;
+}
+
+.customerHeroImage{
+  position:relative!important;
+  min-width:0!important;
+  min-height:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  background:rgba(255,255,255,.25)!important;
+}
+.customerHeroImage:after{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(90deg,rgba(238,248,241,.5),transparent 25%,transparent 78%,rgba(210,225,218,.15))!important;
+  pointer-events:none!important;
+}
+.customerHeroImage img{
+  position:relative!important;
+  z-index:1!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:18px!important;
+}
+
+/* Right form panel */
+.customerFormPanel,
+.customerPage:not(.customerHome) .customerSection.customerFormPanel{
+  min-width:0!important;
+  min-height:620px!important;
+  height:calc(100svh - 102px)!important;
+  max-height:690px!important;
+  margin:0!important;
+  padding:40px 34px!important;
+  border:1px solid #dfe7ee!important;
+  border-radius:26px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:#fff!important;
+  box-shadow:0 18px 48px rgba(9,32,68,.05)!important;
+  overflow:auto!important;
+}
+
+.customerFormPanel h2{
+  margin:13px 0 8px!important;
+  color:#071a3d!important;
+  font-size:clamp(25px,2.15vw,33px)!important;
+  line-height:1.03!important;
+  letter-spacing:-.045em!important;
+  font-weight:800!important;
+}
+.customerFormPanel>p{margin:0!important;color:#536b89!important;font-size:13px!important;line-height:1.48!important}
+.customerFormPanel form{margin-top:8px!important}
+.customerFormPanel label{display:block!important;margin-top:18px!important;color:#405572!important;font-size:10px!important;font-weight:800!important}
+.customerFormPanel .customerInput{width:100%!important;min-height:48px!important;margin-top:6px!important;padding:0 13px!important;border:1px solid #d7e1e9!important;border-radius:12px!important;background:#fff!important;color:#10213b!important;font-size:13px!important;outline:none!important}
+.customerFormPanel .customerInput:focus{border-color:#8eb6d9!important;box-shadow:0 0 0 3px rgba(30,112,218,.08)!important}
+.customerFormPanel .customerButton{width:100%!important;min-height:48px!important;margin-top:12px!important;border-radius:12px!important;font-size:13px!important;font-weight:800!important}
+.customerFormPanel .customerBadge{display:inline-flex!important;align-items:center!important;min-height:23px!important;padding:5px 10px!important;border-radius:999px!important;background:#e7f7ed!important;color:#078b42!important;font-size:10px!important;font-weight:800!important}
+.customerFormPanel .customerDivider{margin:15px 0!important}
+.customerFormPanel .customerMiniNote{display:flex!important;align-items:center!important;gap:9px!important;margin-top:20px!important;padding:11px 12px!important;border:1px solid #e5ebf0!important;border-radius:12px!important;background:#f7fafb!important;color:#63748b!important;font-size:10px!important;line-height:1.35!important}
+.customerFormPanel .customerMiniNote svg{width:18px!important;height:18px!important;flex:0 0 auto!important;color:#20a957!important}
+.customerError{margin-top:14px!important;padding:10px 12px!important;border-radius:12px!important;font-size:11px!important}
+
+/* Product lookup scanner */
+.customerScannerWrap{width:100%!important;margin-top:12px!important}
+
+/* Results remain aligned with the same card system. */
+.customerResults{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;margin-top:18px!important}
+.customerResults .customerSection{min-height:0!important;height:auto!important;margin:0!important;padding:28px!important;border:1px solid #dfe7ee!important;border-radius:22px!important;background:#fff!important;box-shadow:0 12px 32px rgba(9,32,68,.05)!important}
+.customerResults .customerSection:last-child{grid-column:1/-1!important}
+.customerFooter{display:none!important}
+
+@media(max-width:1100px) and (min-width:701px){
+  .customerPage{width:calc(100% - 28px)!important}
+  .customerSplitLayout{grid-template-columns:minmax(0,1.35fr) minmax(350px,.9fr)!important;gap:14px!important}
+  .customerHero.customerHeroVisual{grid-template-columns:1fr .82fr!important}
+  .customerHeroCopy{padding:38px 28px!important}
+  .customerHero h1{font-size:clamp(38px,4.3vw,52px)!important}
+  .customerHero p{font-size:14px!important}
+  .customerFormPanel{padding:30px 26px!important}
+}
+
+@media(max-width:700px){
+  .customerPage{width:calc(100% - 20px)!important}
+  .customerHeader{height:68px!important;padding:12px 0 9px!important}
+  .customerLogo,.customerLogo .olitecOfficialLogo{width:145px!important}
+  .customerHomeButton{min-width:88px!important;height:38px!important;padding:0 13px!important}
+  .customerMain{padding:0 0 20px!important}
+  .customerSplitLayout{display:flex!important;flex-direction:column!important;gap:12px!important;min-height:0!important}
+  .customerHero.customerHeroVisual{height:auto!important;max-height:none!important;min-height:0!important;display:flex!important;flex-direction:column!important;border-radius:23px!important}
+  .customerHeroCopy{order:1!important;padding:28px 22px 24px!important}
+  .customerHeroIcon{width:46px!important;height:46px!important;margin-bottom:15px!important}
+  .customerHeroIcon svg{width:24px!important;height:24px!important}
+  .customerEyebrow{font-size:9px!important;letter-spacing:.28em!important;margin-bottom:12px!important}
+  .customerHero h1{font-size:34px!important;line-height:.98!important;margin-bottom:10px!important}
+  .customerHero p{font-size:14px!important;line-height:1.42!important}
+  .customerHeroPoints{margin-top:18px!important;gap:6px!important}
+  .customerHeroPoints span{font-size:9px!important;padding:7px 9px!important}
+  .customerHeroImage{order:2!important;height:235px!important;min-height:235px!important;max-height:none!important}
+  .customerHeroImage img{padding:10px!important}
+  .customerFormPanel,
+  .customerPage:not(.customerHome) .customerSection.customerFormPanel{height:auto!important;max-height:none!important;min-height:0!important;padding:24px 20px!important;border-radius:23px!important;overflow:visible!important}
+  .customerFormPanel h2{font-size:25px!important;margin-top:12px!important}
+  .customerFormPanel>p{font-size:13px!important}
+  .customerFormPanel label{margin-top:17px!important}
+  .customerFormPanel .customerInput{min-height:48px!important}
+  .customerFormPanel .customerButton{min-height:48px!important}
+  .customerResults{grid-template-columns:1fr!important;gap:12px!important;margin-top:12px!important}
+  .customerResults .customerSection:last-child{grid-column:auto!important}
+}
+
+@media(max-width:390px){
+  .customerPage{width:calc(100% - 14px)!important}
+  .customerHeader{padding-left:3px!important;padding-right:3px!important}
+  .customerLogo,.customerLogo .olitecOfficialLogo{width:132px!important}
+  .customerHomeButton{min-width:40px!important;width:40px!important;padding:0!important}
+  .customerHomeButton span{display:none!important}
+  .customerHeroCopy{padding:24px 18px 20px!important}
+  .customerHero h1{font-size:31px!important}
+  .customerHeroImage{height:215px!important;min-height:215px!important}
+  .customerFormPanel{padding:21px 17px!important}
+}
