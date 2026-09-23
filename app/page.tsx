@@ -53,30 +53,36 @@ export default function HomePage() {
         body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--navy);-webkit-font-smoothing:antialiased}
         a{text-decoration:none}
         .olitecHomePage{min-height:100svh;width:100%;background:#fff;overflow-x:hidden}
-        .olitecHeader{width:min(1360px,calc(100% - 48px));height:72px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .olitecLogo{width:148px;display:block;line-height:0}
+
+        /* Desktop baseline is intentionally sized to reproduce the visual scale that previously required 110% browser zoom. */
+        .olitecHeader{width:min(1465px,calc(100% - 48px));height:78px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+        .olitecLogo{width:158px;display:block;line-height:0}
         .olitecLogo img{display:block;width:100%;height:auto}
-        .olitecNav{display:flex;align-items:center;gap:22px}
-        .portalLabel{font-size:10px;font-weight:800;color:#16345b;padding-bottom:5px;border-bottom:2px solid #16aa50;line-height:1}
-        .homeButton{height:40px;padding:0 18px;border:1px solid #dce5ed;border-radius:999px;background:#fff;color:#10213b;display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;box-shadow:0 5px 16px rgba(17,40,70,.07)}
+        .olitecNav{display:flex;align-items:center;gap:24px}
+        .portalLabel{font-size:10.5px;font-weight:800;color:#16345b;padding-bottom:6px;border-bottom:2px solid #16aa50;line-height:1}
+        .homeButton{height:42px;padding:0 19px;border:1px solid #dce5ed;border-radius:999px;background:#fff;color:#10213b;display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;box-shadow:0 5px 16px rgba(17,40,70,.07)}
         .homeIcon{font-size:15px;line-height:1}
-        .olitecMain{width:min(1360px,calc(100% - 48px));height:min(500px,calc(100svh - 92px));min-height:430px;margin:0 auto 18px;display:grid;grid-template-columns:minmax(0,2.45fr) minmax(360px,1fr);gap:10px}
-        .olitecHero{min-width:0;min-height:0;border-radius:17px;overflow:hidden;border:1px solid #e3e9ee;background:#edf4f6;box-shadow:0 12px 30px rgba(18,42,70,.07)}
-        .olitecHero img{width:100%;height:100%;display:block;object-fit:cover;object-position:center top}
-        .olitecServices{min-width:0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:10px}
-        .serviceCard{position:relative;min-width:0;min-height:0;border:1px solid;border-radius:17px;padding:19px 17px 17px;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden;color:var(--navy);transition:transform .18s ease,box-shadow .18s ease}
+
+        .olitecMain{width:min(1465px,calc(100% - 48px));height:min(540px,calc(100svh - 100px));min-height:455px;margin:0 auto 18px;display:grid;grid-template-columns:minmax(0,2.45fr) minmax(380px,1fr);gap:11px}
+        .olitecHero{position:relative;min-width:0;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #e3e9ee;background:#edf4f6;box-shadow:0 12px 30px rgba(18,42,70,.07)}
+        /* The supplied raster contains a grey strip at its bottom. Scale from the top so that strip stays outside the visible hero. */
+        .olitecHero img{position:absolute;left:50%;top:0;width:108%;height:auto;min-height:108%;display:block;max-width:none;object-fit:cover;object-position:center top;transform:translateX(-50%);transform-origin:center top}
+
+        .olitecServices{min-width:0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:11px}
+        .serviceCard{position:relative;min-width:0;min-height:0;border:1px solid;border-radius:18px;padding:20px 18px 18px;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden;color:var(--navy);transition:transform .18s ease,box-shadow .18s ease}
         .serviceCard:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(15,39,70,.08)}
         .serviceCard.green{background:linear-gradient(145deg,#effaf3 0%,#f7fcf9 100%);border-color:#d9eee1}
         .serviceCard.blue{background:linear-gradient(145deg,#eef5ff 0%,#f7faff 100%);border-color:#dce7f8}
         .serviceCard.orange{background:linear-gradient(145deg,#fff5e9 0%,#fffaf4 100%);border-color:#f1dfca}
         .serviceCard.purple{background:linear-gradient(145deg,#f5efff 0%,#fbf9ff 100%);border-color:#e5dafa}
-        .serviceIcon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;margin-bottom:14px}
+        .serviceIcon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;margin-bottom:15px}
         .serviceIcon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
         .green .serviceIcon{background:#d6f3e0;color:#08a34a}.blue .serviceIcon{background:#dbe9ff;color:#1975e7}.orange .serviceIcon{background:#ffe2c4;color:#ff7d00}.purple .serviceIcon{background:#e8d8ff;color:#7130df}
-        .serviceCard strong{display:block;max-width:190px;font-size:19px;line-height:.98;letter-spacing:-.045em;font-weight:900}
-        .serviceText{display:block;max-width:190px;margin-top:9px;color:#49627f;font-size:10px;line-height:1.38}
-        .serviceArrow{position:absolute;right:13px;bottom:13px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.88);font-size:18px;line-height:1}
+        .serviceCard strong{display:block;max-width:205px;font-size:20px;line-height:.98;letter-spacing:-.045em;font-weight:900}
+        .serviceText{display:block;max-width:205px;margin-top:10px;color:#49627f;font-size:10.5px;line-height:1.4}
+        .serviceArrow{position:absolute;right:13px;bottom:13px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.9);font-size:19px;line-height:1}
         .green .serviceArrow{color:#08a34a}.blue .serviceArrow{color:#1975e7}.orange .serviceArrow{color:#ff7d00}.purple .serviceArrow{color:#7130df}
+
         @media(max-width:1200px){
           .olitecHeader,.olitecMain{width:calc(100% - 36px)}
           .olitecMain{grid-template-columns:minmax(0,2.2fr) minmax(330px,1fr)}
@@ -85,6 +91,7 @@ export default function HomePage() {
           .olitecHeader{width:min(720px,calc(100% - 32px));height:60px}
           .olitecMain{width:min(720px,calc(100% - 32px));height:auto;min-height:0;grid-template-columns:1fr;gap:10px}
           .olitecHero{aspect-ratio:2/1}
+          .olitecHero img{width:108%;min-height:108%;height:auto}
           .olitecServices{min-height:330px}
         }
         @media(max-width:600px){
@@ -94,7 +101,7 @@ export default function HomePage() {
           .homeButton{height:34px;padding:0 12px;font-size:10px}
           .olitecMain{width:calc(100% - 24px);gap:8px;margin-bottom:12px}
           .olitecHero{aspect-ratio:2/1;border-radius:13px}
-          .olitecHero img{height:100%;object-fit:cover;object-position:center top}
+          .olitecHero img{width:108%;min-height:108%;object-fit:cover;object-position:center top}
           .olitecServices{grid-template-columns:1fr;grid-template-rows:none;gap:8px;min-height:0}
           .serviceCard{height:92px;border-radius:13px;padding:12px 48px 12px 12px;justify-content:center}
           .serviceIcon{width:34px;height:34px;margin-bottom:6px}.serviceIcon svg{width:18px;height:18px}
