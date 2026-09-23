@@ -1,0 +1,57 @@
+/* OLITEC mobile layouts for all customer/service pages */
+@media (max-width: 760px) {
+  .customerPage{width:100%;max-width:560px!important;min-height:100dvh;overflow-x:hidden}
+  .customerHeader{min-height:64px;padding:14px 16px 10px!important;align-items:center!important;justify-content:space-between!important}
+  .customerLogo,.portalBrand{max-width:150px}
+  .customerMain{width:100%;padding:4px 12px 28px!important;box-sizing:border-box}
+
+  .customerSplitLayout{display:flex!important;flex-direction:column!important;gap:12px!important;width:100%}
+  .customerSplitLayout>.customerHeroVisual{order:1}
+  .customerSplitLayout>.customerFormPanel,.customerSplitLayout>.customerSection{order:2}
+
+  .customerHeroVisual{position:relative!important;min-height:0!important;height:390px!important;padding:24px 20px 0!important;margin:0!important;border-radius:20px!important;overflow:hidden!important;box-sizing:border-box}
+  .customerHeroCopy{position:relative!important;z-index:3!important;width:67%!important;max-width:290px!important}
+  .customerHeroIcon{width:48px!important;height:48px!important;display:grid!important;place-items:center!important;margin-bottom:13px!important;border-radius:50%!important;background:rgba(255,255,255,.65)!important}
+  .customerEyebrow{font-size:9px!important;letter-spacing:.16em!important;background:transparent!important;padding:0!important;border-radius:0!important}
+  .customerHero h1{font-size:34px!important;line-height:.98!important;letter-spacing:-.045em!important;margin:12px 0 9px!important}
+  .customerHero p{max-width:245px!important;font-size:13px!important;line-height:1.42!important}
+  .customerHeroPoints{position:relative!important;z-index:4!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;margin-top:14px!important}
+  .customerHeroPoints span{display:inline-flex!important;align-items:center!important;width:fit-content!important;max-width:210px!important;padding:6px 10px!important;border-radius:999px!important;background:rgba(255,255,255,.92)!important;box-shadow:0 3px 12px rgba(8,31,63,.06)!important;color:#3e5876!important;font-size:10px!important;line-height:1.15!important}
+  .customerHeroImage{position:absolute!important;z-index:1!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:48%!important;overflow:hidden!important;pointer-events:none!important}
+  .customerHeroImage:before{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.96) 0%,rgba(255,255,255,.18) 42%,rgba(255,255,255,0) 70%);pointer-events:none}
+  .customerHeroImage img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;object-position:center center!important}
+  .portalProductPage .customerHeroImage img,.portalTrackPage .customerHeroImage img{object-position:62% center!important}
+  .portalWarrantyPage .customerHeroImage img{object-position:center center!important}
+
+  .customerFormPanel{width:100%!important;box-sizing:border-box;padding:20px 16px!important;border-radius:18px!important;margin:0!important}
+  .customerFormPanel h2{font-size:24px!important;line-height:1.08!important;margin:12px 0 14px!important}
+  .customerFormPanel p{font-size:13px!important}
+  .customerInput{min-height:52px!important;font-size:14px!important;border-radius:13px!important;box-sizing:border-box}
+  .customerButton{min-height:50px!important;border-radius:13px!important;font-size:14px!important;margin-top:12px!important}
+
+  .customerBack{display:block;width:100%;padding:5px 2px 12px!important;font-size:12px!important}
+  .compactHero{border-radius:18px!important;padding:22px 18px!important}
+  .compactHero h1{font-size:30px!important}
+  .customerSection{width:100%;box-sizing:border-box;padding:18px 16px!important;border-radius:18px!important;margin-bottom:12px!important}
+  .customerSection h2{font-size:21px!important}
+  .customerFormGrid,.customerInfoGrid{grid-template-columns:1fr!important;gap:0!important}
+  .customerInfoGrid>div{margin-bottom:8px}
+  .customerTextarea{min-height:105px!important;resize:vertical}
+  .customerSubmit{margin-bottom:10px!important}
+
+  .customerResults{display:flex!important;flex-direction:column!important;gap:0!important;margin-top:12px!important}
+  .customerTimeline{grid-template-columns:repeat(3,1fr)!important;row-gap:14px!important}
+  .customerTimelineStep span{font-size:8px!important}
+  .customerInfoList>div,.customerInfoListRow{gap:10px!important;padding:11px 12px!important}
+  .customerInfoList strong,.customerInfoListRow strong{max-width:58%}
+  .portalSupport{margin:4px 12px 0!important}
+  .customerFooter{padding-bottom:24px!important}
+}
+
+@media (max-width:390px){
+  .customerHeroVisual{height:370px!important;padding-left:18px!important;padding-right:18px!important}
+  .customerHeroCopy{width:70%!important}
+  .customerHero h1{font-size:31px!important}
+  .customerHero p{font-size:12px!important}
+  .customerHeroPoints span{font-size:9px!important;padding:5px 8px!important}
+}
