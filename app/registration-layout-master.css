@@ -1,0 +1,124 @@
+/* Unified registration layout — final shared visual system */
+
+/* Remove the old support/help block and marker everywhere. */
+.customerSection.customerFormPanel::before,
+.customerSection.customerFormPanel::after,
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::before,
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::after,
+.portalSupport{display:none!important;content:none!important}
+
+/* DETAILS TAB */
+.rfPage{min-height:100vh;background:#fff;color:#071a3d}
+.rfMain{width:min(860px,calc(100% - 32px));margin:0 auto;padding:4px 0 40px}
+.rfTop{margin:4px 0 14px}
+.rfBack{border:0;background:none;padding:4px 0;color:#071a3d;font-size:14px;font-weight:800;cursor:pointer}
+.rfSteps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 18px}
+.rfStep{position:relative;text-align:center;color:#9aa7b6;font-size:10px;font-weight:600}
+.rfDot{width:30px;height:30px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;background:#edf1f4;color:#9aa7b6;font-size:11px;font-weight:800}
+.rfStep.active{color:#078e46;font-weight:800}
+.rfStep.active .rfDot{background:#18ad55;color:#fff}
+.rfHero{border:1px solid #dfe8ee;border-radius:20px;background:#f5faf7;padding:25px 28px 27px;margin-bottom:10px;overflow:hidden}
+.rfEyebrow{display:block;color:#079148;font-size:9px;font-weight:850;letter-spacing:.2em;margin-bottom:13px}
+.rfHero h1{margin:0;color:#071a3d;font-size:47px;line-height:.96;letter-spacing:-.055em;font-weight:900}
+.rfHero p{margin:14px 0 0;color:#526b88;font-size:14px;line-height:1.45;max-width:530px}
+.rfCard{border:1px solid #dfe7ee;border-radius:20px;background:#fff;padding:24px 26px;margin:10px 0;box-shadow:0 8px 25px rgba(18,42,70,.035);overflow:hidden}
+.rfProduct{display:grid;grid-template-columns:128px minmax(0,1fr);grid-template-areas:"image text" "meta meta";gap:20px 22px;align-items:center}
+.rfProductImage{grid-area:image;width:128px;height:128px;border:1px solid #dce5ec;border-radius:16px;overflow:hidden;background:#f7fafb;display:flex;align-items:center;justify-content:center}
+.rfProductImage img{width:100%;height:100%;object-fit:contain;display:block}
+.rfProductText{grid-area:text;min-width:0}
+.rfProductText .rfBadge{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:9px;background:#e3f6e9;color:#138b49;font-size:11px;font-weight:800}
+.rfProductText h2{margin:12px 0 5px;color:#071a3d;font-size:29px;line-height:1.05;letter-spacing:-.045em;font-weight:900}
+.rfProductText p{margin:0;color:#536b89;font-size:13px}
+.rfMeta{grid-area:meta;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rfMetaItem{min-width:0;border:1px solid #e1e8ee;border-radius:12px;padding:12px 14px;background:#fbfcfd}
+.rfMetaItem small{display:block;color:#74869a;font-size:10px;margin-bottom:6px}
+.rfMetaItem strong{display:block;color:#10294b;font-size:12px;word-break:break-word}
+.rfSectionHead{display:flex;justify-content:space-between;align-items:flex-start}
+.rfSectionLabel{display:inline-flex;align-items:center;min-height:31px;padding:0 11px;border-radius:9px;background:#e3f6e9;color:#138b49;font-size:10px;font-weight:850}
+.rfSectionTitle{margin:13px 0 0!important;color:#071a3d!important;font-size:25px!important;line-height:1.08!important;letter-spacing:-.04em!important;font-weight:900!important}
+.rfGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px;margin-top:22px}
+.rfGrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rfField{min-width:0}
+.rfField.full{grid-column:1/-1}
+.rfField label{display:block;margin:0 0 7px!important;color:#405572!important;font-size:11px!important;line-height:1.2;font-weight:800!important}
+.rfReq{color:#e85b2a}
+.rfField input,.rfField select{width:100%;height:50px;min-height:50px;padding:0 14px!important;border:1px solid #dce6ef!important;border-radius:12px!important;background:#fff!important;color:#10294b!important;font-size:13px!important;line-height:normal!important;outline:none;box-shadow:none}
+.rfField input:focus,.rfField select:focus{border-color:#77b18d!important;box-shadow:0 0 0 3px rgba(24,173,85,.08)!important}
+.rfField textarea{width:100%;min-height:96px;padding:12px 14px!important;border:1px solid #dce6ef!important;border-radius:12px!important;background:#fff!important;color:#10294b!important;font-size:13px!important;line-height:1.45!important;outline:none;resize:vertical}
+.rfUpload{position:relative;min-height:96px;border:1px dashed #c9d6df;border-radius:13px;background:#fbfcfd;padding:17px;text-align:left}
+.rfUpload input[type=file]{width:100%;height:auto;padding:0!important;border:0!important;border-radius:0!important}
+.rfUploadText{margin-top:8px;color:#536b88;font-size:11px;display:flex;flex-direction:column;gap:3px}
+.rfUploadText strong{color:#173253;font-size:12px}
+.rfFile{margin-top:9px;color:#138b49;font-size:11px;font-weight:800;word-break:break-word}
+.rfError{margin-top:12px;padding:11px 13px;border:1px solid #ffd4d1;border-radius:11px;background:#fff3f2;color:#a93226;font-size:11px;line-height:1.45}
+.rfActions{margin:14px 0 0}
+.rfButton{width:100%;height:52px;border:0;border-radius:12px;padding:0 18px;display:flex;align-items:center;justify-content:center;background:#08b64d;color:#fff;font-size:14px;font-weight:850;cursor:pointer}
+.rfButton:disabled{opacity:.6;cursor:wait}
+.rfFooter{padding:14px 0;text-align:center;color:#a0aab7;font-size:9px}
+
+/* REVIEW TAB — intentionally mirrors the DETAILS card widths, spacing and typography. */
+.rrPage{min-height:100vh;background:#fff;color:#071a3d}
+.rrMain{width:min(860px,calc(100% - 32px));margin:0 auto;padding:4px 0 40px}
+.rrBackRow{margin:4px 0 14px}
+.rrBack{border:0;background:none;padding:4px 0;color:#071a3d;font-size:14px;font-weight:800;cursor:pointer}
+.rrIntro{border:1px solid #dfe8ee;border-radius:20px;background:#f5faf7;padding:25px 28px 27px;margin-bottom:10px}
+.rrIntro>span{display:block;color:#079148;font-size:9px;font-weight:850;letter-spacing:.2em;margin-bottom:13px}
+.rrIntro h1{margin:0;color:#071a3d;font-size:47px;line-height:.96;letter-spacing:-.055em;font-weight:900}
+.rrIntro p{margin:14px 0 0;color:#526b88;font-size:14px;line-height:1.45;max-width:530px}
+.rrCard{border:1px solid #dfe7ee;border-radius:20px;background:#fff;padding:24px 26px;margin:10px 0;box-shadow:0 8px 25px rgba(18,42,70,.035);overflow:hidden}
+.rrProductCard{display:grid;grid-template-columns:128px minmax(0,1fr);gap:20px 22px;align-items:start}
+.rrProductImage{width:128px;height:128px;border:1px solid #dce5ec;border-radius:16px;overflow:hidden;background:#f7fafb;display:flex;align-items:center;justify-content:center}
+.rrProductImage img{width:100%;height:100%;object-fit:contain;display:block}
+.rrProductInfo{min-width:0}
+.rrBadge{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:9px;background:#e3f6e9;color:#138b49;font-size:11px;font-weight:800}
+.rrBadgeWarn{background:#fff1df;color:#a55a00}
+.rrProductInfo h2{margin:12px 0 5px;color:#071a3d;font-size:29px;line-height:1.05;letter-spacing:-.045em;font-weight:900}
+.rrProductInfo>p{margin:0;color:#536b89;font-size:13px}
+.rrProductRows{margin-top:17px;border:1px solid #e1e8ee;border-radius:13px;overflow:hidden}
+.rrSectionLabel{display:inline-flex;align-items:center;min-height:31px;padding:0 11px;border-radius:9px;background:#e3f6e9;color:#138b49;font-size:10px;font-weight:850}
+.rrCard>h2{margin:13px 0 0;color:#071a3d;font-size:25px;line-height:1.08;letter-spacing:-.04em;font-weight:900}
+.rrRows{margin-top:20px;border:1px solid #e1e8ee;border-radius:13px;overflow:hidden}
+.rrRow{min-width:0;min-height:48px;padding:13px 16px;display:grid;grid-template-columns:minmax(120px,38%) minmax(0,1fr);gap:20px;align-items:center;border-bottom:1px solid #e5ebf0;background:#fff}
+.rrRow:last-child{border-bottom:0}
+.rrRow span{color:#71849a;font-size:11px;line-height:1.35}
+.rrRow strong{color:#10294b;font-size:12px;line-height:1.35;text-align:right;word-break:break-word;overflow-wrap:anywhere}
+.rrError{margin:12px 0;padding:11px 13px;border:1px solid #ffd4d1;border-radius:11px;background:#fff3f2;color:#a93226;font-size:11px;line-height:1.45}
+.rrConfirm{width:100%;height:52px;border:0;border-radius:12px;background:#08b64d;color:#fff;display:flex;align-items:center;justify-content:center;gap:9px;font-size:14px;font-weight:850;cursor:pointer;margin-top:14px}
+.rrConfirm:disabled{opacity:.6;cursor:wait}
+.rrConfirm span{font-size:18px}
+.rrLoading{text-align:center;padding:50px 20px;color:#536b88;font-size:13px}
+
+/* Shared clean spacing / vertical centering for details fields. */
+.rfPage .rfCard{box-sizing:border-box}
+.rfPage .rfField input,.rfPage .rfField select{vertical-align:middle}
+.rfPage .rfField input::placeholder{color:#8a9bad;opacity:1}
+
+@media(max-width:720px){
+  .rfMain,.rrMain{width:calc(100% - 24px)}
+  .rfHero,.rrIntro{padding:22px 20px 24px}
+  .rfHero h1,.rrIntro h1{font-size:39px}
+  .rfCard,.rrCard{padding:20px 18px;border-radius:17px}
+  .rfProduct{grid-template-columns:94px minmax(0,1fr);gap:16px;align-items:start}
+  .rfProductImage,.rrProductImage{width:94px;height:94px;border-radius:13px}
+  .rfProductText h2,.rrProductInfo h2{font-size:23px}
+  .rfMeta{grid-template-columns:1fr}
+  .rfGrid,.rfGrid.three{grid-template-columns:1fr;gap:15px}
+  .rfField.full{grid-column:auto}
+  .rrProductCard{grid-template-columns:94px minmax(0,1fr);gap:16px}
+  .rrRow{grid-template-columns:minmax(95px,36%) minmax(0,1fr);gap:12px;padding:12px 13px}
+  .rrRow span{font-size:10px}
+  .rrRow strong{font-size:11px}
+}
+
+@media(max-width:480px){
+  .rfMain,.rrMain{width:calc(100% - 20px)}
+  .rfSteps{gap:4px}
+  .rfStep{font-size:9px}
+  .rfDot{width:27px;height:27px}
+  .rfHero h1,.rrIntro h1{font-size:34px}
+  .rfProduct,.rrProductCard{grid-template-columns:1fr;}
+  .rfProductImage,.rrProductImage{width:110px;height:110px}
+  .rfProductText h2,.rrProductInfo h2{font-size:25px}
+  .rrRow{grid-template-columns:1fr;gap:5px;align-items:start}
+  .rrRow strong{text-align:left}
+}
