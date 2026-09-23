@@ -17,6 +17,7 @@ import './registration-ui-final.css'
 import './registration-clean.css'
 import './registration-final-layout.css'
 import './registration-review-complete.css'
+import './registration-last-cleanup.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
