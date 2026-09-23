@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import './customer-portal.css'
-import './portal-final-overrides.css'
 import './home-redesign.css'
 import './mobile-home.css'
 import './supporting-pages.css'
+import './portal-final-overrides.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
