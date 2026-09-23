@@ -47,8 +47,8 @@ export default function HomePage() {
           <div className="heroPhoto" aria-hidden="true" />
           <div className="heroWash" aria-hidden="true" />
           <div className="heroCopy">
-            <span className="heroEyebrow">CLEAN ENERGY<br />FOR A BRIGHTER TOMORROW</span>
-            <h1>Your OLITEC<br /><span>Inverter Support</span></h1>
+            <span className="heroEyebrow">OLITEC<br />customer support</span>
+            <h1>Clean Energy<br /><span>For A Brighter Tomorrow</span></h1>
             <p>Register, check warranty and get<br className="desktopBreak" /> service support — all in one place.</p>
             <span className="heroAccent" />
             <div className="heroFeatures">
