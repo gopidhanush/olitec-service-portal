@@ -2,213 +2,26 @@
 
 import { FormEvent, Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
-type ServiceContext = {
-  registration_number: string
-  serial_number: string
-  model_code: string
-  product_name: string
-  capacity_kw: number
-  full_name: string
-  mobile: string
-  email: string
-  address: string
-  city: string
-  state: string
-  pin_code: string
-  purchase_date: string
-  warranty_start_date: string
-  warranty_end_date: string
-  warranty_status: string
+type ServiceContext = { registration_number:string; serial_number:string; model_code:string; product_name:string; capacity_kw:number; full_name:string; mobile:string; email:string; address:string; city:string; state:string; pin_code:string; purchase_date:string; warranty_start_date:string; warranty_end_date:string; warranty_status:string }
+type ComplaintForm = { complaint_type:string; problem_description:string; preferred_visit_date:string; preferred_contact_time:string; service_address:string; service_city:string; service_state:string; service_pin:string }
+type SubmittedComplaint = { complaint_number:string; registration_number:string; serial_number:string; status:string }
+async function getServiceContext(identifier:string):Promise<ServiceContext|null>{const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;if(!url||!key)throw new Error('Service portal is not configured.');const response=await fetch(`${url}/rest/v1/rpc/get_service_context`,{method:'POST',headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({p_registration_number:identifier}),cache:'no-store'});if(!response.ok)throw new Error(`Warranty lookup failed (${response.status}).`);const data=await response.json();return data?.[0]??null}
+async function createComplaint(identifier:string,form:ComplaintForm):Promise<SubmittedComplaint>{const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;if(!url||!key)throw new Error('Service portal is not configured.');const response=await fetch(`${url}/rest/v1/rpc/create_service_complaint`,{method:'POST',headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({p_registration_number:identifier,p_complaint:form}),cache:'no-store'});const body=await response.text();if(!response.ok)throw new Error(body||`Complaint submission failed (${response.status}).`);const data=body?JSON.parse(body):[];if(!data?.[0])throw new Error('Complaint number was not returned. Please try again.');return data[0] as SubmittedComplaint}
+const fmt=(value:string)=>value?new Date(`${value}T00:00:00`).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—'
+
+function ComplaintPageContent(){
+ const params=useSearchParams(); const identifier=params.get('identifier')||params.get('registration')||''
+ const [context,setContext]=useState<ServiceContext|null>(null);const [loading,setLoading]=useState(true);const [saving,setSaving]=useState(false);const [error,setError]=useState('');const [submitted,setSubmitted]=useState<SubmittedComplaint|null>(null)
+ const [form,setForm]=useState<ComplaintForm>({complaint_type:'Product not working',problem_description:'',preferred_visit_date:'',preferred_contact_time:'Any time',service_address:'',service_city:'',service_state:'',service_pin:''})
+ useEffect(()=>{if(!identifier){setError('Registration number or serial number is missing.');setLoading(false);return}getServiceContext(identifier).then(data=>{if(!data)throw new Error('Registered OLITEC product not found.');setContext(data);setForm(previous=>({...previous,service_address:data.address||'',service_city:data.city||'',service_state:data.state||'',service_pin:data.pin_code||''}))}).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to load warranty details.')).finally(()=>setLoading(false))},[identifier])
+ const update=(key:keyof ComplaintForm,value:string)=>setForm(previous=>({...previous,[key]:value}))
+ async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();setError('');setSaving(true);try{setSubmitted(await createComplaint(identifier,form))}catch(reason){setError(reason instanceof Error?reason.message:'Unable to register complaint.')}finally{setSaving(false)}}
+ if(loading)return <div className="app customerPage cleanPortalPage"><main className="customerMain cleanMain"><section className="customerSection cleanPageCard"><p className="customerStatus">Loading registered product…</p></section></main></div>
+ if(submitted)return <div className="app customerPage cleanPortalPage"><main className="customerMain cleanMain"><section className="customerSection customerSuccess cleanPageCard"><div className="customerCheck">✓</div><span className="customerBadge customerBadgeSuccess">Complaint received</span><h1>We're on it.</h1><p>Your service complaint has been registered successfully.</p><div className="customerNumberBox cleanNumberBox"><span>Complaint Number</span><strong>{submitted.complaint_number}</strong><small>Keep this number for tracking and future communication.</small></div><div className="customerInfoList cleanInfoList"><div><span>Registration number</span><strong>{submitted.registration_number}</strong></div><div><span>Serial number</span><strong>{submitted.serial_number}</strong></div><div><span>Status</span><strong>{submitted.status||'Received'}</strong></div></div><button className="customerButton customerButtonPrimary" type="button" onClick={()=>{window.location.href=`/service/track?complaint=${encodeURIComponent(submitted.complaint_number)}`}}>Track Complaint <span>→</span></button><button className="customerButton customerButtonSecondary" type="button" onClick={()=>{window.location.href=`/warranty/${encodeURIComponent(submitted.registration_number)}`}}>Back to Warranty <span>→</span></button></section></main></div>
+ if(error||!context)return <div className="app customerPage cleanPortalPage"><main className="customerMain cleanMain"><section className="customerSection cleanPageCard"><span className="customerBadge customerBadgeWarning">Service Support</span><h1>Unable to continue.</h1><p>{error||'Registered product details could not be loaded.'}</p><button className="customerButton customerButtonPrimary" type="button" onClick={()=>window.location.reload()}>Try Again <span>→</span></button></section></main></div>
+ return <div className="app customerPage cleanPortalPage"><main className="customerMain cleanMain"><button className="customerBack cleanBack" type="button" onClick={()=>window.history.back()}>← Back</button><section className="customerHero compactHero cleanHeroBanner"><span className="customerEyebrow">SERVICE COMPLAINT</span><h1>Register a complaint.</h1><p>Tell us what is happening and our service team will follow up.</p></section><section className="customerSection cleanPageCard"><span className="customerBadge customerBadgeSuccess">✓ Warranty verified</span><h2>{context.model_code}</h2><p>{context.capacity_kw} kW {context.product_name}</p><div className="cleanWarrantySummary"><div><span>Warranty from</span><strong>{fmt(context.warranty_start_date)}</strong></div><div><span>Warranty till</span><strong>{fmt(context.warranty_end_date)}</strong></div></div><div className="customerInfoList cleanInfoList"><div><span>Registration number</span><strong>{context.registration_number}</strong></div><div><span>Serial number</span><strong>{context.serial_number}</strong></div></div></section>
+ <form onSubmit={submit}><section className="customerSection cleanPageCard"><span className="customerBadge">Complaint details</span><h2>What is the problem?</h2><label>Complaint type <span className="req">*</span></label><select className="customerInput" required value={form.complaint_type} onChange={event=>update('complaint_type',event.target.value)}><option>Product not working</option><option>Low / no output</option><option>Charging problem</option><option>Display / indicator issue</option><option>Noise / overheating</option><option>Installation issue</option><option>Physical damage</option><option>Other</option></select><label>Describe the problem <span className="req">*</span></label><textarea className="customerInput customerTextarea" required minLength={10} value={form.problem_description} onChange={event=>update('problem_description',event.target.value)} placeholder="Describe the issue, when it started and any error indication..."/><label>Preferred service visit date</label><input className="customerInput" type="date" value={form.preferred_visit_date} onChange={event=>update('preferred_visit_date',event.target.value)}/><label>Preferred contact time</label><select className="customerInput" value={form.preferred_contact_time} onChange={event=>update('preferred_contact_time',event.target.value)}><option>Any time</option><option>9 AM – 12 PM</option><option>12 PM – 3 PM</option><option>3 PM – 6 PM</option><option>6 PM – 8 PM</option></select></section><section className="customerSection cleanPageCard"><span className="customerBadge">Service location</span><h2>Where should we visit?</h2><p>Your registered address is pre-filled. Change it if the product is elsewhere.</p><label>Address <span className="req">*</span></label><textarea className="customerInput customerTextarea" required value={form.service_address} onChange={event=>update('service_address',event.target.value)}/><div className="customerFormGrid"><div><label>City <span className="req">*</span></label><input className="customerInput" required value={form.service_city} onChange={event=>update('service_city',event.target.value)}/></div><div><label>PIN code <span className="req">*</span></label><input className="customerInput" required inputMode="numeric" pattern="[0-9]{6}" value={form.service_pin} onChange={event=>update('service_pin',event.target.value.replace(/\D/g,''))}/></div></div><label>State <span className="req">*</span></label><input className="customerInput" required value={form.service_state} onChange={event=>update('service_state',event.target.value)}/></section>{error&&<div className="customerError">{error}</div>}<button className="customerButton customerButtonPrimary customerSubmit" disabled={saving} type="submit">{saving?'Registering complaint…':'Submit Service Complaint'} <span>→</span></button></form></main></div>
 }
-
-type ComplaintForm = {
-  complaint_type: string
-  problem_description: string
-  preferred_visit_date: string
-  preferred_contact_time: string
-  service_address: string
-  service_city: string
-  service_state: string
-  service_pin: string
-}
-
-type SubmittedComplaint = {
-  complaint_number: string
-  registration_number: string
-  serial_number: string
-  status: string
-}
-
-async function getServiceContext(registration: string): Promise<ServiceContext | null> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-  if (!url || !key) throw new Error('Service portal is not configured.')
-  const response = await fetch(`${url}/rest/v1/rpc/get_service_context`, {
-    method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ p_registration_number: registration }), cache: 'no-store',
-  })
-  if (!response.ok) throw new Error(`Warranty lookup failed (${response.status}).`)
-  const data = await response.json()
-  return data?.[0] ?? null
-}
-
-async function createComplaint(registration: string, form: ComplaintForm): Promise<SubmittedComplaint> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-  if (!url || !key) throw new Error('Service portal is not configured.')
-  const response = await fetch(`${url}/rest/v1/rpc/create_service_complaint`, {
-    method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ p_registration_number: registration, p_complaint: form }), cache: 'no-store',
-  })
-  const body = await response.text()
-  if (!response.ok) throw new Error(body || `Complaint submission failed (${response.status}).`)
-  const data = body ? JSON.parse(body) : []
-  if (!data?.[0]) throw new Error('Complaint number was not returned. Please try again.')
-  return data[0] as SubmittedComplaint
-}
-
-const fmt = (value: string) => value ? new Date(`${value}T00:00:00`).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
-
-function ComplaintPageContent() {
-  const params = useSearchParams()
-  const registration = params.get('registration') || ''
-  const [context, setContext] = useState<ServiceContext | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
-  const [submitted, setSubmitted] = useState<SubmittedComplaint | null>(null)
-  const [form, setForm] = useState<ComplaintForm>({
-    complaint_type: 'Product not working', problem_description: '', preferred_visit_date: '', preferred_contact_time: 'Any time',
-    service_address: '', service_city: '', service_state: '', service_pin: '',
-  })
-
-  useEffect(() => {
-    if (!registration) { setError('Warranty registration number is missing.'); setLoading(false); return }
-    getServiceContext(registration).then(data => {
-      if (!data) throw new Error('Warranty registration not found.')
-      setContext(data)
-      setForm(previous => ({ ...previous, service_address: data.address || '', service_city: data.city || '', service_state: data.state || '', service_pin: data.pin_code || '' }))
-    }).catch(reason => setError(reason instanceof Error ? reason.message : 'Unable to load warranty details.')).finally(() => setLoading(false))
-  }, [registration])
-
-  const update = (key: keyof ComplaintForm, value: string) => setForm(previous => ({ ...previous, [key]: value }))
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setError(''); setSaving(true)
-    try { setSubmitted(await createComplaint(registration, form)) }
-    catch (reason) { setError(reason instanceof Error ? reason.message : 'Unable to register complaint.') }
-    finally { setSaving(false) }
-  }
-
-  if (loading) return <div className="app customerPage"><PortalHeader /><main className="customerMain"><section className="customerSection"><p className="customerStatus">Loading warranty details…</p></section></main><PortalFooter /></div>
-
-  if (submitted) return (
-    <div className="app customerPage">
-      <PortalHeader />
-      <main className="customerMain">
-        <section className="customerSection customerSuccess">
-          <div className="customerCheck">✓</div>
-          <span className="customerBadge customerBadgeSuccess">Complaint received</span>
-          <h1>We're on it.</h1>
-          <p>Your service complaint has been registered successfully.</p>
-          <div className="customerNumberBox"><span>Complaint Number</span><strong>{submitted.complaint_number}</strong><small>Keep this number for tracking and future communication.</small></div>
-          <div className="customerInfoList">
-            <div><span>Registration</span><strong>{registration}</strong></div>
-            <div><span>Serial number</span><strong>{context?.serial_number}</strong></div>
-            <div><span>Status</span><strong>{submitted.status || 'Received'}</strong></div>
-          </div>
-          <button className="customerButton customerButtonPrimary" type="button" onClick={() => { window.location.href = `/service/track?complaint=${encodeURIComponent(submitted.complaint_number)}` }}>Track Complaint <span>→</span></button>
-          <button className="customerButton customerButtonSecondary" type="button" onClick={() => { window.location.href = `/warranty/${encodeURIComponent(registration)}` }}>Back to Warranty <span>→</span></button>
-        </section>
-      </main>
-      <PortalFooter />
-    </div>
-  )
-
-  if (error || !context) return (
-    <div className="app customerPage">
-      <PortalHeader />
-      <main className="customerMain">
-        <button className="customerBack" type="button" onClick={() => { window.location.href = '/' }}>← OLITEC Home</button>
-        <section className="customerSection">
-          <span className="customerBadge customerBadgeWarning">Service Support</span>
-          <h1>Unable to continue.</h1>
-          <p>{error || 'Warranty details could not be loaded.'}</p>
-          <button className="customerButton customerButtonPrimary" type="button" onClick={() => window.location.reload()}>Try Again <span>→</span></button>
-        </section>
-      </main>
-      <PortalFooter />
-    </div>
-  )
-
-  return (
-    <div className="app customerPage">
-      <PortalHeader />
-      <main className="customerMain">
-        <button className="customerBack" type="button" onClick={() => window.history.back()}>← Warranty Verification</button>
-        <section className="customerHero compactHero">
-          <span className="customerEyebrow">SERVICE SUPPORT</span>
-          <h1>Register a complaint.</h1>
-          <p>Tell us what is happening and our service team will follow up.</p>
-        </section>
-
-        <section className="customerSection">
-          <span className="customerBadge customerBadgeSuccess">✓ Warranty verified</span>
-          <h2>{context.model_code}</h2>
-          <p>{context.capacity_kw} kW {context.product_name}</p>
-          <div className="customerInfoGrid">
-            <div><small>Serial number</small><strong>{context.serial_number}</strong></div>
-            <div><small>Warranty</small><strong>{fmt(context.warranty_start_date)} – {fmt(context.warranty_end_date)}</strong></div>
-          </div>
-        </section>
-
-        <form onSubmit={submit}>
-          <section className="customerSection">
-            <span className="customerBadge">Complaint details</span>
-            <h2>What is the problem?</h2>
-            <label>Complaint type <span className="req">*</span></label>
-            <select className="customerInput" required value={form.complaint_type} onChange={event => update('complaint_type', event.target.value)}>
-              <option>Product not working</option><option>Low / no output</option><option>Charging problem</option><option>Display / indicator issue</option><option>Noise / overheating</option><option>Installation issue</option><option>Physical damage</option><option>Other</option>
-            </select>
-            <label>Describe the problem <span className="req">*</span></label>
-            <textarea className="customerInput customerTextarea" required minLength={10} value={form.problem_description} onChange={event => update('problem_description', event.target.value)} placeholder="Describe the issue, when it started and any error indication..." />
-            <label>Preferred service visit date</label>
-            <input className="customerInput" type="date" value={form.preferred_visit_date} onChange={event => update('preferred_visit_date', event.target.value)} />
-            <label>Preferred contact time</label>
-            <select className="customerInput" value={form.preferred_contact_time} onChange={event => update('preferred_contact_time', event.target.value)}>
-              <option>Any time</option><option>9 AM – 12 PM</option><option>12 PM – 3 PM</option><option>3 PM – 6 PM</option><option>6 PM – 8 PM</option>
-            </select>
-          </section>
-
-          <section className="customerSection">
-            <span className="customerBadge">Service location</span>
-            <h2>Where should we visit?</h2>
-            <p>Your registered address is pre-filled. Change it if the product is elsewhere.</p>
-            <label>Address <span className="req">*</span></label>
-            <textarea className="customerInput customerTextarea" required value={form.service_address} onChange={event => update('service_address', event.target.value)} />
-            <div className="customerFormGrid">
-              <div><label>City <span className="req">*</span></label><input className="customerInput" required value={form.service_city} onChange={event => update('service_city', event.target.value)} /></div>
-              <div><label>PIN code <span className="req">*</span></label><input className="customerInput" required inputMode="numeric" pattern="[0-9]{6}" value={form.service_pin} onChange={event => update('service_pin', event.target.value.replace(/\D/g, ''))} /></div>
-            </div>
-            <label>State <span className="req">*</span></label>
-            <input className="customerInput" required value={form.service_state} onChange={event => update('service_state', event.target.value)} />
-          </section>
-
-          {error && <div className="customerError">{error}</div>}
-          <button className="customerButton customerButtonPrimary customerSubmit" disabled={saving} type="submit">{saving ? 'Registering complaint…' : 'Submit Service Complaint'} <span>→</span></button>
-        </form>
-      </main>
-      <PortalFooter />
-    </div>
-  )
-}
-
-function ComplaintPageFallback() {
-  return <div className="app customerPage"><PortalHeader /><main className="customerMain"><section className="customerSection"><p className="customerStatus">Loading service complaint form…</p></section></main><PortalFooter /></div>
-}
-
-export default function ComplaintPage() {
-  return <Suspense fallback={<ComplaintPageFallback />}><ComplaintPageContent /></Suspense>
-}
+function ComplaintPageFallback(){return <div className="app customerPage cleanPortalPage"><main className="customerMain cleanMain"><section className="customerSection cleanPageCard"><p className="customerStatus">Loading service complaint form…</p></section></main></div>}
+export default function ComplaintPage(){return <Suspense fallback={<ComplaintPageFallback/>}><ComplaintPageContent/></Suspense>}
