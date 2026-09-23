@@ -1,0 +1,53 @@
+/* Registration portal polish: layout, typography, spacing, uploads and product imagery. */
+
+.customerPage{max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important}
+.customerHeader{width:min(1180px,calc(100% - 40px));margin:0 auto!important;padding:16px 0 12px!important;align-items:center!important}
+.customerHeaderRight{margin-left:auto!important;display:flex!important;align-items:center!important;gap:22px!important}
+.customerMain{width:min(860px,calc(100% - 32px));margin:0 auto!important;padding:8px 0 36px!important}
+.customerBack{margin:0 0 10px!important;padding:4px 0 10px!important}
+.customerSteps{margin:2px 0 14px!important}
+.customerHero,.customerHero.compactHero{min-height:0!important;height:auto!important;padding:24px 26px!important;margin-bottom:14px!important;overflow:visible!important}
+.customerHero h1{max-width:720px;margin:10px 0 7px!important;line-height:1.08!important;overflow:visible!important}
+.customerHero p{max-width:650px}
+.customerSection{padding:22px!important;margin-bottom:14px!important;overflow:visible!important}
+.customerSection h2{margin:9px 0 7px!important;line-height:1.18!important;overflow:visible!important}
+.customerSection label{margin-top:13px!important}
+.customerInput{box-sizing:border-box!important;min-height:48px!important}
+.customerTextarea{min-height:92px!important;resize:vertical}
+.customerProductSummary{display:grid!important;grid-template-columns:120px minmax(0,1fr)!important;column-gap:20px!important;align-items:center!important}
+.customerProductSummary .customerProductImage{grid-row:1/span 3}
+.customerProductSummary .customerBadge,.customerProductSummary h2,.customerProductSummary p{grid-column:2}
+.customerProductImage{width:120px;height:120px;border:1px solid #e3e9ee;border-radius:16px;background:#f7fafb;display:grid;place-items:center;overflow:hidden}
+.customerProductImage img{width:100%;height:100%;object-fit:contain;display:block}
+.customerProductImageFallback{width:100%;height:100%;display:grid;place-items:center;padding:12px;box-sizing:border-box;color:#71829b;font-size:11px;text-align:center}
+.customerVerificationCard{display:grid!important;grid-template-columns:180px minmax(0,1fr)!important;gap:24px!important;align-items:center!important}
+.customerVerificationImage{width:180px;height:180px;border:1px solid #e2e9ee;border-radius:18px;background:#f7fafb;overflow:hidden;display:grid;place-items:center}
+.customerVerificationImage img{width:100%;height:100%;object-fit:contain}
+.customerVerificationDetails .customerInfoList{margin-top:12px}
+.customerInfoList>div,.customerInfoListRow{min-width:0;align-items:flex-start!important}
+.customerInfoList strong,.customerInfoListRow strong{max-width:68%;line-height:1.35!important;overflow-wrap:anywhere!important}
+.customerUploadBox{position:relative;border:1.5px dashed #cbd8e3;border-radius:15px;background:#fbfdfe;padding:16px;transition:border-color .15s ease,background .15s ease}
+.customerUploadBox:hover{border-color:#20a957;background:#f7fcf9}
+.customerUploadBox input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.customerUploadContent{display:flex;align-items:center;gap:12px;pointer-events:none}
+.customerUploadIcon{width:42px;height:42px;border-radius:12px;background:#e5f6eb;color:#128443;display:grid;place-items:center;font-size:19px;flex:0 0 auto}
+.customerUploadText strong,.customerUploadText span,.customerUploadText small{display:block}
+.customerUploadText strong{color:var(--portal-ink);font-size:13px}
+.customerUploadText span{margin-top:3px;color:#61738d;font-size:11px}
+.customerUploadText small{margin-top:5px;color:#8491a2;font-size:10px}
+.customerUploadFile{margin-top:10px;padding:8px 10px;border-radius:9px;background:#edf8f1;color:#128443;font-size:11px;font-weight:750;overflow-wrap:anywhere}
+.customerUploadError{margin-top:9px;color:#a93226;font-size:11px}
+.customerSubmit{margin-top:8px!important}
+.customerSuccess{padding:28px 26px!important}
+.customerSuccess .customerProductBox{text-align:left}
+.customerSuccessProduct{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;margin-top:12px;padding:12px;border:1px solid #e6ebef;background:#f8fbfc;border-radius:15px;text-align:left}
+.customerSuccessProductImage{width:96px;height:96px;border-radius:12px;background:#fff;overflow:hidden;display:grid;place-items:center}
+.customerSuccessProductImage img{width:100%;height:100%;object-fit:contain}
+.portalProductPage .customerSplitLayout{width:min(1180px,calc(100% - 40px));margin:0 auto;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);gap:18px;align-items:start}
+.portalProductPage .customerSplitLayout>.customerHero,.portalProductPage .customerSplitLayout>.customerSection{margin:0!important}
+.portalProductPage .customerHeroVisual{min-height:0!important;height:auto!important;align-self:stretch;display:flex;flex-direction:column;justify-content:space-between}
+.portalProductPage .customerHeroImage{min-height:280px;margin-top:18px;border-radius:18px;overflow:hidden;background:#f3f7f8}
+.portalProductPage .customerHeroImage img{width:100%;height:100%;min-height:280px;display:block;object-fit:cover;object-position:center}
+.portalProductPage .customerFormPanel{align-self:start}
+@media(max-width:900px){.portalProductPage .customerSplitLayout{grid-template-columns:1fr}.portalProductPage .customerHeroImage{min-height:240px}.portalProductPage .customerHeroImage img{min-height:240px}}
+@media(max-width:640px){.customerHeader{width:calc(100% - 28px);padding:14px 0 10px!important}.customerHeaderRight{gap:10px!important}.olitecExactPortal{display:none!important}.customerMain{width:calc(100% - 24px);padding-bottom:24px!important}.customerHero,.customerHero.compactHero,.customerSection{padding:18px!important;border-radius:17px!important}.customerVerificationCard,.customerProductSummary{grid-template-columns:1fr!important}.customerVerificationImage{width:150px;height:150px;margin:0 auto 2px}.customerProductSummary .customerProductImage{grid-row:auto;margin:0 auto 4px}.customerProductSummary .customerBadge,.customerProductSummary h2,.customerProductSummary p{grid-column:1}.customerInfoList strong,.customerInfoListRow strong{max-width:58%}.customerSuccessProduct{grid-template-columns:72px minmax(0,1fr)}.customerSuccessProductImage{width:72px;height:72px}}

@@ -1,0 +1,74 @@
+/* OLITEC registration UI final cleanup. Loaded last so registration screens are not affected by older portal overrides. */
+
+/* The progress stepper belongs only to the Details / purchase screen. */
+.customerPage .customerSteps{display:none!important}
+.customerPage .customerSteps:has(~ form){display:grid!important}
+
+/* Remove the injected support/help block from every registration screen. */
+.customerPage .customerSection.customerFormPanel::before,
+.customerPage .customerSection.customerFormPanel::after{content:none!important;display:none!important}
+
+/* Keep the registration content in a predictable vertical flow. */
+.customerPage .customerMain{width:min(860px,calc(100% - 32px))!important;margin:0 auto!important;padding:8px 0 32px!important}
+.customerPage .customerBack{position:static!important;display:block!important;width:max-content!important;max-width:100%!important;margin:0 0 12px!important;padding:4px 0 8px!important;line-height:1.35!important}
+.customerPage .customerHero,.customerPage .customerHero.compactHero{position:static!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0 0 16px!important;padding:26px 28px 28px!important;overflow:visible!important;box-sizing:border-box!important}
+.customerPage .customerHero h1{width:100%!important;max-width:760px!important;margin:12px 0 10px!important;font-size:48px!important;line-height:1.02!important;overflow:visible!important;white-space:normal!important;word-break:normal!important}
+.customerPage .customerHero p{width:100%!important;max-width:680px!important;margin:0!important;font-size:15px!important;line-height:1.5!important;overflow:visible!important}
+
+/* Every form card gets a stable box model. */
+.customerPage .customerSection{position:relative!important;width:100%!important;box-sizing:border-box!important;margin:0 0 14px!important;padding:22px!important;overflow:visible!important}
+.customerPage .customerSection h2{width:100%!important;max-width:100%!important;margin:10px 0 8px!important;line-height:1.18!important;overflow:visible!important;white-space:normal!important;word-break:normal!important}
+.customerPage .customerSection p{max-width:100%!important;margin-top:5px!important;overflow-wrap:anywhere!important}
+.customerPage .customerSection label{display:block!important;width:100%!important;box-sizing:border-box!important;margin:14px 0 6px!important;line-height:1.25!important;white-space:normal!important}
+.customerPage .customerInput,.customerPage input.customerInput,.customerPage select.customerInput,.customerPage textarea.customerInput{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important;min-height:50px!important;height:50px!important;padding:0 14px!important;line-height:1.25!important;vertical-align:top!important}
+.customerPage textarea.customerInput,.customerPage .customerTextarea{height:96px!important;min-height:96px!important;padding:12px 14px!important;line-height:1.4!important;resize:vertical!important}
+.customerPage select.customerInput{padding-right:36px!important}
+.customerPage .customerFormGrid{width:100%!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:14px!important;align-items:start!important}
+.customerPage .customerFormGrid>div{min-width:0!important}
+
+/* Product summary: image, badge, model/serial and description share one clean grid. */
+.customerPage .customerProductSummary{display:grid!important;grid-template-columns:132px minmax(0,1fr)!important;grid-template-rows:auto auto auto auto!important;grid-template-areas:"image badge" "image title" "image description" "image warranty";column-gap:22px!important;row-gap:8px!important;align-items:center!important;min-height:174px!important}
+.customerPage .customerProductSummary .customerProductImage{grid-area:image!important;width:132px!important;height:132px!important;min-width:132px!important;max-width:132px!important;margin:0!important;border:1px solid #e1e8ee!important;border-radius:17px!important;background:#f7fafb!important;display:grid!important;place-items:center!important;overflow:hidden!important;align-self:center!important}
+.customerPage .customerProductSummary .customerProductImage img{width:100%!important;height:100%!important;max-width:none!important;display:block!important;object-fit:contain!important}
+.customerPage .customerProductSummary>.customerBadge{grid-area:badge!important;display:inline-flex!important;width:max-content!important;max-width:100%!important;min-width:0!important;justify-self:start!important;align-self:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.customerPage .customerProductSummary>h2{grid-area:title!important;width:100%!important;min-width:0!important;margin:0!important;font-size:32px!important;line-height:1.08!important;letter-spacing:-.035em!important;overflow-wrap:anywhere!important;word-break:break-word!important;align-self:center!important}
+.customerPage .customerProductSummary>p{grid-area:description!important;width:100%!important;min-width:0!important;margin:0!important;font-size:14px!important;line-height:1.4!important;overflow-wrap:anywhere!important;align-self:start!important}
+.customerPage .customerProductSummary .customerInfoList{grid-area:warranty!important;width:100%!important;max-width:100%!important;margin:0!important;border:0!important;border-radius:0!important;overflow:visible!important}
+.customerPage .customerProductSummary .customerInfoList>div{width:max-content!important;max-width:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:14px!important;padding:7px 12px!important;border:1px solid #e1e8ee!important;border-radius:12px!important;background:#fff!important}
+.customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{min-width:0!important;max-width:none!important;margin:0!important;line-height:1.25!important;text-align:left!important;overflow-wrap:anywhere!important}
+.customerPage .customerProductSummary .customerInfoList strong{font-size:12px!important}
+.customerPage .customerProductSummary .customerInfoList span{font-size:11px!important}
+
+/* Customer/purchase/review rows never push text outside the card. */
+.customerPage .customerInfoList{width:100%!important;max-width:100%!important;box-sizing:border-box!important;overflow:hidden!important}
+.customerPage .customerInfoList>div,.customerPage .customerInfoListRow{width:100%!important;min-width:0!important;box-sizing:border-box!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:16px!important}
+.customerPage .customerInfoList span,.customerPage .customerInfoListRow span{min-width:0!important;line-height:1.4!important}
+.customerPage .customerInfoList strong,.customerPage .customerInfoListRow strong{min-width:0!important;max-width:68%!important;line-height:1.4!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+
+/* Re-assert the compact warranty row after the generic info-list rules above. */
+.customerPage .customerProductSummary .customerInfoList{width:100%!important;max-width:100%!important;margin:0!important;border:0!important;overflow:visible!important}
+.customerPage .customerProductSummary .customerInfoList>div{width:max-content!important;max-width:100%!important;padding:7px 12px!important;align-items:center!important;justify-content:flex-start!important;gap:14px!important;border:1px solid #e1e8ee!important;border-radius:12px!important;background:#fff!important}
+.customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{max-width:none!important;line-height:1.25!important;text-align:left!important}
+
+/* Invoice upload stays inside its card and does not overlap neighbouring fields. */
+.customerPage .customerUploadBox{position:relative!important;width:100%!important;min-height:84px!important;box-sizing:border-box!important;overflow:hidden!important}
+.customerPage .customerUploadBox input[type=file]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important;z-index:2!important}
+.customerPage .customerUploadContent{width:100%!important;min-width:0!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;gap:12px!important}
+.customerPage .customerUploadText{min-width:0!important;flex:1!important}
+.customerPage .customerUploadText strong,.customerPage .customerUploadText span,.customerPage .customerUploadText small,.customerPage .customerUploadFile{overflow-wrap:anywhere!important;word-break:break-word!important}
+.customerPage .customerSubmit{width:100%!important;min-height:52px!important;margin-top:8px!important}
+
+@media(max-width:640px){
+  .customerPage .customerMain{width:calc(100% - 24px)!important;padding-bottom:24px!important}
+  .customerPage .customerHero,.customerPage .customerHero.compactHero,.customerPage .customerSection{padding:18px!important;border-radius:17px!important}
+  .customerPage .customerHero h1{font-size:36px!important;line-height:1.04!important}
+  .customerPage .customerHero p{font-size:14px!important}
+  .customerPage .customerFormGrid{grid-template-columns:1fr!important;gap:0!important}
+  .customerPage .customerProductSummary{grid-template-columns:1fr!important;grid-template-rows:auto auto auto auto auto!important;grid-template-areas:"image" "badge" "title" "description" "warranty";gap:9px!important;text-align:left!important}
+  .customerPage .customerProductSummary .customerProductImage{width:132px!important;height:132px!important;min-width:132px!important;margin:0 auto!important}
+  .customerPage .customerProductSummary>.customerBadge{justify-self:start!important}
+  .customerPage .customerProductSummary>h2{font-size:28px!important}
+  .customerPage .customerProductSummary .customerInfoList>div{width:max-content!important;max-width:100%!important}
+  .customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{max-width:none!important}
+  .customerPage .customerInfoList strong,.customerPage .customerInfoListRow strong{max-width:58%!important}
+}

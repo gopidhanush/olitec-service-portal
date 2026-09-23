@@ -3,9 +3,19 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import QRScanner from '@/components/QRScanner'
-import { PortalFooter, PortalHeader, PortalIcon } from '@/components/PortalChrome'
+import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
-type Product = { product_id: string; serial_number: string; qr_code: string; model_code: string; product_name: string; capacity_kw: number; manufacturing_date: string | null; warranty_months: number }
+type Product = {
+  product_id: string
+  serial_number: string
+  qr_code: string
+  model_code: string
+  product_name: string
+  capacity_kw: number
+  manufacturing_date: string | null
+  warranty_months: number
+  product_image: string | null
+}
 
 function normalizeIdentifier(value: string) {
   const raw = value.trim()
@@ -26,6 +36,18 @@ function normalizeIdentifier(value: string) {
   }
 
   return raw.toUpperCase()
+}
+
+function productImageUrl(value: string | null | undefined) {
+  const raw = value?.trim()
+  if (!raw) return '/olitec-generated-hero.jpg'
+  if (/^https?:\/\//i.test(raw) || raw.startsWith('/')) return raw
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '')
+  if (!supabaseUrl) return '/olitec-generated-hero.jpg'
+  if (raw.startsWith('storage/v1/')) return `${supabaseUrl}/${raw}`
+  if (raw.includes('/')) return `${supabaseUrl}/storage/v1/object/public/${raw}`
+  return `${supabaseUrl}/storage/v1/object/public/products/${encodeURIComponent(raw)}`
 }
 
 async function lookupProduct(identifier: string): Promise<Product | null> {
@@ -52,10 +74,7 @@ async function lookupProduct(identifier: string): Promise<Product | null> {
     throw new Error('Product verification returned an invalid response.')
   }
 
-  if (!response.ok) {
-    throw new Error(`Product verification failed (${response.status}).`)
-  }
-
+  if (!response.ok) throw new Error(`Product verification failed (${response.status}).`)
   return data?.[0] ?? null
 }
 
@@ -79,9 +98,7 @@ export default function RegisterLookupPage() {
 
     try {
       const item = await lookupProduct(identifier)
-      if (!item) {
-        throw new Error('Product not found. Please check the serial number or QR code and try again.')
-      }
+      if (!item) throw new Error('Product not found. Please check the serial number or QR code and try again.')
       setProduct(item)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Unable to verify this product.')
@@ -100,14 +117,68 @@ export default function RegisterLookupPage() {
     verifyProduct(serial)
   }
 
-  return <div className="app customerPage portalProductPage"><PortalHeader/><main className="customerMain"><div className="customerSplitLayout">
-    <section className="customerHero customerHeroVisual"><div className="customerHeroCopy"><div className="customerHeroIcon"><PortalIcon type="scan"/></div><span className="customerEyebrow">PRODUCT REGISTRATION</span><h1>Register Your<br/>OLITEC Inverter</h1><p>Scan the QR code or enter the serial number to register your product and activate warranty.</p><div className="customerHeroPoints"><span>✓ Activate your warranty</span><span>✓ Get genuine support</span><span>✓ Access faster service</span></div></div><div className="customerHeroImage"><img src="/olitec-generated-hero.jpg" alt="OLITEC solar inverter"/></div></section>
-    {!product&&<section className="customerSection customerFormPanel"><span className="customerBadge">Identify your product</span><h2>Choose how to continue</h2>
-      {scannerOpen?<div className="customerScannerWrap"><QRScanner onScan={verifyProduct} onClose={()=>setScannerOpen(false)}/></div>:<button className="customerButton customerButtonPrimary" type="button" onClick={()=>{setError('');setScannerOpen(true)}}>Scan QR Code <span>→</span></button>}
-      <div className="customerDivider"><span>OR</span></div>
-      <form onSubmit={submit}><label>Serial number</label><input className="customerInput" required autoCapitalize="characters" autoComplete="off" value={serial} onChange={e=>{setSerial(e.target.value.toUpperCase());setError('')}} placeholder="Enter Serial Number"/><button className="customerButton customerButtonSecondary" type="submit" disabled={loading}>{loading?'Verifying…':<>Continue <span>→</span></>}</button></form>
-      {loading&&<p className="customerStatus">Verifying product…</p>}{error&&<div className="customerError">{error}</div>}
-    </section>}
-    {product&&!loading&&<section className="customerSection customerFormPanel"><span className="customerBadge customerBadgeSuccess">✓ Genuine OLITEC Product</span><h2>{product.model_code}</h2><p>{product.capacity_kw} kW {product.product_name}</p><div className="customerInfoList"><div><span>Serial number</span><strong>{product.serial_number}</strong></div><div><span>Manufactured</span><strong>{product.manufacturing_date?new Date(product.manufacturing_date+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—'}</strong></div><div><span>Warranty</span><strong>{product.warranty_months/12} Years</strong></div></div><div className="customerNote">Your product has been verified. Continue to register your purchase and activate the warranty.</div><button className="customerButton customerButtonPrimary" type="button" onClick={()=>router.push(`/register/${encodeURIComponent(product.serial_number)}/purchase`)}>Register Purchase <span>→</span></button><button className="customerTextButton" type="button" onClick={()=>{setProduct(null);setError('');setSerial('');router.replace('/register')}}>Use another product</button></section>}
-  </div></main><PortalFooter/></div>
+  return (
+    <div className="app customerPage portalProductPage">
+      <PortalHeader />
+      <main className="customerMain">
+        <div className="customerSplitLayout">
+          <section className="customerHero customerHeroVisual">
+            <div className="customerHeroCopy">
+              <span className="customerEyebrow">PRODUCT REGISTRATION</span>
+              <h1>Register Your<br />OLITEC Inverter</h1>
+              <p>Scan the QR code or enter the serial number to verify your product and activate warranty.</p>
+              <div className="customerHeroPoints"><span>✓ Activate your warranty</span><span>✓ Get genuine support</span><span>✓ Access faster service</span></div>
+            </div>
+            <div className="customerHeroImage"><img src="/olitec-generated-hero.jpg" alt="OLITEC solar inverter" /></div>
+          </section>
+
+          {!product && (
+            <section className="customerSection customerFormPanel">
+              <span className="customerBadge">Identify your product</span>
+              <h2>Choose how to continue</h2>
+              {scannerOpen ? (
+                <div className="customerScannerWrap"><QRScanner onScan={verifyProduct} onClose={() => setScannerOpen(false)} /></div>
+              ) : (
+                <button className="customerButton customerButtonPrimary" type="button" onClick={() => { setError(''); setScannerOpen(true) }}>Scan QR Code <span>→</span></button>
+              )}
+              <div className="customerDivider"><span>OR</span></div>
+              <form onSubmit={submit}>
+                <label>Serial number</label>
+                <input className="customerInput" required autoCapitalize="characters" autoComplete="off" value={serial} onChange={e => { setSerial(e.target.value.toUpperCase()); setError('') }} placeholder="Enter Serial Number" />
+                <button className="customerButton customerButtonSecondary" type="submit" disabled={loading}>{loading ? 'Verifying…' : <>Continue <span>→</span></>}</button>
+              </form>
+              {loading && <p className="customerStatus">Verifying product…</p>}
+              {error && <div className="customerError">{error}</div>}
+            </section>
+          )}
+
+          {product && !loading && (
+            <section className="customerSection customerVerificationCard customerFormPanel">
+              <div className="customerVerificationImage">
+                <img
+                  src={productImageUrl(product.product_image)}
+                  alt={`${product.model_code} solar inverter`}
+                  onError={event => { event.currentTarget.src = '/olitec-generated-hero.jpg' }}
+                />
+              </div>
+              <div className="customerVerificationDetails">
+                <span className="customerBadge customerBadgeSuccess">✓ Genuine OLITEC Product</span>
+                <h2>{product.model_code}</h2>
+                <p>{product.capacity_kw} kW {product.product_name}</p>
+                <div className="customerInfoList">
+                  <div><span>Serial number</span><strong>{product.serial_number}</strong></div>
+                  <div><span>Manufactured</span><strong>{product.manufacturing_date ? new Date(product.manufacturing_date + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</strong></div>
+                  <div><span>Warranty</span><strong>{product.warranty_months / 12} Years</strong></div>
+                </div>
+                <div className="customerNote">Your product has been verified. Continue to register your purchase and activate the warranty.</div>
+                <button className="customerButton customerButtonPrimary" type="button" onClick={() => router.push(`/register/${encodeURIComponent(product.serial_number)}/purchase`)}>Register Purchase <span>→</span></button>
+                <button className="customerTextButton" type="button" onClick={() => { setProduct(null); setError(''); setSerial(''); router.replace('/register') }}>Use another product</button>
+              </div>
+            </section>
+          )}
+        </div>
+      </main>
+      <PortalFooter />
+    </div>
+  )
 }

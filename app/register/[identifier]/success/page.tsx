@@ -5,8 +5,18 @@ import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
-type Product = { serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number; manufacturing_date: string | null }
+type Product = { serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number; manufacturing_date: string | null; product_image: string | null }
 const fmt = (v:string) => v ? new Date(v+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'
+function productImageUrl(value: string | null | undefined) {
+  const raw = value?.trim()
+  if (!raw) return '/olitec-generated-hero.jpg'
+  if (/^https?:\/\//i.test(raw) || raw.startsWith('/')) return raw
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '')
+  if (!supabaseUrl) return '/olitec-generated-hero.jpg'
+  if (raw.startsWith('storage/v1/')) return `${supabaseUrl}/${raw}`
+  if (raw.includes('/')) return `${supabaseUrl}/storage/v1/object/public/${raw}`
+  return `${supabaseUrl}/storage/v1/object/public/products/${encodeURIComponent(raw)}`
+}
 
 export default function RegistrationSuccessPage() {
   const router=useRouter(); const params=useParams<{identifier:string}>(); const serial=decodeURIComponent(params.identifier)
@@ -23,7 +33,7 @@ export default function RegistrationSuccessPage() {
     <section className="customerSection customerSuccess">
       <div className="customerCheck">✓</div><span className="customerBadge customerBadgeSuccess">Registration received</span><h1>Thank you.</h1><p>Your OLITEC product has been registered successfully.</p>
       <div className="customerNumberBox"><span>Registration Number</span><strong>{registrationNumber}</strong><small>Keep this number for future warranty and service requests.</small></div>
-      {product&&<div className="customerProductBox"><strong>{product.model_code} · {product.serial_number}</strong><span>{product.capacity_kw} kW</span><span>Warranty: {fmt(warrantyStart)} to {fmt(warrantyEnd)}</span></div>}
+      {product&&<div className="customerSuccessProduct"><div className="customerSuccessProductImage"><img src={productImageUrl(product.product_image)} alt={`${product.model_code} solar inverter`} onError={event=>{event.currentTarget.src='/olitec-generated-hero.jpg'}}/></div><div><strong>{product.model_code} · {product.serial_number}</strong><span>{product.capacity_kw} kW</span><span>Warranty: {fmt(warrantyStart)} to {fmt(warrantyEnd)}</span></div></div>}
       {qrDataUrl&&<div className="customerQr"><img src={qrDataUrl} alt="Registration QR code"/><span>Scan to verify your warranty registration</span></div>}
       <button className="customerButton customerButtonPrimary" type="button" disabled={!qrDataUrl||downloading} onClick={downloadWarrantyCard}>{downloading?'Preparing Warranty Card…':'Download Warranty Card (PDF)'} <span>↓</span></button>
       <button className="customerButton customerButtonSecondary" type="button" onClick={()=>router.push('/')}>Back to OLITEC <span>→</span></button>
