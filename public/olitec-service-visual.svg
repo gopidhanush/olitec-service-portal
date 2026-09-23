@@ -1,0 +1,9 @@
+<svg width="900" height="700" viewBox="0 0 900 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="bg" x1="80" y1="60" x2="820" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF8F0"/><stop offset="1" stop-color="#FFEBD9"/></linearGradient><linearGradient id="panel" x1="170" y1="120" x2="720" y2="580" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFF6EC"/></linearGradient><filter id="shadow" x="100" y="80" width="700" height="570" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="28" stdDeviation="30" flood-color="#A85411" flood-opacity="0.13"/></filter></defs>
+<rect width="900" height="700" rx="38" fill="url(#bg)"/><circle cx="770" cy="115" r="100" fill="#FFE1C3"/><circle cx="125" cy="595" r="125" fill="#FFF0DE"/>
+<g filter="url(#shadow)"><rect x="165" y="105" width="570" height="480" rx="34" fill="url(#panel)" stroke="#F1DCC7" stroke-width="2"/></g>
+<text x="220" y="175" fill="#A45C1C" font-family="Arial" font-size="18" font-weight="700" letter-spacing="4">OLITEC SERVICE</text>
+<circle cx="450" cy="330" r="105" fill="#FFF0DE"/><path d="M520 255C494 229 453 229 427 255C403 279 401 316 416 343L310 449C298 461 298 481 310 493C322 505 342 505 354 493L460 387C487 402 523 399 547 375C573 349 573 308 547 282L510 319L478 309L468 277L505 240L520 255Z" fill="#FF7A00"/>
+<rect x="270" y="470" width="360" height="20" rx="10" fill="#F2D7BF"/><rect x="270" y="470" width="205" height="20" rx="10" fill="#FFB26E"/>
+<text x="270" y="535" fill="#6F6257" font-family="Arial" font-size="18">Fast, reliable service assistance</text>
+</svg>
