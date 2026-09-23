@@ -4,14 +4,25 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { PortalFooter, PortalHeader } from '@/components/PortalChrome'
 
-type Product = { model_code: string; serial_number: string; warranty_months: number }
+type Product = { model_code: string; serial_number: string; warranty_months: number; product_image: string | null }
 type RegistrationForm = {
   full_name: string; mobile: string; email: string; address: string; city: string; state: string; pin_code: string
-  purchase_date: string; invoice_number: string; dealer_name: string; purchase_type: string
+  purchase_date: string; invoice_number: string; dealer_name: string; purchase_type: string; invoice_path: string; invoice_name: string
   installation_date: string; installation_type: string; installer_name: string; installer_mobile: string
   installation_address: string; installation_city: string; installation_state: string; installation_pin: string
 }
-const emptyForm: RegistrationForm = { full_name:'', mobile:'', email:'', address:'', city:'', state:'', pin_code:'', purchase_date:'', invoice_number:'', dealer_name:'', purchase_type:'Dealer', installation_date:'', installation_type:'Professional', installer_name:'', installer_mobile:'', installation_address:'', installation_city:'', installation_state:'', installation_pin:'' }
+const emptyForm: RegistrationForm = { full_name:'', mobile:'', email:'', address:'', city:'', state:'', pin_code:'', purchase_date:'', invoice_number:'', dealer_name:'', purchase_type:'Dealer', invoice_path:'', invoice_name:'', installation_date:'', installation_type:'Professional', installer_name:'', installer_mobile:'', installation_address:'', installation_city:'', installation_state:'', installation_pin:'' }
+
+function productImageUrl(value: string | null | undefined) {
+  const raw = value?.trim()
+  if (!raw) return '/olitec-generated-hero.jpg'
+  if (/^https?:\/\//i.test(raw) || raw.startsWith('/')) return raw
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '')
+  if (!supabaseUrl) return '/olitec-generated-hero.jpg'
+  if (raw.startsWith('storage/v1/')) return `${supabaseUrl}/${raw}`
+  if (raw.includes('/')) return `${supabaseUrl}/storage/v1/object/public/${raw}`
+  return `${supabaseUrl}/storage/v1/object/public/products/${encodeURIComponent(raw)}`
+}
 
 async function getProduct(identifier: string): Promise<Product> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -38,7 +49,7 @@ export default function RegistrationReviewPage() {
   const params = useParams<{ identifier:string }>(); const router = useRouter(); const serial = decodeURIComponent(params.identifier); const storageKey=`olitec-registration-${serial}`
   const [product,setProduct]=useState<Product|null>(null); const [form,setForm]=useState<RegistrationForm>(emptyForm); const [loading,setLoading]=useState(true); const [submitting,setSubmitting]=useState(false); const [error,setError]=useState('')
 
-  useEffect(()=>{ let cancelled=false; async function load(){ const saved=localStorage.getItem(storageKey); if(saved){try{setForm({...emptyForm,...JSON.parse(saved)})}catch{localStorage.removeItem(storageKey)}} try{const item=await getProduct(serial);if(!cancelled)setProduct(item)}catch(e){if(!cancelled)setError(e instanceof Error?e.message:'Unable to verify product.')}finally{if(!cancelled)setLoading(false)} } load(); return()=>{cancelled=true} },[serial,storageKey])
+  useEffect(()=>{ let cancelled=false; async function load(){ const saved=localStorage.getItem(storageKey); if(saved){try{setForm({...emptyForm,...JSON.parse(saved)})}catch{localStorage.removeItem(storageKey)}} try{const item=await getProduct(serial);if(!cancelled)setProduct(item)}catch(e){if(!cancelled)setError(e instanceof Error?e.message:'Unable to verify product.')}finally{if(!cancelled)setLoading(false)} } load();return()=>{cancelled=true} },[serial,storageKey])
 
   async function confirmRegistration(){ if(!product)return; setSubmitting(true);setError('');try{const result=await registerPurchase(serial,form);if(!result?.registration_number)throw new Error('Registration was not completed. Please try again.');localStorage.removeItem(storageKey);router.push(`/register/${encodeURIComponent(serial)}/success?registration=${encodeURIComponent(result.registration_number)}&start=${encodeURIComponent(result.warranty_start_date)}&end=${encodeURIComponent(result.warranty_end_date)}`)}catch(e){const message=e instanceof Error?e.message:'';if(message.includes('PRODUCT_ALREADY_REGISTERED:'))setError(`This product is already registered. Registration number: ${message.split('PRODUCT_ALREADY_REGISTERED:')[1]}`);else if(message.includes('PRODUCT_NOT_FOUND'))setError('The product could not be verified. Please scan the product QR code again.');else if(message.includes('REQUIRED_CUSTOMER_FIELDS_MISSING'))setError('Please return to the form and complete all required customer and dealer details.');else setError(message||'Registration could not be completed. Please try again.');setSubmitting(false)}}
 
@@ -52,9 +63,9 @@ export default function RegistrationReviewPage() {
       <div className="customerSteps"><span className="active">1 Product</span><span className="active">2 Details</span><span className="active">3 Review</span><span>4 Complete</span></div>
       <section className="customerHero compactHero"><span className="customerEyebrow">FINAL REVIEW</span><h1>Almost complete.</h1><p>Review the information you entered before activating your OLITEC warranty.</p></section>
 
-      <section className="customerSection"><span className="customerBadge customerBadgeSuccess">Product verified</span><h2>{product?.model_code}</h2><p>Serial number: {product?.serial_number || serial}</p><div className="customerInfoList"><div><span>Warranty</span><strong>{product?.warranty_months ? `${product.warranty_months / 12} years` : '—'}</strong></div></div></section>
+      <section className="customerSection customerProductSummary"><div className="customerProductImage"><img src={productImageUrl(product?.product_image)} alt={`${product?.model_code || 'OLITEC'} solar inverter`} onError={event=>{event.currentTarget.src='/olitec-generated-hero.jpg'}}/></div><span className="customerBadge customerBadgeSuccess">Product verified</span><h2>{product?.model_code}</h2><p>Serial number: {product?.serial_number || serial}</p><div className="customerInfoList"><div><span>Warranty</span><strong>{product?.warranty_months ? `${product.warranty_months / 12} years` : '—'}</strong></div></div></section>
       <section className="customerSection"><span className="customerBadge">Customer</span><h2>{form.full_name}</h2><div className="customerInfoList"><Row label="Mobile" value={form.mobile}/><Row label="Email" value={form.email}/><Row label="Address" value={form.address}/><Row label="City" value={form.city}/><Row label="State" value={form.state}/><Row label="PIN code" value={form.pin_code}/></div></section>
-      <section className="customerSection"><span className="customerBadge">Purchase</span><h2>{form.dealer_name}</h2><div className="customerInfoList"><Row label="Purchase date" value={displayDate(form.purchase_date)}/><Row label="Invoice number" value={form.invoice_number}/><Row label="Purchase type" value={form.purchase_type}/><Row label="Invoice" value="Will be uploaded with registration"/></div></section>
+      <section className="customerSection"><span className="customerBadge">Purchase</span><h2>{form.dealer_name}</h2><div className="customerInfoList"><Row label="Purchase date" value={displayDate(form.purchase_date)}/><Row label="Invoice number" value={form.invoice_number}/><Row label="Purchase type" value={form.purchase_type}/><Row label="Invoice" value={form.invoice_name || 'Not uploaded'}/></div></section>
       <section className="customerSection"><span className="customerBadge">Installation</span><h2>{form.installation_type}</h2><div className="customerInfoList"><Row label="Installation date" value={displayDate(form.installation_date)}/><Row label="Installer" value={form.installer_name}/><Row label="Installer mobile" value={form.installer_mobile}/><Row label="Installation address" value={form.installation_address}/></div></section>
       {error&&<div className="customerError">{error}</div>}
       <button className="customerButton customerButtonPrimary customerSubmit" type="button" disabled={submitting} onClick={confirmRegistration}>{submitting?'Registering…':'Confirm Registration'} <span>→</span></button>
