@@ -1,0 +1,11 @@
+<svg width="900" height="700" viewBox="0 0 900 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="bg" x1="90" y1="60" x2="820" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#FAF6FF"/><stop offset="1" stop-color="#EEE4FF"/></linearGradient><linearGradient id="panel" x1="170" y1="120" x2="730" y2="590" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#F7F1FF"/></linearGradient><filter id="shadow" x="90" y="80" width="720" height="570" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="28" stdDeviation="30" flood-color="#6732B0" flood-opacity="0.13"/></filter></defs>
+<rect width="900" height="700" rx="38" fill="url(#bg)"/><circle cx="770" cy="115" r="100" fill="#E5D5FF"/><circle cx="125" cy="595" r="125" fill="#F3EAFF"/>
+<g filter="url(#shadow)"><rect x="165" y="105" width="570" height="480" rx="34" fill="url(#panel)" stroke="#E3D5F4" stroke-width="2"/></g>
+<text x="220" y="175" fill="#7440B6" font-family="Arial" font-size="18" font-weight="700" letter-spacing="4">SERVICE TRACKING</text>
+<rect x="245" y="255" width="410" height="180" rx="22" fill="#FBF9FF" stroke="#DED0F2" stroke-width="3"/>
+<path d="M305 345H595" stroke="#D5C8EA" stroke-width="8" stroke-linecap="round"/><circle cx="305" cy="345" r="25" fill="#7431DF"/><circle cx="402" cy="345" r="25" fill="#7431DF"/><circle cx="499" cy="345" r="25" fill="#A88AE2"/><circle cx="595" cy="345" r="25" fill="#D8D0E5"/>
+<path d="M295 345L302 352L316 336" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M392 345L399 352L413 336" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="245" y="470" width="410" height="20" rx="10" fill="#E0D6EE"/><rect x="245" y="470" width="275" height="20" rx="10" fill="#B79AE7"/>
+<text x="245" y="535" fill="#65577A" font-family="Arial" font-size="18">Follow your service request</text>
+</svg>
