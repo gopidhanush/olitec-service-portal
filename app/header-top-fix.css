@@ -1,0 +1,19 @@
+/* Header position refinement for all four customer portal pages. */
+.customerPage:not(.customerHome) .customerHeader{
+  width:min(1024px,calc(100% - 32px))!important;
+  height:56px!important;
+  margin:0 auto!important;
+  padding:2px 0 0!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+}
+.customerPage:not(.customerHome) .customerLogo{margin:0!important;align-self:flex-start!important}
+.customerPage:not(.customerHome) .customerHeaderRight{margin-top:0!important;align-self:flex-start!important}
+.customerPage:not(.customerHome) .customerMain{margin-top:0!important}
+@media(max-width:900px){
+  .customerPage:not(.customerHome) .customerHeader{width:min(760px,calc(100% - 24px))!important;height:54px!important;padding-top:2px!important}
+}
+@media(max-width:600px){
+  .customerPage:not(.customerHome) .customerHeader{width:calc(100% - 24px)!important;height:52px!important;padding:1px 0 0!important}
+}
