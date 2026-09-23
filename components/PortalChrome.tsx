@@ -19,7 +19,7 @@ export function PortalHeader() {
   return (
     <header className="customerHeader">
       <Link href="/" className="customerLogo" aria-label="OLITEC home">
-        <span className="portalBrand"><span>OLITEC</span><span className="portalTagline">POWERING A BETTER TOMORROW</span></span>
+        <img className="olitecOfficialLogo" src="/olitec-logo.svg" alt="OLITEC — Powering a Better Tomorrow" />
       </Link>
     </header>
   )
