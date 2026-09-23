@@ -45,6 +45,11 @@
 .customerPage .customerInfoList span,.customerPage .customerInfoListRow span{min-width:0!important;line-height:1.4!important}
 .customerPage .customerInfoList strong,.customerPage .customerInfoListRow strong{min-width:0!important;max-width:68%!important;line-height:1.4!important;overflow-wrap:anywhere!important;word-break:break-word!important}
 
+/* Re-assert the compact warranty row after the generic info-list rules above. */
+.customerPage .customerProductSummary .customerInfoList{width:100%!important;max-width:100%!important;margin:0!important;border:0!important;overflow:visible!important}
+.customerPage .customerProductSummary .customerInfoList>div{width:max-content!important;max-width:100%!important;padding:7px 12px!important;align-items:center!important;justify-content:flex-start!important;gap:14px!important;border:1px solid #e1e8ee!important;border-radius:12px!important;background:#fff!important}
+.customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{max-width:none!important;line-height:1.25!important;text-align:left!important}
+
 /* Invoice upload stays inside its card and does not overlap neighbouring fields. */
 .customerPage .customerUploadBox{position:relative!important;width:100%!important;min-height:84px!important;box-sizing:border-box!important;overflow:hidden!important}
 .customerPage .customerUploadBox input[type=file]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;cursor:pointer!important;z-index:2!important}
@@ -64,5 +69,6 @@
   .customerPage .customerProductSummary>.customerBadge{justify-self:start!important}
   .customerPage .customerProductSummary>h2{font-size:28px!important}
   .customerPage .customerProductSummary .customerInfoList>div{width:max-content!important;max-width:100%!important}
+  .customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{max-width:none!important}
   .customerPage .customerInfoList strong,.customerPage .customerInfoListRow strong{max-width:58%!important}
 }
