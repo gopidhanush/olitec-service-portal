@@ -39,16 +39,18 @@ export default function HomePage() {
           <span className="portalLabel">Support Portal</span>
           <Link href="/" className="homeButton"><span className="homeIcon" aria-hidden="true">⌂</span> Home</Link>
         </nav>
+        <button className="mobileMenuButton" type="button" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
       </header>
 
       <main className="olitecMain">
         <section className="olitecHero" aria-label="OLITEC Inverter Support">
-          {/* The supplied photographic hero is used only as the scene/background. All copy and feature icons below are live HTML. */}
           <div className="heroPhoto" aria-hidden="true" />
           <div className="heroWash" aria-hidden="true" />
           <div className="heroCopy">
-            <span className="heroEyebrow">OLITEC<br />customer support</span>
-            <h1>Clean Energy<br /><span>For A Brighter Tomorrow</span></h1>
+            <span className="heroEyebrow">CLEAN ENERGY<br />FOR A BRIGHTER TOMORROW</span>
+            <h1>Your OLITEC<br /><span>Inverter Support</span></h1>
             <p>Register, check warranty and get<br className="desktopBreak" /> service support — all in one place.</p>
             <span className="heroAccent" />
             <div className="heroFeatures">
@@ -89,12 +91,12 @@ export default function HomePage() {
         .portalLabel{font-size:10.5px;font-weight:800;color:#16345b;padding-bottom:6px;border-bottom:2px solid #16aa50;line-height:1}
         .homeButton{height:42px;padding:0 19px;border:1px solid #dce5ed;border-radius:999px;background:#fff;color:#10213b;display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;box-shadow:0 5px 16px rgba(17,40,70,.07)}
         .homeIcon{font-size:15px;line-height:1}
+        .mobileMenuButton{display:none}
 
         .olitecMain{width:min(1465px,calc(100% - 48px));height:min(540px,calc(100svh - 100px));min-height:455px;margin:0 auto 18px;display:grid;grid-template-columns:minmax(0,2.45fr) minmax(380px,1fr);gap:11px}
 
         .olitecHero{position:relative;min-width:0;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #e3e9ee;background:#eaf2f4;box-shadow:0 12px 30px rgba(18,42,70,.07)}
-        .heroPhoto{position:absolute;inset:0;background-image:url('/olitec-generated-hero.jpg');background-size:100% 100%;background-position:center;background-repeat:no-repeat;transform:none}
-        /* The source image is a clean photographic scene. The heading, description and feature icons remain live HTML above it. */
+        .heroPhoto{position:absolute;inset:0;background-image:url('/olitec-generated-hero.jpg');background-size:cover;background-position:center;background-repeat:no-repeat}
         .heroWash{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.72) 26%,rgba(255,255,255,.30) 47%,rgba(255,255,255,.05) 66%,rgba(255,255,255,0) 82%);pointer-events:none}
         .heroWash:after{content:"";position:absolute;left:0;bottom:0;width:46%;height:18%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.30) 50%,rgba(255,255,255,.72) 100%)}
         .heroCopy{position:absolute;z-index:2;left:5.5%;top:0;width:45%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:5% 0 4%}
@@ -132,28 +134,50 @@ export default function HomePage() {
           .olitecHeader{width:min(720px,calc(100% - 32px));height:60px}
           .olitecMain{width:min(720px,calc(100% - 32px));height:auto;min-height:0;grid-template-columns:1fr;gap:10px}
           .olitecHero{aspect-ratio:1.72/1}
-          .heroPhoto{background-position:center;background-size:100% 100%}
+          .heroPhoto{background-position:center;background-size:cover}
           .heroCopy{left:5%;width:48%}.heroCopy h1{font-size:clamp(31px,7vw,48px)}.heroCopy p{font-size:12px}.heroEyebrow{font-size:8px}.heroFeatures{gap:12px}.heroFeature{font-size:8px;min-width:60px}
           .olitecServices{min-height:330px}
         }
         @media(max-width:600px){
-          .olitecHeader{width:calc(100% - 24px);height:58px}
-          .olitecLogo{width:126px}.olitecNav{gap:9px}.portalLabel{display:none}
-          .homeButton{height:34px;padding:0 12px;font-size:10px}
-          .olitecMain{width:calc(100% - 24px);gap:8px;margin-bottom:12px}
-          .olitecHero{aspect-ratio:1.08/1;border-radius:13px;min-height:390px}
-          .heroPhoto{background-position:center;background-size:100% 100%}
-          .heroWash{background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.72) 48%,rgba(255,255,255,.18) 74%,rgba(255,255,255,0) 100%)}
-          .heroWash:after{width:68%;height:18%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.24) 55%,rgba(255,255,255,.62) 100%)}
-          .heroCopy{left:7%;width:62%;height:100%;padding:9% 0 7%;justify-content:flex-start}
-          .heroEyebrow{font-size:7px;letter-spacing:.22em;margin-bottom:13px}.heroCopy h1{font-size:32px;line-height:.94}.heroCopy p{font-size:11px;line-height:1.35;margin-top:14px}.desktopBreak{display:none}.heroAccent{margin-top:13px}.heroFeatures{gap:8px;margin-top:16px}.heroFeature{font-size:7px;gap:4px;min-width:54px}.heroFeatureIcon{width:22px;height:22px}.heroFeatureIcon svg{width:21px;height:21px}
-          .olitecServices{grid-template-columns:1fr;grid-template-rows:none;gap:8px;min-height:0}
-          .serviceCard{height:92px;border-radius:13px;padding:12px 48px 12px 12px;justify-content:center}
-          .serviceIcon{width:34px;height:34px;margin-bottom:6px}.serviceIcon svg{width:18px;height:18px}
-          .serviceCard strong{font-size:14px;line-height:1.02}.serviceText{font-size:9px;line-height:1.3;margin-top:4px;max-width:245px}
-          .serviceArrow{right:12px;top:50%;bottom:auto;transform:translateY(-50%);width:30px;height:30px}
+          .olitecHeader{width:calc(100% - 28px);height:56px}
+          .olitecLogo{width:126px}
+          .olitecNav{display:none}
+          .mobileMenuButton{width:34px;height:34px;padding:6px;border:0;background:transparent;display:flex;flex-direction:column;justify-content:center;gap:4px;align-items:center;cursor:pointer}
+          .mobileMenuButton span{display:block;width:21px;height:2.5px;border-radius:99px;background:#071a3d}
+          .olitecMain{width:100%;gap:8px;margin:0 auto 10px}
+          .olitecHero{width:100%;aspect-ratio:auto;height:306px;min-height:0;border-radius:0 0 14px 14px;border-left:0;border-right:0;box-shadow:none}
+          .heroPhoto{background-size:cover;background-position:66% center}
+          .heroWash{background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.78) 30%,rgba(255,255,255,.24) 60%,rgba(255,255,255,0) 100%)}
+          .heroWash:after{width:72%;height:27%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.12) 45%,rgba(255,255,255,.68) 100%)}
+          .heroCopy{left:20px;top:0;width:calc(100% - 40px);height:auto;padding:22px 0 0;justify-content:flex-start}
+          .heroEyebrow{font-size:8px;line-height:1.65;letter-spacing:.25em;margin-bottom:12px;color:#637b9b}
+          .heroCopy h1{font-size:30px;line-height:.96;letter-spacing:-.055em;max-width:280px}
+          .heroCopy h1 span{color:#075d46}
+          .heroCopy p{font-size:12px;line-height:1.3;margin-top:13px;max-width:280px;color:#3f5b7b}
+          .desktopBreak{display:none}
+          .heroAccent{width:30px;height:3px;margin-top:12px}
+          .heroFeatures{gap:12px;margin-top:14px}
+          .heroFeature{font-size:7px;gap:4px;min-width:58px;color:#45627f}
+          .heroFeatureIcon{width:22px;height:22px}.heroFeatureIcon svg{width:21px;height:21px}
+          .olitecServices{display:grid;grid-template-columns:1fr;grid-template-rows:none;gap:7px;min-height:0;padding:0 12px}
+          .serviceCard{height:56px;border-radius:13px;padding:7px 46px 7px 9px;display:grid;grid-template-columns:40px 1fr;align-items:center;column-gap:12px;justify-content:initial;overflow:hidden}
+          .serviceIcon{width:40px;height:40px;border-radius:12px;margin:0;display:grid;place-items:center}
+          .serviceIcon svg{width:21px;height:21px}
+          .serviceCard strong{font-size:14px;line-height:1.05;letter-spacing:-.025em;max-width:none;align-self:center}
+          .serviceText{display:none}
+          .serviceArrow{right:12px;top:50%;bottom:auto;transform:translateY(-50%);width:30px;height:30px;background:rgba(255,255,255,.85);font-size:20px}
         }
-        @media(max-width:380px){.olitecHero{min-height:360px}.heroCopy h1{font-size:29px}.serviceCard{height:86px}.serviceCard strong{font-size:13px}.serviceText{font-size:8.5px}}
+        @media(max-width:380px){
+          .olitecHeader{height:54px}
+          .olitecLogo{width:118px}
+          .olitecHero{height:292px}
+          .heroCopy{left:18px;width:calc(100% - 36px);padding-top:20px}
+          .heroCopy h1{font-size:28px}
+          .heroCopy p{font-size:11px}
+          .heroFeature{font-size:6.5px;min-width:54px}
+          .serviceCard{height:54px}
+          .serviceCard strong{font-size:13px}
+        }
       `}</style>
     </div>
   )
