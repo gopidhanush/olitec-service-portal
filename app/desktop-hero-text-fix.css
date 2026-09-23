@@ -1,0 +1,97 @@
+/* Desktop-only hero readability fix for the four customer lookup pages.
+   Mobile layouts are intentionally untouched. */
+@media (min-width: 901px) {
+  .customerPage:not(.customerHome) .customerHero {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  /* Keep the live HTML copy in a clean reading zone above the photography. */
+  .customerPage:not(.customerHome) .customerHeroCopy {
+    position: relative !important;
+    z-index: 5 !important;
+    padding: 30px 28px 24px !important;
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,.99) 0%,
+      rgba(255,255,255,.98) 48%,
+      rgba(255,255,255,.94) 63%,
+      rgba(255,255,255,.60) 76%,
+      rgba(255,255,255,0) 88%
+    ) !important;
+  }
+
+  .customerPage:not(.customerHome) .customerHero h1,
+  .customerPage:not(.customerHome) .customerHeroCopy h1 {
+    position: relative !important;
+    z-index: 7 !important;
+    max-width: 400px !important;
+  }
+
+  .customerPage:not(.customerHome) .customerHero p {
+    position: relative !important;
+    z-index: 7 !important;
+    max-width: 350px !important;
+  }
+
+  .customerPage:not(.customerHome) .customerHeroPoints {
+    position: relative !important;
+    z-index: 8 !important;
+    max-width: 360px !important;
+  }
+
+  /* Move photography lower so it does not sit directly behind the main copy. */
+  .customerPage:not(.customerHome) .customerHeroImage {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 43% !important;
+    z-index: 1 !important;
+  }
+
+  .customerPage:not(.customerHome) .customerHeroImage::after {
+    z-index: 3 !important;
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,.98) 0%,
+      rgba(255,255,255,.72) 18%,
+      rgba(255,255,255,.16) 45%,
+      rgba(255,255,255,0) 68%
+    ) !important;
+  }
+
+  .customerPage:not(.customerHome) .customerHeroImage img {
+    z-index: 1 !important;
+    object-position: center bottom !important;
+  }
+
+  .customerPage.portalProductPage .customerHeroImage {
+    height: 46% !important;
+  }
+
+  .customerPage.portalProductPage .customerHeroImage img {
+    object-fit: cover !important;
+    object-position: 68% bottom !important;
+  }
+
+  .customerPage.portalProductPage .customerHeroCopy h1 {
+    max-width: 420px !important;
+    font-size: clamp(42px, 3.1vw, 46px) !important;
+    line-height: .96 !important;
+  }
+
+  .customerPage.portalWarrantyPage .customerHeroImage,
+  .customerPage.portalComplaintPage .customerHeroImage,
+  .customerPage.portalTrackPage .customerHeroImage {
+    height: 41% !important;
+  }
+
+  .customerPage.portalWarrantyPage .customerHeroImage img,
+  .customerPage.portalComplaintPage .customerHeroImage img,
+  .customerPage.portalTrackPage .customerHeroImage img {
+    object-fit: contain !important;
+    object-position: center bottom !important;
+  }
+}
