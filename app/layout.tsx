@@ -11,6 +11,7 @@ import './hero-image-fit-fix.css'
 import './header-top-fix.css'
 import './desktop-hero-text-fix.css'
 import './mobile-pages.css'
+import './registration-polish.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
