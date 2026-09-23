@@ -4,57 +4,17 @@
 .cleanPortalPage .customerMain{width:min(1465px,calc(100% - 48px));margin:0 auto;padding:8px 0 56px!important;box-sizing:border-box}
 .cleanPortalPage .cleanSplitLayout{gap:16px}
 .cleanPortalPage .cleanPageCard,.cleanPortalPage .cleanHero,.cleanPortalPage .cleanFormPanel{border-radius:20px}
+.cleanPortalPage .cleanPageCard{min-height:0!important;height:auto!important}
 .cleanPortalPage .cleanHeroBanner{margin-bottom:20px}
 .cleanPortalPage .customerBack{margin-left:0}
 .cleanPortalPage .customerFooter{display:none!important}
 
-.multiProductPanel{margin-top:20px;padding:18px;border:1px solid #dbe4ec;border-radius:16px;background:#f8fbfc}
-.multiProductHead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
-.multiProductHead strong{font-size:15px;color:#06214e}
-.multiProductHead span{font-size:11px;color:#6681a2}
-.multiProductList{display:grid;gap:9px}
-.multiProductItem{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;background:#fff;border:1px solid #dbe4ec;border-radius:12px}
-.multiProductItemText{min-width:0;display:flex;flex-direction:column;gap:3px}
-.multiProductItemText strong{font-size:13px;color:#06214e}
-.multiProductItemText span{font-size:11px;color:#6681a2}
-.multiProductRemove{border:0;background:transparent;color:#b33b2f;font-size:11px;font-weight:800;cursor:pointer;padding:7px}
-.multiProductAddRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}
-.multiProductAddRow .customerInput{min-height:44px}
-.multiProductAddButton{border:1px solid #dbe4ec;border-radius:12px;background:#fff;color:#06214e;font-size:12px;font-weight:850;padding:0 16px;cursor:pointer}
-.multiProductScanButton{border:1px solid #ccefd9;border-radius:12px;background:#effaf3;color:#0a9449;font-size:12px;font-weight:850;padding:0 16px;cursor:pointer}
-.multiProductError{margin-top:9px;padding:10px 12px;border-radius:11px;background:#fff3f2;border:1px solid #ffd4d1;color:#a93226;font-size:11px}
-.multiProductHint{margin-top:8px;font-size:10px!important;color:#71829b!important}
+.multiProductPanel{margin-top:20px;padding:18px;border:1px solid #dbe4ec;border-radius:16px;background:#f8fbfc}.multiProductHead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}.multiProductHead strong{font-size:15px;color:#06214e}.multiProductHead span{font-size:11px;color:#6681a2}.multiProductList{display:grid;gap:9px}.multiProductItem{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;background:#fff;border:1px solid #dbe4ec;border-radius:12px}.multiProductItemText{min-width:0;display:flex;flex-direction:column;gap:3px}.multiProductItemText strong{font-size:13px;color:#06214e}.multiProductItemText span{font-size:11px;color:#6681a2}.multiProductRemove{border:0;background:transparent;color:#b33b2f;font-size:11px;font-weight:800;cursor:pointer;padding:7px}.multiProductAddRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.multiProductAddRow .customerInput{min-height:44px}.multiProductAddButton{border:1px solid #dbe4ec;border-radius:12px;background:#fff;color:#06214e;font-size:12px;font-weight:850;padding:0 16px;cursor:pointer}.multiProductScanButton{border:1px solid #ccefd9;border-radius:12px;background:#effaf3;color:#0a9449;font-size:12px;font-weight:850;padding:0 16px;cursor:pointer}.multiProductError{margin-top:9px;padding:10px 12px;border-radius:11px;background:#fff3f2;border:1px solid #ffd4d1;color:#a93226;font-size:11px}.multiProductHint{margin-top:8px;font-size:10px!important;color:#71829b!important}
 
-.registrationProductsSummary{display:grid;gap:10px;margin-top:18px}
-.registrationProductsSummaryItem{display:grid;grid-template-columns:1fr auto;gap:16px;padding:14px 16px;border:1px solid #dbe4ec;border-radius:14px;background:#f8fbfc}
-.registrationProductsSummaryItem strong{font-size:13px;color:#06214e}
-.registrationProductsSummaryItem span{display:block;font-size:11px;color:#6681a2;margin-top:3px}
-.registrationProductsSummaryItem .warrantyMini{font-size:11px;color:#0a9449;font-weight:800;align-self:center;white-space:nowrap}
+.registrationProductsSummary{display:grid;gap:10px;margin-top:18px}.registrationProductsSummaryItem{display:grid;grid-template-columns:1fr auto;gap:16px;padding:14px 16px;border:1px solid #dbe4ec;border-radius:14px;background:#f8fbfc}.registrationProductsSummaryItem strong{font-size:13px;color:#06214e}.registrationProductsSummaryItem span{display:block;font-size:11px;color:#6681a2;margin-top:3px}.registrationProductsSummaryItem .warrantyMini{font-size:11px;color:#0a9449;font-weight:800;align-self:center;white-space:nowrap}
 
-.warrantyDeviceSelector{display:grid;gap:10px;margin:20px 0}
-.warrantyDeviceOption{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid #dbe4ec;border-radius:14px;background:#fff;cursor:pointer}
-.warrantyDeviceOption input{accent-color:#2078e8}
-.warrantyDeviceOption strong{display:block;color:#06214e;font-size:13px}
-.warrantyDeviceOption span{display:block;color:#6681a2;font-size:11px;margin-top:3px}
-.warrantyDeviceOption em{font-style:normal;color:#06214e;font-size:11px;font-weight:800;text-align:right}
-.warrantyDeviceOption.selected{border-color:#8cbcf5;background:#f4f8ff;box-shadow:0 0 0 2px rgba(32,120,232,.08)}
+.warrantyDeviceSelector{display:grid;gap:10px;margin:20px 0}.warrantyDeviceOption{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px;border:1px solid #dbe4ec;border-radius:14px;background:#fff;cursor:pointer}.warrantyDeviceOption input{accent-color:#2078e8}.warrantyDeviceOption strong{display:block;color:#06214e;font-size:13px}.warrantyDeviceOption span{display:block;color:#6681a2;font-size:11px;margin-top:3px}.warrantyDeviceOption em{font-style:normal;color:#06214e;font-size:11px;font-weight:800;text-align:right}.warrantyDeviceOption.selected{border-color:#8cbcf5;background:#f4f8ff;box-shadow:0 0 0 2px rgba(32,120,232,.08)}
 
-.complaintDeviceSelector{margin:18px 0}
-.complaintDeviceSelector>label{margin:0 0 8px!important}
-.complaintDeviceGrid{display:grid;gap:8px}
-.complaintDeviceOption{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #dbe4ec;border-radius:12px;background:#fff;cursor:pointer}
-.complaintDeviceOption input{accent-color:#16aa50}
-.complaintDeviceOption strong{font-size:12px;color:#06214e}
-.complaintDeviceOption span{font-size:11px;color:#6681a2}
+.complaintDeviceSelector{margin:18px 0}.complaintDeviceSelector>label{margin:0 0 8px!important}.complaintDeviceGrid{display:grid;gap:8px}.complaintDeviceOption{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #dbe4ec;border-radius:12px;background:#fff;cursor:pointer}.complaintDeviceOption input{accent-color:#16aa50}.complaintDeviceOption strong{font-size:12px;color:#06214e}.complaintDeviceOption span{font-size:11px;color:#6681a2}
 
-@media(max-width:800px){
-  .cleanPortalPage .customerHeader{width:calc(100% - 24px);padding:18px 0 12px!important}
-  .cleanPortalPage .customerMain{width:calc(100% - 24px);padding:6px 0 36px!important}
-  .multiProductAddRow{grid-template-columns:1fr 1fr}
-  .multiProductAddRow .customerInput{grid-column:1/-1}
-  .multiProductScanButton,.multiProductAddButton{min-height:44px}
-  .registrationProductsSummaryItem{grid-template-columns:1fr}
-  .registrationProductsSummaryItem .warrantyMini{align-self:start;text-align:left}
-  .warrantyDeviceOption{grid-template-columns:auto 1fr}
-  .warrantyDeviceOption em{grid-column:2;text-align:left}
-}
+@media(max-width:800px){.cleanPortalPage .customerHeader{width:calc(100% - 24px);padding:18px 0 12px!important}.cleanPortalPage .customerMain{width:calc(100% - 24px);padding:6px 0 36px!important}.multiProductAddRow{grid-template-columns:1fr 1fr}.multiProductAddRow .customerInput{grid-column:1/-1}.multiProductScanButton,.multiProductAddButton{min-height:44px}.registrationProductsSummaryItem{grid-template-columns:1fr}.registrationProductsSummaryItem .warrantyMini{align-self:start;text-align:left}.warrantyDeviceOption{grid-template-columns:auto 1fr}.warrantyDeviceOption em{grid-column:2;text-align:left}}
