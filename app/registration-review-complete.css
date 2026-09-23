@@ -1,0 +1,381 @@
+/* OLITEC registration — review/complete layout polish */
+
+/* Shared info rows: equal inner breathing room, stable left/right columns, no edge collisions. */
+.customerPage .customerInfoList {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  border: 1px solid #dfe7ee !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.customerPage .customerInfoList > div,
+.customerPage .customerInfoListRow {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 48px !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: minmax(105px, 38%) minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 18px !important;
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+}
+
+.customerPage .customerInfoList > div:last-child,
+.customerPage .customerInfoListRow:last-child {
+  border-bottom: 0 !important;
+}
+
+.customerPage .customerInfoList span,
+.customerPage .customerInfoListRow span {
+  min-width: 0 !important;
+  margin: 0 !important;
+  color: #71829b !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+  overflow-wrap: anywhere !important;
+}
+
+.customerPage .customerInfoList strong,
+.customerPage .customerInfoListRow strong {
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  color: #07183d !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  text-align: right !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+/* Product verification / preview card */
+.customerPage .customerSection:not(.customerFormPanel) .customerInfoGrid {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 18px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  border: 1px solid #dfe7ee !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.customerPage .customerInfoGrid > div {
+  min-width: 0 !important;
+  min-height: 48px !important;
+  padding: 12px 16px !important;
+  display: grid !important;
+  grid-template-columns: minmax(105px, 38%) minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 18px !important;
+  background: #fff !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #e5ebf0 !important;
+  box-sizing: border-box !important;
+}
+
+.customerPage .customerInfoGrid > div:last-child {
+  border-bottom: 0 !important;
+}
+
+.customerPage .customerInfoGrid small {
+  margin: 0 !important;
+  color: #71829b !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.customerPage .customerInfoGrid strong {
+  min-width: 0 !important;
+  display: block !important;
+  color: #07183d !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  text-align: right !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+/* Review page: product information first, then customer/purchase/installation in the same card rhythm. */
+.customerPage .customerProductSummary {
+  display: grid !important;
+  grid-template-columns: 132px minmax(0, 1fr) !important;
+  grid-template-areas:
+    "image badge"
+    "image title"
+    "image serial"
+    "image warranty" !important;
+  column-gap: 22px !important;
+  row-gap: 9px !important;
+  align-items: center !important;
+  padding: 24px !important;
+}
+
+.customerPage .customerProductSummary .customerProductImage {
+  grid-area: image !important;
+  width: 132px !important;
+  height: 132px !important;
+  min-width: 132px !important;
+  margin: 0 !important;
+  border: 1px solid #dfe7ee !important;
+  border-radius: 16px !important;
+  background: #f7fafb !important;
+  overflow: hidden !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.customerPage .customerProductSummary .customerProductImage img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.customerPage .customerProductSummary > .customerBadge {
+  grid-area: badge !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+.customerPage .customerProductSummary > h2 {
+  grid-area: title !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  font-size: 31px !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.035em !important;
+  overflow-wrap: anywhere !important;
+}
+
+.customerPage .customerProductSummary > p {
+  grid-area: serial !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  color: #536784 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.customerPage .customerProductSummary .customerInfoList {
+  grid-area: warranty !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  border: 1px solid #dfe7ee !important;
+  border-radius: 11px !important;
+}
+
+.customerPage .customerProductSummary .customerInfoList > div {
+  min-height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  background: #fff !important;
+}
+
+.customerPage .customerProductSummary .customerInfoList span,
+.customerPage .customerProductSummary .customerInfoList strong {
+  width: auto !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+/* Review sections get consistent spacing and no oversized empty areas. */
+.customerPage .customerProductSummary + .customerSection,
+.customerPage .customerProductSummary ~ .customerSection {
+  padding: 22px !important;
+}
+
+.customerPage .customerProductSummary ~ .customerSection h2 {
+  margin: 10px 0 10px !important;
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+}
+
+.customerPage .customerSubmit {
+  margin-top: 8px !important;
+  min-height: 54px !important;
+}
+
+/* Complete page: compact, ordered warranty result card. */
+.customerPage .customerSuccess {
+  width: 100% !important;
+  max-width: 760px !important;
+  margin: 0 auto !important;
+  padding: 30px 28px !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.customerPage .customerSuccess h1 {
+  margin: 13px 0 8px !important;
+  font-size: 42px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -.04em !important;
+}
+
+.customerPage .customerSuccess > p {
+  max-width: 520px !important;
+  margin: 0 auto !important;
+  line-height: 1.5 !important;
+}
+
+.customerPage .customerNumberBox {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 22px 0 14px !important;
+  padding: 16px 18px !important;
+  border-radius: 14px !important;
+}
+
+.customerPage .customerNumberBox strong {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+.customerPage .customerSuccessProduct {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: 92px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin: 14px 0 !important;
+  padding: 14px 16px !important;
+  border: 1px solid #dfe7ee !important;
+  border-radius: 15px !important;
+  background: #fff !important;
+  text-align: left !important;
+}
+
+.customerPage .customerSuccessProductImage {
+  width: 92px !important;
+  height: 92px !important;
+  min-width: 92px !important;
+  border: 1px solid #e1e8ee !important;
+  border-radius: 13px !important;
+  overflow: hidden !important;
+  background: #f7fafb !important;
+}
+
+.customerPage .customerSuccessProductImage img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.customerPage .customerSuccessProduct > div:last-child {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 5px !important;
+}
+
+.customerPage .customerSuccessProduct strong,
+.customerPage .customerSuccessProduct span {
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+.customerPage .customerSuccessProduct strong {
+  color: #07183d !important;
+  font-size: 16px !important;
+  line-height: 1.25 !important;
+}
+
+.customerPage .customerSuccessProduct span {
+  color: #536784 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.customerPage .customerSuccess .customerQr {
+  margin: 18px 0 8px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid #e7edf2 !important;
+}
+
+.customerPage .customerSuccess .customerQr img {
+  width: 148px !important;
+  height: 148px !important;
+}
+
+.customerPage .customerSuccess .customerButton {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 10px !important;
+}
+
+@media (max-width: 640px) {
+  .customerPage .customerInfoList > div,
+  .customerPage .customerInfoListRow,
+  .customerPage .customerInfoGrid > div {
+    grid-template-columns: minmax(88px, 36%) minmax(0, 1fr) !important;
+    column-gap: 12px !important;
+    padding: 11px 13px !important;
+  }
+
+  .customerPage .customerProductSummary {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "image"
+      "badge"
+      "title"
+      "serial"
+      "warranty" !important;
+    row-gap: 10px !important;
+    padding: 18px !important;
+  }
+
+  .customerPage .customerProductSummary .customerProductImage {
+    width: 132px !important;
+    height: 132px !important;
+    margin: 0 auto !important;
+  }
+
+  .customerPage .customerProductSummary > .customerBadge {
+    justify-self: start !important;
+  }
+
+  .customerPage .customerProductSummary .customerInfoList {
+    justify-self: start !important;
+  }
+
+  .customerPage .customerSuccess {
+    padding: 24px 18px !important;
+  }
+
+  .customerPage .customerSuccess h1 {
+    font-size: 34px !important;
+  }
+
+  .customerPage .customerSuccessProduct {
+    grid-template-columns: 76px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  .customerPage .customerSuccessProductImage {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+  }
+}
