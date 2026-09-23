@@ -1,0 +1,33 @@
+/* OLITEC hero image fit correction.
+   The photographic source keeps its native aspect ratio at every breakpoint.
+   Content remains live HTML; the image is never stretched with 100% 100%. */
+
+.olitecHero .heroPhoto {
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: 58% center !important;
+  transform: none !important;
+}
+
+/* Desktop: preserve the photo proportions while allowing the hero to fill the wide card. */
+@media (min-width: 901px) {
+  .olitecHero .heroPhoto {
+    background-position: 58% center !important;
+  }
+}
+
+/* Tablet: keep the inverter weighted toward the right side. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .olitecHero .heroPhoto {
+    background-position: 62% center !important;
+  }
+}
+
+/* Mobile: the hero becomes portrait, so cover crops the sides instead of distorting them.
+   This keeps the inverter visible on the right and leaves the left side available for live copy. */
+@media (max-width: 600px) {
+  .olitecHero .heroPhoto {
+    background-size: cover !important;
+    background-position: 67% center !important;
+  }
+}
