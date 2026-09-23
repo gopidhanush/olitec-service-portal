@@ -9,6 +9,7 @@ import './portal-final-overrides.css'
 import './portal-layout-fixes.css'
 import './hero-image-fit-fix.css'
 import './header-top-fix.css'
+import './mobile-pages.css'
 
 export const metadata: Metadata = {
   title: 'OLITEC — Product Registration',
