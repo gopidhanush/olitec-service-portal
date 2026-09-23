@@ -1,1 +1,185 @@
-.customerHeaderRight{display:flex;align-items:center;gap:18px}.customerHeaderRight .olitecExactPortal{display:inline-block}
+/* Final alignment + responsive fixes for the four customer lookup pages. */
+
+.customerPage:not(.customerHome) .customerHeader{
+  width:min(1024px,calc(100% - 32px));height:68px;margin:0 auto;padding:0!important;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff!important;
+}
+.customerPage:not(.customerHome) .customerLogo{width:144px;flex:0 0 auto;line-height:0}
+.customerPage:not(.customerHome) .customerLogo img{display:block;width:100%;height:auto}
+.customerPage:not(.customerHome) .customerHeaderRight{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:18px;flex:0 0 auto}
+.customerPage:not(.customerHome) .customerHeaderRight .olitecExactPortal{
+  display:inline-flex;align-items:center;height:30px;padding:0 0 5px;border-bottom:2px solid #18a850;
+  color:#12345b;font-size:10px;line-height:1;font-weight:800;white-space:nowrap;
+}
+.customerPage:not(.customerHome) .customerHomeButton{
+  height:38px;min-width:108px;padding:0 17px;border:1px solid #dce5ed;border-radius:999px;
+  background:#fff;color:#10213b;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-size:11px;font-weight:800;text-decoration:none;box-shadow:0 6px 18px rgba(18,42,70,.07);white-space:nowrap;
+}
+.customerPage:not(.customerHome) .customerHomeButton svg{width:15px;height:15px;flex:0 0 auto}
+
+.customerPage:not(.customerHome) .customerMain{width:min(1024px,calc(100% - 32px));margin:0 auto!important;padding:0 0 24px!important}
+.customerPage:not(.customerHome) .customerSplitLayout{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:stretch}
+
+/* Left panel: text is live HTML, image is a separate non-distorting layer. */
+.customerPage:not(.customerHome) .customerHero{
+  position:relative;min-width:0;height:560px;margin:0!important;padding:0!important;
+  border:1px solid #e2e9ef!important;border-radius:19px!important;overflow:hidden;
+  background:#f6faf8!important;box-shadow:0 12px 30px rgba(18,42,70,.055);text-align:left;
+}
+.customerPage:not(.customerHome) .customerHeroVisual{display:block!important}
+.customerPage:not(.customerHome) .customerHeroCopy{
+  position:relative;z-index:4;width:100%;height:100%;padding:30px 28px 25px;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.91) 38%,rgba(255,255,255,.18) 62%,rgba(255,255,255,0) 74%);
+}
+.customerPage:not(.customerHome) .customerHeroIcon{width:48px;height:48px;flex:0 0 48px;margin:0 0 13px;display:grid;place-items:center;border-radius:50%}
+.customerPage:not(.customerHome) .customerHeroIcon svg{width:25px;height:25px;display:block}
+.customerPage.portalProductPage .customerHeroIcon{background:#d8f5e2;color:#08a64b}
+.customerPage.portalWarrantyPage .customerHeroIcon{background:#dceaff;color:#1675e8}
+.customerPage.portalComplaintPage .customerHeroIcon{background:#ffe5c8;color:#ff7900}
+.customerPage.portalTrackPage .customerHeroIcon{background:#eadcff;color:#7430e2}
+.customerPage:not(.customerHome) .customerEyebrow{
+  display:block;margin:0 0 12px!important;padding:0!important;background:transparent!important;
+  font-size:9px!important;line-height:1.15!important;letter-spacing:.22em!important;font-weight:850!important;
+}
+.customerPage.portalProductPage .customerEyebrow{color:#099246!important}
+.customerPage.portalWarrantyPage .customerEyebrow{color:#176be0!important}
+.customerPage.portalComplaintPage .customerEyebrow{color:#eb6908!important}
+.customerPage.portalTrackPage .customerEyebrow{color:#7533d7!important}
+.customerPage:not(.customerHome) .customerHero h1,
+.customerPage:not(.customerHome) .customerHeroCopy h1{
+  display:block!important;width:auto!important;max-width:360px!important;margin:0 0 13px!important;padding:0!important;
+  color:#071a3d!important;font-size:clamp(34px,3.5vw,48px)!important;line-height:.95!important;
+  letter-spacing:-.055em!important;font-weight:900!important;overflow:visible!important;white-space:normal!important;word-break:normal!important;
+}
+.customerPage:not(.customerHome) .customerHero p,
+.customerPage:not(.customerHome) .customerHeroCopy p{
+  width:auto!important;max-width:335px!important;margin:0!important;padding:0!important;color:#526b88!important;
+  font-size:13px!important;line-height:1.42!important;overflow:visible!important;
+}
+.customerPage:not(.customerHome) .customerHeroPoints{
+  position:relative;z-index:5;display:flex;flex-wrap:wrap;gap:18px;margin:22px 0 0!important;padding:0!important;
+}
+.customerPage:not(.customerHome) .customerHeroPoints span{
+  display:flex!important;align-items:center;gap:7px;max-width:125px;padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;color:#49627f!important;font-size:10px!important;line-height:1.2!important;font-weight:700!important;
+}
+.customerPage:not(.customerHome) .customerHeroPoints span::first-letter{color:#10a64c}
+.customerPage.portalWarrantyPage .customerHeroPoints span::first-letter{color:#1675e8}
+.customerPage.portalComplaintPage .customerHeroPoints span::first-letter{color:#ff7900}
+.customerPage.portalTrackPage .customerHeroPoints span::first-letter{color:#7430e2}
+
+.customerPage:not(.customerHome) .customerHeroImage{
+  position:absolute!important;z-index:1;left:0!important;right:0!important;bottom:0!important;width:100%!important;
+  height:54%!important;min-width:0;overflow:hidden!important;display:block!important;background:transparent!important;pointer-events:none;
+}
+.customerPage:not(.customerHome) .customerHeroImage::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.35) 18%,rgba(255,255,255,0) 45%);
+}
+.customerPage:not(.customerHome) .customerHeroImage img{
+  position:absolute!important;inset:0!important;z-index:1;display:block!important;width:100%!important;height:100%!important;
+  max-width:none!important;object-fit:cover!important;object-position:center bottom!important;transform:none!important;
+}
+.customerPage.portalProductPage .customerHeroImage{height:57%!important}
+.customerPage.portalProductPage .customerHeroImage img{object-position:66% center!important}
+.customerPage.portalWarrantyPage .customerHeroImage,
+.customerPage.portalComplaintPage .customerHeroImage,
+.customerPage.portalTrackPage .customerHeroImage{height:51%!important}
+.customerPage.portalWarrantyPage .customerHeroImage img,
+.customerPage.portalComplaintPage .customerHeroImage img,
+.customerPage.portalTrackPage .customerHeroImage img{object-fit:contain!important;object-position:center bottom!important}
+
+/* Right form panel: fixed desktop height keeps both cards aligned. */
+.customerPage:not(.customerHome) .customerSection.customerFormPanel{
+  position:relative;min-width:0;height:560px;min-height:560px;margin:0!important;padding:28px 28px 30px!important;
+  border:1px solid #e2e9ef!important;border-radius:19px!important;background:#fff!important;
+  box-shadow:0 12px 30px rgba(18,42,70,.045)!important;display:flex!important;flex-direction:column!important;
+  justify-content:flex-start!important;overflow:hidden!important;
+}
+.customerPage:not(.customerHome) .customerFormPanel .customerBadge{
+  width:100%;min-height:35px;padding:0 12px;border-radius:10px;align-self:stretch;display:flex;align-items:center;
+  background:#e3f6e9;color:#138b49;font-size:11px;font-weight:800;
+}
+.customerPage.portalWarrantyPage .customerFormPanel .customerBadge{background:#e5f0ff;color:#126bdc}
+.customerPage.portalComplaintPage .customerFormPanel .customerBadge{background:#fff0df;color:#e96c0a}
+.customerPage.portalTrackPage .customerFormPanel .customerBadge{background:#f0e5ff;color:#7431d7}
+.customerPage:not(.customerHome) .customerFormPanel h2{
+  margin:17px 0 8px!important;color:#071a3d!important;font-size:26px!important;line-height:1.04!important;
+  letter-spacing:-.045em!important;font-weight:900!important;overflow:visible!important;white-space:normal!important;
+}
+.customerPage:not(.customerHome) .customerFormPanel>p{margin:0 0 18px!important;color:#536b89!important;font-size:12px!important;line-height:1.45!important}
+.customerPage:not(.customerHome) .customerFormPanel form{width:100%;margin:10px 0 0!important;display:flex;flex-direction:column;gap:0}
+.customerPage:not(.customerHome) .customerFormPanel label{display:block;margin:0 0 7px!important;color:#405572!important;font-size:11px!important;line-height:1.2;font-weight:800!important}
+.customerPage:not(.customerHome) .customerInput{
+  width:100%!important;height:52px!important;min-height:52px!important;padding:0 14px!important;
+  border:1px solid #dce6ef!important;border-radius:12px!important;background:#fff!important;color:#132a4d!important;font-size:13px!important;outline:none;
+  box-shadow:inset 0 1px 2px rgba(19,40,66,.025)
+}
+.customerPage:not(.customerHome) .customerInput:focus{border-color:#8ab9ef!important;box-shadow:0 0 0 3px rgba(40,125,235,.09)!important}
+.customerPage:not(.customerHome) .customerButton{
+  width:100%!important;height:52px!important;min-height:52px!important;margin-top:13px!important;padding:0 16px!important;
+  border:0!important;border-radius:11px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:9px!important;font-size:14px!important;line-height:1!important;font-weight:850!important;cursor:pointer;
+}
+.customerPage:not(.customerHome) .customerButton span{font-size:19px!important;line-height:1}
+.customerPage.portalProductPage .customerButtonPrimary{background:#08b64d!important;color:#fff!important}
+.customerPage.portalWarrantyPage .customerButtonPrimary{background:#1680ed!important;color:#fff!important}
+.customerPage.portalComplaintPage .customerButtonPrimary{background:#ff8500!important;color:#fff!important}
+.customerPage.portalTrackPage .customerButtonPrimary{background:#7930e8!important;color:#fff!important}
+.customerPage:not(.customerHome) .customerButtonSecondary{background:#fff!important;border:1px solid #dce6ef!important;color:#071a3d!important}
+.customerPage:not(.customerHome) .customerDivider{height:30px;margin:9px 0 5px!important;display:flex;align-items:center;gap:10px;color:#7b8ba0;font-size:10px;font-weight:800}
+.customerPage:not(.customerHome) .customerDivider::before,.customerPage:not(.customerHome) .customerDivider::after{content:"";height:1px;background:#e5ebf0;flex:1}
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::after{
+  content:"Need help?\A Contact our support team for assistance.";white-space:pre;display:block;margin-top:auto;padding:12px 0 0 38px;
+  color:#526a87;font-size:10px;line-height:1.55;font-weight:500;
+}
+.customerPage:not(.customerHome) .customerSection.customerFormPanel::before{
+  content:"⌖";position:absolute;left:28px;bottom:28px;color:#071a3d;font-size:21px;line-height:1;font-weight:700;z-index:4;
+}
+
+@media(max-width:900px){
+  .customerPage:not(.customerHome) .customerHeader,.customerPage:not(.customerHome) .customerMain{width:min(760px,calc(100% - 24px))}
+  .customerPage:not(.customerHome) .customerSplitLayout{grid-template-columns:1fr;gap:12px}
+  .customerPage:not(.customerHome) .customerHero{height:560px}
+  .customerPage:not(.customerHome) .customerSection.customerFormPanel{height:auto;min-height:430px}
+}
+@media(max-width:600px){
+  .customerPage:not(.customerHome) .customerHeader{width:calc(100% - 24px);height:62px;padding:0!important}
+  .customerPage:not(.customerHome) .customerLogo{width:122px}
+  .customerPage:not(.customerHome) .customerHeaderRight{gap:9px}
+  .customerPage:not(.customerHome) .customerHeaderRight .olitecExactPortal{display:none}
+  .customerPage:not(.customerHome) .customerHomeButton{height:35px;min-width:92px;padding:0 13px;font-size:10px}
+  .customerPage:not(.customerHome) .customerMain{width:calc(100% - 24px);padding-bottom:16px!important}
+  .customerPage:not(.customerHome) .customerSplitLayout{gap:10px}
+  .customerPage:not(.customerHome) .customerHero{height:545px;border-radius:16px!important}
+  .customerPage:not(.customerHome) .customerHeroCopy{
+    height:100%;padding:24px 19px 18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.92) 44%,rgba(255,255,255,.20) 66%,rgba(255,255,255,0) 75%);
+  }
+  .customerPage:not(.customerHome) .customerHeroIcon{width:44px;height:44px;flex-basis:44px;margin-bottom:12px}
+  .customerPage:not(.customerHome) .customerEyebrow{font-size:8px!important;letter-spacing:.18em!important;margin-bottom:11px!important}
+  .customerPage:not(.customerHome) .customerHero h1,.customerPage:not(.customerHome) .customerHeroCopy h1{max-width:300px!important;font-size:34px!important;line-height:.96!important;margin-bottom:11px!important}
+  .customerPage:not(.customerHome) .customerHero p,.customerPage:not(.customerHome) .customerHeroCopy p{max-width:300px!important;font-size:12px!important;line-height:1.4!important}
+  .customerPage:not(.customerHome) .customerHeroPoints{gap:10px 14px;margin-top:16px!important;max-width:310px}
+  .customerPage:not(.customerHome) .customerHeroPoints span{max-width:92px;font-size:9px!important}
+  .customerPage:not(.customerHome) .customerHeroImage{height:45%!important}
+  .customerPage.portalProductPage .customerHeroImage{height:48%!important}
+  .customerPage.portalProductPage .customerHeroImage img{object-position:69% center!important}
+  .customerPage.portalWarrantyPage .customerHeroImage img,.customerPage.portalComplaintPage .customerHeroImage img,.customerPage.portalTrackPage .customerHeroImage img{object-fit:contain!important;object-position:center bottom!important}
+  .customerPage:not(.customerHome) .customerSection.customerFormPanel{min-height:400px;padding:22px 18px 25px!important;border-radius:16px!important}
+  .customerPage:not(.customerHome) .customerFormPanel .customerBadge{min-height:34px;font-size:10px}
+  .customerPage:not(.customerHome) .customerFormPanel h2{font-size:24px!important;margin-top:15px!important}
+  .customerPage:not(.customerHome) .customerFormPanel>p{font-size:11px!important}
+  .customerPage:not(.customerHome) .customerInput{height:50px!important;min-height:50px!important}
+  .customerPage:not(.customerHome) .customerButton{height:50px!important;min-height:50px!important}
+  .customerPage:not(.customerHome) .customerSection.customerFormPanel::before{left:18px;bottom:24px}
+  .customerPage:not(.customerHome) .customerSection.customerFormPanel::after{padding-left:31px;padding-top:10px}
+}
+@media(max-width:380px){
+  .customerPage:not(.customerHome) .customerHero{height:520px}
+  .customerPage:not(.customerHome) .customerHero h1,.customerPage:not(.customerHome) .customerHeroCopy h1{font-size:31px!important}
+  .customerPage:not(.customerHome) .customerHeroPoints span{font-size:8px!important;max-width:85px}
+  .customerPage:not(.customerHome) .customerHeroImage{height:43%!important}
+}
