@@ -60,7 +60,6 @@ export default function RegistrationReviewPage() {
     <PortalHeader/>
     <main className="customerMain">
       <button className="customerBack" type="button" onClick={()=>router.push(`/register/${encodeURIComponent(serial)}/purchase`)}>← Edit details</button>
-      <div className="customerSteps"><span className="active">1 Product</span><span className="active">2 Details</span><span className="active">3 Review</span><span>4 Complete</span></div>
       <section className="customerHero compactHero"><span className="customerEyebrow">FINAL REVIEW</span><h1>Almost complete.</h1><p>Review the information you entered before activating your OLITEC warranty.</p></section>
 
       <section className="customerSection customerProductSummary"><div className="customerProductImage"><img src={productImageUrl(product?.product_image)} alt={`${product?.model_code || 'OLITEC'} solar inverter`} onError={event=>{event.currentTarget.src='/olitec-generated-hero.jpg'}}/></div><span className="customerBadge customerBadgeSuccess">Product verified</span><h2>{product?.model_code}</h2><p>Serial number: {product?.serial_number || serial}</p><div className="customerInfoList"><div><span>Warranty</span><strong>{product?.warranty_months ? `${product.warranty_months / 12} years` : '—'}</strong></div></div></section>
