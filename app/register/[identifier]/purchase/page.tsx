@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import QRScanner from '@/components/QRScanner'
 import { PortalHeader } from '@/components/PortalChrome'
 
 type Product = { product_id: string; serial_number: string; model_code: string; product_name: string; capacity_kw: number; warranty_months: number; product_image: string | null }
@@ -12,7 +13,6 @@ type RegistrationForm = {
   installation_date:string; installation_type:string; installer_name:string; installer_mobile:string
   installation_address:string; installation_city:string; installation_state:string; installation_pin:string
 }
-
 const blank:RegistrationForm={full_name:'',mobile:'',email:'',address:'',city:'',state:'',pin_code:'',purchase_date:'',invoice_number:'',dealer_name:'',purchase_type:'Dealer',invoice_path:'',invoice_name:'',installation_date:'',installation_type:'Professional',installer_name:'',installer_mobile:'',installation_address:'',installation_city:'',installation_state:'',installation_pin:''}
 
 function imageUrl(value:string|null|undefined){
@@ -27,35 +27,60 @@ function imageUrl(value:string|null|undefined){
 async function getProduct(identifier:string):Promise<Product>{
   const url=process.env.NEXT_PUBLIC_SUPABASE_URL; const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   if(!url||!key)throw new Error('Product verification is not configured.')
-  const r=await fetch(`${url}/rest/v1/rpc/get_product_for_registration`,{method:'POST',headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({identifier}),cache:'no-store'})
+  const r=await fetch(`${url}/rest/v1/rpc/get_product_for_registration`,{method:'POST',headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({identifier:identifier.trim().toUpperCase()}),cache:'no-store'})
   const body=await r.text(); if(!r.ok)throw new Error(`Product verification failed (${r.status}).`)
-  const data=body?JSON.parse(body) as Product[]:[]; if(!data.length)throw new Error('Product could not be verified. Please go back and scan again.')
+  const data=body?JSON.parse(body) as Product[]:[]; if(!data.length)throw new Error('Product could not be verified. Please check the serial number or QR code.')
   return data[0]
 }
 
+async function verifyProduct(identifier:string){ return getProduct(identifier) }
 function Steps(){return <div className="rfSteps"><div className="rfStep active"><span className="rfDot">✓</span>1 Product</div><div className="rfStep active"><span className="rfDot">2</span>2 Details</div><div className="rfStep"><span className="rfDot">3</span>3 Review</div><div className="rfStep"><span className="rfDot">4</span>4 Complete</div></div>}
 
 export default function PurchaseRegistrationPage(){
   const params=useParams<{identifier:string}>(); const router=useRouter(); const serial=decodeURIComponent(params.identifier); const storageKey=`olitec-registration-${serial}`
-  const [product,setProduct]=useState<Product|null>(null); const [form,setForm]=useState<RegistrationForm>(blank); const [loading,setLoading]=useState(true); const [saving,setSaving]=useState(false); const [uploading,setUploading]=useState(false); const [error,setError]=useState(''); const [uploadError,setUploadError]=useState('')
+  const [products,setProducts]=useState<Product[]>([]); const [form,setForm]=useState<RegistrationForm>(blank); const [loading,setLoading]=useState(true); const [saving,setSaving]=useState(false); const [uploading,setUploading]=useState(false); const [error,setError]=useState(''); const [uploadError,setUploadError]=useState('')
+  const [additionalSerial,setAdditionalSerial]=useState(''); const [addingProduct,setAddingProduct]=useState(false); const [addError,setAddError]=useState(''); const [scannerOpen,setScannerOpen]=useState(false)
 
-  useEffect(()=>{let cancelled=false;(async()=>{const saved=localStorage.getItem(storageKey);if(saved){try{setForm({...blank,...JSON.parse(saved)})}catch{localStorage.removeItem(storageKey)}}try{const item=await getProduct(serial);if(!cancelled)setProduct(item)}catch(e){if(!cancelled)setError(e instanceof Error?e.message:'Product could not be verified.')}finally{if(!cancelled)setLoading(false)}})();return()=>{cancelled=true}},[serial,storageKey])
+  useEffect(()=>{let cancelled=false;(async()=>{const saved=localStorage.getItem(storageKey);if(saved){try{const parsed=JSON.parse(saved);setForm({...blank,...parsed});const savedSerials=Array.isArray(parsed.serial_numbers)?parsed.serial_numbers:[];if(savedSerials.length){const loaded=await Promise.all(savedSerials.map((s:string)=>getProduct(s).catch(()=>null)));if(!cancelled)setProducts(loaded.filter(Boolean) as Product[])} }catch{localStorage.removeItem(storageKey)}}try{const item=await getProduct(serial);if(!cancelled)setProducts(current=>current.some(p=>p.serial_number===item.serial_number)?current:[item,...current.filter(p=>p.serial_number!==item.serial_number)])}catch(e){if(!cancelled)setError(e instanceof Error?e.message:'Product could not be verified.')}finally{if(!cancelled)setLoading(false)}})();return()=>{cancelled=true}},[serial,storageKey])
   const update=(key:keyof RegistrationForm,value:string)=>setForm(prev=>({...prev,[key]:value}))
   async function invoiceChange(e:ChangeEvent<HTMLInputElement>){const file=e.target.files?.[0];if(!file)return;setUploadError('');if(!['application/pdf','image/jpeg','image/png'].includes(file.type)){setUploadError('Please upload a PDF, JPG or PNG file.');e.target.value='';return}if(file.size>10*1024*1024){setUploadError('Invoice must be 10 MB or smaller.');e.target.value='';return}setUploading(true);try{const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-120);const path=`${serial}/${crypto.randomUUID()}-${safe}`;const {error:err}=await supabase.storage.from('invoices').upload(path,file,{cacheControl:'3600',upsert:false,contentType:file.type});if(err)throw new Error(err.message);setForm(p=>({...p,invoice_path:path,invoice_name:file.name}))}catch(err){setUploadError(err instanceof Error?`Invoice upload failed: ${err.message}`:'Invoice upload failed. Please try again.');e.target.value=''}finally{setUploading(false)}}
-  function submit(e:FormEvent){e.preventDefault();if(!product)return;setSaving(true);localStorage.setItem(storageKey,JSON.stringify(form));router.push(`/register/${encodeURIComponent(product.serial_number)}/review`)}
+
+  async function addProduct(raw:string){
+    const value=raw.trim().toUpperCase(); if(!value)return
+    setAddingProduct(true);setAddError('');setScannerOpen(false)
+    try{const item=await verifyProduct(value);if(products.some(p=>p.serial_number.toUpperCase()===item.serial_number.toUpperCase()))throw new Error('This product is already in the registration.');setProducts(current=>[...current,item]);setAdditionalSerial('')}catch(e){setAddError(e instanceof Error?e.message:'Unable to verify this product.')}finally{setAddingProduct(false)}
+  }
+  function submit(e:FormEvent){e.preventDefault();if(!products.length){setError('Please verify at least one product.');return}setSaving(true);localStorage.setItem(storageKey,JSON.stringify({...form,serial_numbers:products.map(p=>p.serial_number)}));router.push(`/register/${encodeURIComponent(products[0].serial_number)}/review`)}
 
   if(loading)return <div className="rfPage"><PortalHeader/><main className="rfMain"><div className="rfLoading">Preparing your registration…</div></main></div>
-  if(error||!product)return <div className="rfPage"><PortalHeader/><main className="rfMain"><section className="rfCard"><span className="rfSectionLabel">Unable to continue</span><h2 className="rfSectionTitle">Product verification failed.</h2><p>{error}</p><button className="rfButton primary" onClick={()=>router.back()}>Go back</button></section></main></div>
+  if(error||!products.length)return <div className="rfPage"><PortalHeader/><main className="rfMain"><section className="rfCard"><span className="rfSectionLabel">Unable to continue</span><h2 className="rfSectionTitle">Product verification failed.</h2><p>{error||'No product was verified.'}</p><button className="rfButton primary" onClick={()=>router.back()}>Go back</button></section></main></div>
 
   return <div className="rfPage"><PortalHeader/><main className="rfMain">
     <div className="rfTop"><button className="rfBack" type="button" onClick={()=>router.back()}>← Product Verification</button></div>
     <Steps/>
-    <section className="rfHero"><span className="rfEyebrow">PRODUCT REGISTRATION</span><h1>Register your purchase.</h1><p>Enter your purchase and installation details to activate your OLITEC warranty.</p></section>
+    <section className="rfHero"><span className="rfEyebrow">PRODUCT REGISTRATION</span><h1>Register your purchase.</h1><p>Register one or more OLITEC inverters under a single customer registration.</p></section>
 
     <section className="rfCard rfProduct">
-      <div className="rfProductImage"><img src={imageUrl(product.product_image)} alt={`${product.model_code} solar inverter`} onError={e=>{e.currentTarget.src='/olitec-generated-hero.jpg'}}/></div>
-      <div className="rfProductText"><span className="rfBadge">✓ {product.model_code}</span><h2>{product.serial_number}</h2><p>{product.capacity_kw} kW {product.product_name}</p></div>
-      <div className="rfMeta"><div className="rfMetaItem"><small>Model</small><strong>{product.model_code}</strong></div><div className="rfMetaItem"><small>Warranty</small><strong>{product.warranty_months/12} years</strong></div><div className="rfMetaItem"><small>Serial number</small><strong>{product.serial_number}</strong></div></div>
+      <div className="rfProductImage"><img src={imageUrl(products[0].product_image)} alt={`${products[0].model_code} solar inverter`} onError={e=>{e.currentTarget.src='/olitec-generated-hero.jpg'}}/></div>
+      <div className="rfProductText"><span className="rfBadge">✓ {products.length} product{products.length>1?'s':''} verified</span><h2>{products[0].model_code}</h2><p>{products[0].capacity_kw} kW {products[0].product_name}</p></div>
+      <div className="rfMeta"><div className="rfMetaItem"><small>Model</small><strong>{products[0].model_code}</strong></div><div className="rfMetaItem"><small>Warranty</small><strong>{products[0].warranty_months/12} years</strong></div><div className="rfMetaItem"><small>Devices</small><strong>{products.length}</strong></div></div>
+    </section>
+
+    <section className="rfCard">
+      <span className="rfSectionLabel">Registered products</span><h2 className="rfSectionTitle">Products in this registration</h2>
+      <p>You can register additional OLITEC inverters purchased by the same customer without creating another registration.</p>
+      <div className="registrationProductsSummary">{products.map((p,index)=><div className="registrationProductsSummaryItem" key={p.serial_number}><div><strong>{index+1}. {p.model_code}</strong><span>{p.serial_number} · {p.capacity_kw} kW {p.product_name}</span></div><span className="warrantyMini">{p.warranty_months/12} year warranty</span></div>)}</div>
+      <div className="multiProductPanel">
+        <div className="multiProductHead"><strong>Add another product</strong><span>Scan QR or enter its serial number</span></div>
+        {scannerOpen&&<div className="customerScannerWrap"><QRScanner onScan={addProduct} onClose={()=>setScannerOpen(false)}/></div>}
+        <div className="multiProductAddRow">
+          <input className="customerInput" value={additionalSerial} onChange={e=>{setAdditionalSerial(e.target.value.toUpperCase());setAddError('')}} placeholder="Enter another serial number" autoCapitalize="characters" autoComplete="off"/>
+          <button className="multiProductAddButton" type="button" disabled={addingProduct||!additionalSerial.trim()} onClick={()=>addProduct(additionalSerial)}>{addingProduct?'Checking…':'Verify & Add'}</button>
+          <button className="multiProductScanButton" type="button" onClick={()=>{setAddError('');setScannerOpen(v=>!v)}}>{scannerOpen?'Close Scanner':'Scan QR'}</button>
+        </div>
+        {addError&&<div className="multiProductError">{addError}</div>}
+        <p className="multiProductHint">All selected products will receive the same registration number and remain individually identifiable by serial number.</p>
+      </div>
     </section>
 
     <form onSubmit={submit}>
