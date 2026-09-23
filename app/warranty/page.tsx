@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { PortalIcon } from '@/components/PortalChrome'
+import { PortalIcon, PortalHeader } from '@/components/PortalChrome'
 
 export default function WarrantyLookupPage() {
   const [identifier, setIdentifier] = useState('')
@@ -11,6 +11,7 @@ export default function WarrantyLookupPage() {
     if (value) window.location.href = `/warranty/${encodeURIComponent(value)}`
   }
   return <div className="app customerPage portalWarrantyPage cleanPortalPage">
+    <PortalHeader />
     <main className="customerMain cleanMain"><div className="customerSplitLayout cleanSplitLayout">
       <section className="customerHero customerHeroVisual cleanHero">
         <div className="customerHeroCopy"><div className="customerHeroIcon"><PortalIcon type="shield" /></div><span className="customerEyebrow">WARRANTY STATUS</span><h1>Check Your<br />Warranty</h1><p>Enter your registration number or product serial number to view the warranty period and coverage.</p><div className="customerHeroPoints"><span>✓ Check warranty period</span><span>✓ View product information</span><span>✓ Register a service complaint</span></div></div>
