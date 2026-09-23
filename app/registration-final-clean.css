@@ -1,0 +1,184 @@
+/* OLITEC registration final clean pass. Loaded last to neutralize legacy overrides. */
+
+/* Never render the legacy help/support injection anywhere on registration pages. */
+.customerPage .customerSection.customerFormPanel::before,
+.customerPage .customerSection.customerFormPanel::after,
+.customerPage .portalSupport,
+.customerPage .customerSupport,
+.customerPage .supportBlock,
+.customerPage .needHelp,
+.customerPage .need-help,
+.customerPage [class*="supportBlock"],
+.customerPage [class*="SupportBlock"]{
+  display:none !important;
+  content:none !important;
+}
+
+.customerPage .customerFooter{display:none !important}
+
+/* Keep the registration flow compact and consistent. */
+.customerPage:not(.customerHome){
+  width:100% !important;
+  max-width:none !important;
+  min-height:100vh !important;
+  background:#fff !important;
+  overflow-x:hidden !important;
+}
+.customerPage:not(.customerHome) .customerMain{
+  width:min(860px,calc(100% - 32px)) !important;
+  margin:0 auto !important;
+  padding:8px 0 34px !important;
+}
+
+/* PRODUCT VERIFICATION / PREVIEW */
+.customerVerifyCard{
+  display:grid !important;
+  grid-template-columns:170px minmax(0,1fr) !important;
+  grid-template-rows:auto auto auto auto !important;
+  column-gap:24px !important;
+  row-gap:8px !important;
+  align-items:center !important;
+  padding:24px !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+.customerVerifyImage{
+  grid-column:1 !important;
+  grid-row:1 / span 4 !important;
+  width:170px !important;
+  height:170px !important;
+  border:1px solid #dfe7ee !important;
+  border-radius:18px !important;
+  background:#f7fafb !important;
+  overflow:hidden !important;
+  display:grid !important;
+  place-items:center !important;
+}
+.customerVerifyImage img{
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+  object-fit:contain !important;
+}
+.customerVerifyCard > .customerBadge{grid-column:2 !important;grid-row:1 !important;width:max-content !important;margin:0 !important}
+.customerVerifyCard > h2{
+  grid-column:2 !important;grid-row:2 !important;
+  width:100% !important;min-width:0 !important;
+  margin:0 !important;
+  font-size:34px !important;line-height:1.08 !important;letter-spacing:-.04em !important;
+  overflow-wrap:anywhere !important;
+}
+.customerVerifyCard > p{
+  grid-column:2 !important;grid-row:3 !important;
+  width:100% !important;min-width:0 !important;
+  margin:0 !important;color:#536784 !important;font-size:15px !important;line-height:1.45 !important;
+}
+.customerVerifyCard .customerInfoGrid{
+  grid-column:2 !important;grid-row:4 !important;
+  width:100% !important;max-width:100% !important;
+  margin:7px 0 0 !important;
+  display:grid !important;grid-template-columns:1fr !important;gap:0 !important;
+  border:1px solid #dfe7ee !important;border-radius:14px !important;overflow:hidden !important;
+}
+.customerVerifyCard .customerInfoGrid > div{
+  min-width:0 !important;min-height:46px !important;
+  padding:10px 14px !important;
+  display:grid !important;grid-template-columns:minmax(105px,38%) minmax(0,1fr) !important;
+  align-items:center !important;column-gap:14px !important;
+  background:#fff !important;border-bottom:1px solid #e5ebf0 !important;
+}
+.customerVerifyCard .customerInfoGrid > div:last-child{border-bottom:0 !important}
+.customerVerifyCard .customerInfoGrid small{margin:0 !important;color:#71829b !important;font-size:11px !important}
+.customerVerifyCard .customerInfoGrid strong{
+  min-width:0 !important;color:#07183d !important;font-size:12px !important;text-align:right !important;
+  overflow-wrap:anywhere !important;word-break:break-word !important;
+}
+.customerVerifyCard .customerButton{grid-column:2 !important;grid-row:5 !important;margin-top:10px !important}
+
+/* REVIEW */
+.customerPage .customerSteps{display:none !important}
+.customerPage .customerProductSummary{
+  display:grid !important;
+  grid-template-columns:132px minmax(0,1fr) !important;
+  grid-template-areas:
+    "image badge"
+    "image title"
+    "image serial"
+    "image warranty" !important;
+  column-gap:22px !important;row-gap:9px !important;align-items:center !important;
+  padding:24px !important;margin-bottom:14px !important;overflow:hidden !important;
+}
+.customerPage .customerProductSummary .customerProductImage{
+  grid-area:image !important;width:132px !important;height:132px !important;min-width:132px !important;
+  margin:0 !important;border:1px solid #dfe7ee !important;border-radius:16px !important;
+  background:#f7fafb !important;overflow:hidden !important;display:grid !important;place-items:center !important;
+}
+.customerPage .customerProductSummary .customerProductImage img{width:100% !important;height:100% !important;object-fit:contain !important;display:block !important}
+.customerPage .customerProductSummary > .customerBadge{grid-area:badge !important;width:max-content !important;margin:0 !important}
+.customerPage .customerProductSummary > h2{grid-area:title !important;margin:0 !important;font-size:32px !important;line-height:1.08 !important;letter-spacing:-.04em !important;overflow-wrap:anywhere !important}
+.customerPage .customerProductSummary > p{grid-area:serial !important;margin:0 !important;font-size:14px !important;color:#536784 !important;overflow-wrap:anywhere !important}
+.customerPage .customerProductSummary .customerInfoList{grid-area:warranty !important;width:max-content !important;max-width:100% !important;margin:0 !important;border:1px solid #dfe7ee !important;border-radius:12px !important;overflow:hidden !important}
+.customerPage .customerProductSummary .customerInfoList > div{display:flex !important;align-items:center !important;gap:16px !important;padding:9px 14px !important;border:0 !important;min-height:38px !important}
+.customerPage .customerProductSummary .customerInfoList span,.customerPage .customerProductSummary .customerInfoList strong{white-space:nowrap !important;text-align:left !important;width:auto !important;max-width:none !important;margin:0 !important}
+
+.customerPage .customerSection:not(.customerProductSummary){
+  padding:22px !important;margin-bottom:14px !important;overflow:hidden !important;
+}
+.customerPage .customerSection:not(.customerProductSummary) h2{margin:10px 0 !important}
+.customerPage .customerInfoList{
+  width:100% !important;max-width:100% !important;margin-top:14px !important;
+  border:1px solid #dfe7ee !important;border-radius:14px !important;overflow:hidden !important;
+}
+.customerPage .customerInfoList > div,.customerPage .customerInfoListRow{
+  min-width:0 !important;min-height:48px !important;box-sizing:border-box !important;
+  display:grid !important;grid-template-columns:minmax(105px,38%) minmax(0,1fr) !important;
+  align-items:center !important;column-gap:16px !important;padding:11px 15px !important;
+  border-bottom:1px solid #e5ebf0 !important;
+}
+.customerPage .customerInfoList > div:last-child,.customerPage .customerInfoListRow:last-child{border-bottom:0 !important}
+.customerPage .customerInfoList span,.customerPage .customerInfoListRow span{min-width:0 !important;margin:0 !important;color:#71829b !important;font-size:11px !important;line-height:1.4 !important}
+.customerPage .customerInfoList strong,.customerPage .customerInfoListRow strong{min-width:0 !important;max-width:none !important;margin:0 !important;color:#07183d !important;font-size:12px !important;line-height:1.4 !important;text-align:right !important;overflow-wrap:anywhere !important;word-break:break-word !important}
+.customerPage .customerSubmit{width:100% !important;min-height:52px !important;margin-top:6px !important}
+
+/* COMPLETE / SUCCESS */
+.customerPage .customerSuccess{
+  width:100% !important;max-width:760px !important;margin:0 auto !important;padding:28px !important;
+  text-align:center !important;box-sizing:border-box !important;overflow:hidden !important;
+}
+.customerPage .customerSuccess h1{margin:12px 0 7px !important;font-size:42px !important;line-height:1.04 !important;letter-spacing:-.045em !important}
+.customerPage .customerSuccess > p{margin:0 auto !important;max-width:520px !important}
+.customerPage .customerNumberBox{width:100% !important;box-sizing:border-box !important;margin:20px 0 14px !important;padding:15px 18px !important;border-radius:14px !important}
+.customerPage .customerSuccessProduct{
+  width:100% !important;box-sizing:border-box !important;display:grid !important;
+  grid-template-columns:88px minmax(0,1fr) !important;align-items:center !important;gap:16px !important;
+  margin:14px 0 !important;padding:14px 16px !important;border:1px solid #dfe7ee !important;
+  border-radius:15px !important;background:#fff !important;text-align:left !important;overflow:hidden !important;
+}
+.customerPage .customerSuccessProductImage{width:88px !important;height:88px !important;min-width:88px !important;border:1px solid #e1e8ee !important;border-radius:13px !important;overflow:hidden !important;background:#f7fafb !important}
+.customerPage .customerSuccessProductImage img{width:100% !important;height:100% !important;object-fit:contain !important;display:block !important}
+.customerPage .customerSuccessProduct > div:last-child{min-width:0 !important;display:grid !important;gap:5px !important}
+.customerPage .customerSuccessProduct strong,.customerPage .customerSuccessProduct span{min-width:0 !important;overflow-wrap:anywhere !important;word-break:break-word !important}
+.customerPage .customerSuccessProduct strong{font-size:15px !important;line-height:1.25 !important;color:#07183d !important}
+.customerPage .customerSuccessProduct span{font-size:12px !important;line-height:1.35 !important;color:#536784 !important}
+.customerPage .customerSuccess .customerQr{margin:16px 0 8px !important;padding-top:16px !important;border-top:1px solid #e7edf2 !important}
+.customerPage .customerSuccess .customerQr img{width:148px !important;height:148px !important;display:block !important;margin:0 auto 8px !important}
+.customerPage .customerSuccess .customerButton{width:100% !important;max-width:100% !important;margin-top:10px !important}
+
+@media(max-width:640px){
+  .customerPage:not(.customerHome) .customerMain{width:calc(100% - 24px) !important;padding-bottom:24px !important}
+  .customerVerifyCard{grid-template-columns:1fr !important;grid-template-rows:auto !important;gap:10px !important;padding:18px !important}
+  .customerVerifyImage{grid-column:1 !important;grid-row:auto !important;width:150px !important;height:150px !important;margin:0 auto 2px !important}
+  .customerVerifyCard > .customerBadge,.customerVerifyCard > h2,.customerVerifyCard > p,.customerVerifyCard .customerInfoGrid,.customerVerifyCard .customerButton{grid-column:1 !important;grid-row:auto !important}
+  .customerVerifyCard > .customerBadge{justify-self:start !important}
+  .customerVerifyCard > h2{font-size:28px !important}
+  .customerVerifyCard > p{font-size:13px !important}
+  .customerPage .customerProductSummary{grid-template-columns:1fr !important;grid-template-areas:"image" "badge" "title" "serial" "warranty" !important;gap:9px !important;padding:18px !important}
+  .customerPage .customerProductSummary .customerProductImage{width:132px !important;height:132px !important;margin:0 auto !important}
+  .customerPage .customerProductSummary > .customerBadge{justify-self:start !important}
+  .customerPage .customerProductSummary .customerInfoList{justify-self:start !important}
+  .customerPage .customerSuccess{padding:24px 18px !important}
+  .customerPage .customerSuccess h1{font-size:34px !important}
+  .customerPage .customerSuccessProduct{grid-template-columns:76px minmax(0,1fr) !important;gap:12px !important;padding:12px !important}
+  .customerPage .customerSuccessProductImage{width:76px !important;height:76px !important;min-width:76px !important}
+  .customerPage .customerInfoList > div,.customerPage .customerInfoListRow{grid-template-columns:minmax(88px,36%) minmax(0,1fr) !important;column-gap:12px !important;padding:11px 13px !important}
+}
