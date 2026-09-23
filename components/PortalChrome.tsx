@@ -15,33 +15,24 @@ export function PortalIcon({ type }: { type: PortalIconType }) {
   return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h15l7 7v29H14Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round"/><path d="M29 6v9h9M20 23h10M20 29h10M20 35h7" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
 }
 
+function HomeIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinejoin="round"/></svg>
+}
+
 export function PortalHeader() {
   return (
     <header className="customerHeader">
       <Link href="/" className="customerLogo" aria-label="OLITEC home">
-        <img className="olitecOfficialLogo" src="/olitec-logo.svg" alt="OLITEC — Powering a Better Tomorrow" />
+        <img className="olitecOfficialLogo" src="/olitec-logo.svg" alt="OLITEC" />
+      </Link>
+      <Link href="/" className="customerHomeButton" aria-label="Go to OLITEC home">
+        <HomeIcon />
+        <span>Home</span>
       </Link>
     </header>
   )
 }
 
-export function PortalSupport() {
-  return (
-    <section className="portalSupport" aria-label="OLITEC support">
-      <div>
-        <strong>Need help?</strong>
-        <span>Our service team is here to help.</span>
-      </div>
-      <span className="portalSupportLink">View Support Details&nbsp; →</span>
-    </section>
-  )
-}
-
 export function PortalFooter() {
-  return (
-    <>
-      <PortalSupport />
-      <footer className="customerFooter">OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
-    </>
-  )
+  return <footer className="customerFooter">OLITEC · Clean Energy · Reliable Performance · Smarter Tomorrow</footer>
 }
