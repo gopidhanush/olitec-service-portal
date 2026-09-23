@@ -3,8 +3,8 @@
 import Link from 'next/link'
 
 const services = [
-  { tone: 'green', title: 'Product Registration', text: 'Scan QR code or enter your serial number.', href: '/register', icon: 'scan' },
-  { tone: 'blue', title: 'Warranty Status', text: 'Check your product warranty details.', href: '/warranty', icon: 'shield' },
+  { tone: 'green', title: 'Product Registration', text: 'Scan QR code or enter your serial number to register your product.', href: '/register', icon: 'scan' },
+  { tone: 'blue', title: 'Warranty Status', text: 'Check your product warranty details anytime.', href: '/warranty', icon: 'shield' },
   { tone: 'orange', title: 'Register Complaint', text: 'Report a problem with your registered product.', href: '/service/complaint/start', icon: 'wrench' },
   { tone: 'purple', title: 'Complaint Status', text: 'Track the latest status of your service complaint.', href: '/service/track', icon: 'file' },
 ]
@@ -15,6 +15,18 @@ function ServiceIcon({ type }: { type: string }) {
   if (type === 'wrench') return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.1a5 5 0 0 0-6.2 6.2L3.8 17a2.1 2.1 0 1 0 3 3l4.7-4.7a5 5 0 0 0 6.2-6.2l-3.2 3.2-2.9-.9-.9-2.9 3.2-3.2Z"/></svg>
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5M10 16h5"/></svg>
 }
+
+function FeatureIcon({ type }: { type: string }) {
+  if (type === 'shield') return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.2 8.5-8 10-4.8-1.5-8-5-8-10V6l8-3Z"/><path d="m8.4 12 2.2 2.2 4.9-5"/></svg>
+  if (type === 'bolt') return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2 5 13h5.8L10.8 22 19 10.5h-5.8L13.2 2Z"/></svg>
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13h3v6H5a1 1 0 0 1-1-1v-5ZM20 13h-3v6h2a1 1 0 0 0 1-1v-5Z"/><path d="M17 19c-.8 1.1-2 2-4 2h-1"/></svg>
+}
+
+const features = [
+  { icon: 'shield', label: <>Genuine<br />Support</> },
+  { icon: 'bolt', label: <>Quick<br />Service</> },
+  { icon: 'headset', label: <>Reliable<br />Assistance</> },
+]
 
 export default function HomePage() {
   return (
@@ -31,7 +43,23 @@ export default function HomePage() {
 
       <main className="olitecMain">
         <section className="olitecHero" aria-label="OLITEC Inverter Support">
-          <img src="/olitec-generated-hero.jpg" alt="OLITEC inverter support" />
+          {/* The supplied photographic hero is used only as the scene/background. All copy and feature icons below are live HTML. */}
+          <div className="heroPhoto" aria-hidden="true" />
+          <div className="heroWash" aria-hidden="true" />
+          <div className="heroCopy">
+            <span className="heroEyebrow">CLEAN ENERGY<br />FOR A BRIGHTER TOMORROW</span>
+            <h1>Your OLITEC<br /><span>Inverter Support</span></h1>
+            <p>Register, check warranty and get<br className="desktopBreak" /> service support — all in one place.</p>
+            <span className="heroAccent" />
+            <div className="heroFeatures">
+              {features.map((feature) => (
+                <div className="heroFeature" key={feature.icon}>
+                  <span className="heroFeatureIcon"><FeatureIcon type={feature.icon} /></span>
+                  <span>{feature.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="olitecServices" aria-label="Customer services">
@@ -54,7 +82,6 @@ export default function HomePage() {
         a{text-decoration:none}
         .olitecHomePage{min-height:100svh;width:100%;background:#fff;overflow-x:hidden}
 
-        /* Desktop baseline is intentionally sized to reproduce the visual scale that previously required 110% browser zoom. */
         .olitecHeader{width:min(1465px,calc(100% - 48px));height:78px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
         .olitecLogo{width:158px;display:block;line-height:0}
         .olitecLogo img{display:block;width:100%;height:auto}
@@ -64,9 +91,22 @@ export default function HomePage() {
         .homeIcon{font-size:15px;line-height:1}
 
         .olitecMain{width:min(1465px,calc(100% - 48px));height:min(540px,calc(100svh - 100px));min-height:455px;margin:0 auto 18px;display:grid;grid-template-columns:minmax(0,2.45fr) minmax(380px,1fr);gap:11px}
-        .olitecHero{position:relative;min-width:0;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #e3e9ee;background:#edf4f6;box-shadow:0 12px 30px rgba(18,42,70,.07)}
-        /* The supplied raster contains a grey strip at its bottom. Scale from the top so that strip stays outside the visible hero. */
-        .olitecHero img{position:absolute;left:50%;top:0;width:108%;height:auto;min-height:108%;display:block;max-width:none;object-fit:cover;object-position:center top;transform:translateX(-50%);transform-origin:center top}
+
+        .olitecHero{position:relative;min-width:0;min-height:0;border-radius:18px;overflow:hidden;border:1px solid #e3e9ee;background:#eaf2f4;box-shadow:0 12px 30px rgba(18,42,70,.07)}
+        .heroPhoto{position:absolute;inset:0;background-image:url('/olitec-generated-hero.jpg');background-size:cover;background-position:68% center;background-repeat:no-repeat;transform:scale(1.01)}
+        /* Hide the copy baked into the source raster while retaining its real photographic house/solar/inverter scene. */
+        .heroWash{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.91) 29%,rgba(255,255,255,.54) 48%,rgba(255,255,255,.08) 66%,rgba(255,255,255,0) 78%);pointer-events:none}
+        .heroWash:after{content:"";position:absolute;left:0;bottom:0;width:49%;height:31%;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.86) 32%,#fff 100%)}
+        .heroCopy{position:absolute;z-index:2;left:5.5%;top:0;width:45%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:5% 0 4%}
+        .heroEyebrow{font-size:10px;line-height:1.7;letter-spacing:.30em;font-weight:800;color:#637b9b;margin-bottom:17px}
+        .heroCopy h1{margin:0;color:#071a3d;font-size:clamp(39px,4vw,61px);line-height:.94;letter-spacing:-.055em;font-weight:900}
+        .heroCopy h1 span{color:#075d46}
+        .heroCopy p{margin:18px 0 0;color:#4b6382;font-size:15px;line-height:1.42;font-weight:500}
+        .heroAccent{display:block;width:29px;height:3px;border-radius:99px;background:#13ae55;margin-top:17px}
+        .heroFeatures{display:flex;align-items:flex-start;gap:27px;margin-top:20px}
+        .heroFeature{display:flex;align-items:center;gap:7px;color:#496684;font-size:9px;line-height:1.15;font-weight:600;min-width:70px}
+        .heroFeatureIcon{width:27px;height:27px;display:grid;place-items:center;color:#0aaa52;flex:0 0 auto}
+        .heroFeatureIcon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
 
         .olitecServices{min-width:0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:11px}
         .serviceCard{position:relative;min-width:0;min-height:0;border:1px solid;border-radius:18px;padding:20px 18px 18px;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden;color:var(--navy);transition:transform .18s ease,box-shadow .18s ease}
@@ -86,29 +126,34 @@ export default function HomePage() {
         @media(max-width:1200px){
           .olitecHeader,.olitecMain{width:calc(100% - 36px)}
           .olitecMain{grid-template-columns:minmax(0,2.2fr) minmax(330px,1fr)}
+          .heroCopy{left:5%;width:47%}.heroCopy h1{font-size:clamp(36px,4.2vw,54px)}
         }
         @media(max-width:900px){
           .olitecHeader{width:min(720px,calc(100% - 32px));height:60px}
           .olitecMain{width:min(720px,calc(100% - 32px));height:auto;min-height:0;grid-template-columns:1fr;gap:10px}
-          .olitecHero{aspect-ratio:2/1}
-          .olitecHero img{width:108%;min-height:108%;height:auto}
+          .olitecHero{aspect-ratio:1.72/1}
+          .heroPhoto{background-position:70% center}
+          .heroCopy{left:5%;width:48%}.heroCopy h1{font-size:clamp(31px,7vw,48px)}.heroCopy p{font-size:12px}.heroEyebrow{font-size:8px}.heroFeatures{gap:12px}.heroFeature{font-size:8px;min-width:60px}
           .olitecServices{min-height:330px}
         }
         @media(max-width:600px){
           .olitecHeader{width:calc(100% - 24px);height:58px}
-          .olitecLogo{width:126px}
-          .olitecNav{gap:9px}.portalLabel{display:none}
+          .olitecLogo{width:126px}.olitecNav{gap:9px}.portalLabel{display:none}
           .homeButton{height:34px;padding:0 12px;font-size:10px}
           .olitecMain{width:calc(100% - 24px);gap:8px;margin-bottom:12px}
-          .olitecHero{aspect-ratio:2/1;border-radius:13px}
-          .olitecHero img{width:108%;min-height:108%;object-fit:cover;object-position:center top}
+          .olitecHero{aspect-ratio:1.08/1;border-radius:13px;min-height:390px}
+          .heroPhoto{background-position:69% center;background-size:auto 100%;}
+          .heroWash{background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.92) 49%,rgba(255,255,255,.36) 73%,rgba(255,255,255,0) 100%)}
+          .heroWash:after{width:70%;height:27%}
+          .heroCopy{left:7%;width:62%;height:100%;padding:9% 0 7%;justify-content:flex-start}
+          .heroEyebrow{font-size:7px;letter-spacing:.22em;margin-bottom:13px}.heroCopy h1{font-size:32px;line-height:.94}.heroCopy p{font-size:11px;line-height:1.35;margin-top:14px}.desktopBreak{display:none}.heroAccent{margin-top:13px}.heroFeatures{gap:8px;margin-top:16px}.heroFeature{font-size:7px;gap:4px;min-width:54px}.heroFeatureIcon{width:22px;height:22px}.heroFeatureIcon svg{width:21px;height:21px}
           .olitecServices{grid-template-columns:1fr;grid-template-rows:none;gap:8px;min-height:0}
           .serviceCard{height:92px;border-radius:13px;padding:12px 48px 12px 12px;justify-content:center}
           .serviceIcon{width:34px;height:34px;margin-bottom:6px}.serviceIcon svg{width:18px;height:18px}
           .serviceCard strong{font-size:14px;line-height:1.02}.serviceText{font-size:9px;line-height:1.3;margin-top:4px;max-width:245px}
           .serviceArrow{right:12px;top:50%;bottom:auto;transform:translateY(-50%);width:30px;height:30px}
         }
-        @media(max-width:380px){.serviceCard{height:86px}.serviceCard strong{font-size:13px}.serviceText{font-size:8.5px}}
+        @media(max-width:380px){.olitecHero{min-height:360px}.heroCopy h1{font-size:29px}.serviceCard{height:86px}.serviceCard strong{font-size:13px}.serviceText{font-size:8.5px}}
       `}</style>
     </div>
   )
