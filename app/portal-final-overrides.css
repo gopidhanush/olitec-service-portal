@@ -6,3 +6,85 @@
 .olitecBrandName,.olitecBrandTagline{display:none!important}
 .olitecBrand{width:178px!important;height:39px!important;display:block!important;background:url('/olitec-logo.svg') left top / 178px 39px no-repeat!important;color:transparent!important}
 .olitecOfficialLogo{display:block!important;width:178px!important;height:auto!important;max-width:none!important}
+
+/* Customer portal: full-width desktop composition with a real Home control. */
+.customerPage{width:100%!important;max-width:1360px!important;min-height:100svh!important;margin:0 auto!important;background:#fff!important;box-shadow:none!important;overflow:visible!important}
+.customerHeader{width:100%!important;min-height:76px!important;padding:18px 8px 12px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;background:#fff!important}
+.customerLogo{display:block!important;width:178px!important;height:auto!important;line-height:0!important}
+.customerLogo .olitecOfficialLogo{width:178px!important;height:auto!important}
+.customerHomeButton{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:96px!important;height:42px!important;padding:0 16px!important;border:1px solid #dfe7ee!important;border-radius:999px!important;background:#fff!important;color:#10213b!important;text-decoration:none!important;font-size:13px!important;font-weight:800!important;box-shadow:0 5px 16px rgba(9,32,68,.06)!important;transition:all .16s ease!important}
+.customerHomeButton:hover{transform:translateY(-1px)!important;border-color:#bfcddd!important;box-shadow:0 9px 22px rgba(9,32,68,.1)!important}
+.customerHomeButton svg{width:17px!important;height:17px!important;display:block!important}
+.customerMain{width:100%!important;padding:8px 8px 24px!important}
+.customerSplitLayout{display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(430px,.9fr)!important;gap:18px!important;align-items:stretch!important;min-height:650px!important}
+.customerHero.customerHeroVisual{position:relative!important;min-height:650px!important;margin:0!important;padding:0!important;border:1px solid #e1e8ee!important;border-radius:28px!important;overflow:hidden!important;display:grid!important;grid-template-columns:1fr .95fr!important;background:#eef8f1!important;box-shadow:0 16px 45px rgba(9,32,68,.06)!important}
+.customerHeroCopy{position:relative!important;z-index:2!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;padding:48px 42px!important}
+.customerHeroIcon{width:54px!important;height:54px!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#d9f3e2!important;color:#11a34b!important;margin-bottom:22px!important}
+.customerHeroIcon svg{width:29px!important;height:29px!important}
+.customerHero h1{font-size:clamp(38px,3.3vw,58px)!important;line-height:.98!important;letter-spacing:-.055em!important;margin:14px 0 14px!important;color:#07183d!important;max-width:570px!important}
+.customerHero p{font-size:17px!important;line-height:1.5!important;max-width:520px!important;margin:0!important;color:#536784!important}
+.customerEyebrow{padding:7px 11px!important;font-size:10px!important;letter-spacing:.18em!important}
+.customerHeroPoints{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin-top:28px!important;color:#536784!important;font-size:11px!important;font-weight:700!important}
+.customerHeroPoints span{padding:9px 11px!important;border-radius:999px!important;background:rgba(255,255,255,.72)!important;border:1px solid rgba(216,228,235,.9)!important}
+.customerHeroImage{position:relative!important;min-width:0!important;min-height:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(220,232,228,.4))!important}
+.customerHeroImage:after{content:''!important;position:absolute!important;inset:0!important;background:linear-gradient(90deg,rgba(238,248,241,.55),transparent 24%,transparent 80%,rgba(210,225,218,.16))!important;pointer-events:none!important}
+.customerHeroImage img{position:relative!important;z-index:1!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
+.customerFormPanel{min-height:650px!important;margin:0!important;padding:42px!important;border:1px solid #dfe7ee!important;border-radius:28px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;background:#fff!important;box-shadow:0 16px 45px rgba(9,32,68,.055)!important}
+.customerFormPanel h2{font-size:31px!important;line-height:1.08!important;margin:15px 0 8px!important;letter-spacing:-.04em!important}
+.customerFormPanel>p{font-size:14px!important;line-height:1.55!important;margin:0 0 10px!important}
+.customerFormPanel form{margin-top:8px!important}
+.customerFormPanel .customerButton{min-height:52px!important;margin-top:14px!important}
+.customerMiniNote{display:flex!important;align-items:center!important;gap:10px!important;margin-top:24px!important;padding:13px 14px!important;border-radius:14px!important;background:#f7fafb!important;border:1px solid #e5ebf0!important;color:#63748b!important;font-size:11px!important;line-height:1.4!important}
+.customerMiniNote svg{width:20px!important;height:20px!important;flex:0 0 auto!important;color:#20a957!important}
+.customerResults{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin-top:18px!important}
+.customerResults .customerSection:last-child{grid-column:1/-1}
+.customerFooter{padding:16px 8px 22px!important;text-align:center!important;color:#9aa1ac!important;font-size:10px!important}
+
+/* Keep the home page large enough to use the browser viewport instead of leaving a large blank area. */
+.olitecHomeHeader,.olitecHomeMain{width:min(1360px,calc(100% - 32px))!important}
+.olitecHomeHeader{padding-top:14px!important;padding-bottom:12px!important}
+.olitecHomeLayout{height:min(820px,calc(100svh - 105px))!important;min-height:620px!important;gap:18px!important}
+.olitecHero{border-radius:28px!important}
+.olitecServices{gap:18px!important}
+.olitecServiceCard{border-radius:23px!important;padding:24px!important}
+
+@media(max-width:900px){
+  .customerPage{max-width:760px!important}
+  .customerHeader{padding:16px 18px 10px!important}
+  .customerMain{padding:8px 18px 24px!important}
+  .customerSplitLayout{grid-template-columns:1fr!important;min-height:0!important}
+  .customerHero.customerHeroVisual{min-height:540px!important;grid-template-columns:1fr .85fr!important}
+  .customerFormPanel{min-height:0!important;padding:30px!important}
+  .customerResults{grid-template-columns:1fr!important}
+  .customerResults .customerSection:last-child{grid-column:auto}
+  .olitecHomeHeader,.olitecHomeMain{width:calc(100% - 24px)!important}
+  .olitecHomeLayout{height:auto!important;min-height:0!important;grid-template-columns:1fr!important}
+  .olitecHero{min-height:520px!important}
+}
+
+@media(max-width:620px){
+  .customerHeader{min-height:68px!important;padding:14px 16px 9px!important}
+  .customerLogo,.customerLogo .olitecOfficialLogo{width:150px!important}
+  .customerHomeButton{min-width:42px!important;width:42px!important;padding:0!important;height:40px!important}
+  .customerHomeButton span{display:none!important}
+  .customerMain{padding:6px 12px 18px!important}
+  .customerHero.customerHeroVisual{min-height:0!important;display:flex!important;flex-direction:column!important}
+  .customerHeroCopy{padding:30px 24px 24px!important}
+  .customerHero h1{font-size:36px!important}
+  .customerHero p{font-size:14px!important}
+  .customerHeroImage{min-height:270px!important;max-height:310px!important}
+  .customerHeroPoints{margin-top:20px!important;gap:7px!important}
+  .customerHeroPoints span{font-size:10px!important;padding:7px 9px!important}
+  .customerFormPanel{padding:24px!important;border-radius:22px!important}
+  .customerFormPanel h2{font-size:25px!important}
+  .customerSplitLayout{gap:12px!important}
+  .customerResults{gap:12px!important}
+  .olitecHomeHeader,.olitecHomeMain{width:calc(100% - 20px)!important}
+  .olitecHomeHeader{padding-top:10px!important}
+  .olitecHomeLayout{gap:12px!important}
+  .olitecHero{min-height:620px!important;grid-template-columns:1fr!important}
+  .olitecHeroImage{min-height:300px!important;order:2}
+  .olitecHeroCopy{padding:28px!important}
+  .olitecServices{gap:12px!important}
+  .olitecServiceCard{padding:18px!important}
+}
