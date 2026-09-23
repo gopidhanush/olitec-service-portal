@@ -1,5 +1,5 @@
-/* Reference visual assets for the complaint tracking panel. Text stays live HTML. */
-.portalTrackPage .customerHeroImage{
+/* Reference visual asset for complaint tracking. Text remains live HTML. */
+.customerPage.portalTrackPage .customerHeroImage{
   background:linear-gradient(180deg,#f7efff 0%,#f1e7ff 100%) url('/olitec-tracking-visual.svg') center bottom / 88% auto no-repeat;
 }
-.portalTrackPage .customerHeroImage img{display:none!important}
+.customerPage.portalTrackPage .customerHeroImage img{display:none!important}
