@@ -31,6 +31,11 @@
 .portalTrackPage .customerResults{margin-top:18px!important}
 .portalTrackPage .customerStatusCard{min-height:0!important}
 
+/* Keep complaint status on the same green customer-service visual language. */
+.portalTrackPage .customerEyebrow{color:#099246!important}
+.portalTrackPage .customerButtonPrimary{background:#08b64d!important;color:#fff!important}
+.portalTrackPage .customerFormPanel .customerBadge{background:#e3f6e9!important;color:#138b49!important}
+
 /* Result/detail cards use the same compact vertical rhythm. */
 .portalWarrantyPage .warrantyResult,
 .portalTrackPage .cleanPageCard,
