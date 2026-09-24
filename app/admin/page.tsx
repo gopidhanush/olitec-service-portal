@@ -111,8 +111,6 @@ export default function AdminHomePage() {
       <main className="adminPage adminLoginPage">
         <section className="adminLoginCard adminHomeLoginCard">
           <img src="/olitec-logo.svg" alt="OLITEC" className="adminHomeLogo" />
-          <div className="adminSubtitle adminHomeSubtitle">Administration</div>
-          <div className="adminEyebrow adminHomeEyebrow">OLITEC ADMINISTRATION</div>
           <h1>{signupMode ? 'Create staff account' : 'Service & Product Management'}</h1>
           <p>{signupMode ? 'Create your OLITEC administration account. Access will remain locked until the Super Admin assigns permissions.' : 'Sign in with your authorised staff account or create a new account.'}</p>
           <form onSubmit={signupMode ? signup : login} className="adminForm">
@@ -137,14 +135,14 @@ export default function AdminHomePage() {
     <main className="adminPage adminHomePage">
       <div className="adminShell adminHomeShell">
         <header className="adminHeader adminHomeHeader">
-          <div className="adminBrandBlock"><img src="/olitec-logo.svg" alt="OLITEC" className="adminHomeLogo" /><div className="adminSubtitle">Administration</div></div>
+          <div className="adminBrandBlock"><img src="/olitec-logo.svg" alt="OLITEC" className="adminHomeLogo" /></div>
           <div className="adminHeaderActions"><span className="adminTopBadge">{permissions?.display_name || permissions?.email}</span><button className="adminDarkButton" onClick={logout}>Sign out</button></div>
         </header>
 
         {error && <div className="adminAlert error">{error}</div>}
         {message && <div className="adminAlert success">✓ {message}</div>}
 
-        <section className="adminHomeHero"><div><div className="adminEyebrow">OLITEC ADMINISTRATION</div><h1>Service &amp; Product Management</h1><p>Choose an administration area assigned to your account.</p></div><div className="adminHomeHeroMark">OLITEC</div></section>
+        <section className="adminHomeHero"><div><h1>Service &amp; Product Management</h1><p>Choose an administration area assigned to your account.</p></div><div className="adminHomeHeroMark">OLITEC</div></section>
 
         <section className="adminHomeModules" aria-label="Administration modules">
           {canService && <button className="adminHomeModule service" onClick={() => { window.location.href = '/admin/service' }}><div className="adminModuleTop"><span className="adminModuleIcon">✓</span><span className="adminModuleLabel">SERVICE</span></div><h2>Service Complaints</h2><p>Receive, assign, track and close customer complaints from one service dashboard.</p><span className="adminModuleAction">Open Service Admin <b>→</b></span></button>}
