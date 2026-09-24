@@ -19,6 +19,12 @@
   min-height: 64px;
 }
 
+/* Do not render the legacy footer/breadcrumb text in an unintended position. */
+.adminHomeFooterRow,
+.adminFooter {
+  display: none !important;
+}
+
 .adminHomeHero {
   border-radius: 20px;
 }
