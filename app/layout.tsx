@@ -25,11 +25,10 @@ import './customer-portal-final-fix.css'
 import './multi-product-portal.css'
 import './global-page-frame.css'
 import './final-customer-fixes.css'
+import './final-admin-warranty-polish.css'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
 
-// Explicit mobile viewport prevents iOS/Android from rendering the portal at a desktop
-// layout scale and then visually zooming/cropping the page.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
