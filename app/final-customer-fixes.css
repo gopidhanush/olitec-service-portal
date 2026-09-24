@@ -19,6 +19,38 @@
 input[type="date"]{min-height:50px;line-height:1.2!important;padding-top:0!important;padding-bottom:0!important;display:flex;align-items:center;vertical-align:middle}
 .customerSection input[type="date"],.rfField input[type="date"]{text-align:center}
 
+/* Prevent mobile browsers from widening/zooming the page because of a child element. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+.site-frame,.site-frame-content{max-width:100vw;overflow-x:hidden}
+.customerPage,.rfPage,.rrPage,.olitecHomePage{max-width:100vw;box-sizing:border-box}
+
+/* Product verification must show the complete uploaded product image, not a cropped strip. */
+.customerVerifyCard .customerVerifyImage{
+  width:220px!important;
+  height:220px!important;
+  min-width:220px!important;
+  max-width:220px!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  background:#f7fafb!important;
+  display:grid!important;
+  place-items:center!important;
+}
+.customerVerifyCard .customerVerifyImage img{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  display:block!important;
+}
+.customerVerifyCard{
+  grid-template-columns:220px minmax(0,1fr)!important;
+  column-gap:26px!important;
+}
+
 @media (max-width:760px){
   .customerHeader{flex-wrap:wrap;align-items:center!important}
   .customerHeaderRight{width:100%;order:3;margin-left:0;justify-content:flex-start;gap:12px;overflow-x:auto;overflow-y:hidden;padding:4px 0 8px;scrollbar-width:none}
@@ -33,6 +65,20 @@ input[type="date"]{min-height:50px;line-height:1.2!important;padding-top:0!impor
   input[type="date"]{height:52px!important;min-height:52px!important;padding:0 14px!important;line-height:52px!important;text-align:center!important}
   .rfField input[type="date"]{text-align:center!important}
   .customerSuccessPage .customerSuccess,.customerComplaintSuccessPage .customerSuccess{width:100%}
+
+  .customerVerifyCard{
+    grid-template-columns:1fr!important;
+    column-gap:0!important;
+  }
+  .customerVerifyCard .customerVerifyImage{
+    width:180px!important;
+    height:180px!important;
+    min-width:180px!important;
+    max-width:180px!important;
+    margin:0 auto 4px!important;
+    border-radius:18px!important;
+  }
+  .customerVerifyCard .customerVerifyImage img{object-fit:contain!important}
 }
 
 @media (min-width:761px){
