@@ -9,6 +9,21 @@ export function PortalIcon({ type }: { type: PortalIconType }) {
   return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h15l7 7v29H14Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round"/><path d="M29 6v9h9M20 23h10M20 29h10M20 35h7" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
 }
 function HomeIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinejoin="round"/></svg>}
-export function PortalHeader(){return <header className="customerHeader"><Link href="/" className="customerLogo" aria-label="OLITEC home"><img className="olitecOfficialLogo" src="/olitec-logo.svg" alt="OLITEC" /></Link><div className="customerHeaderRight"><span className="olitecExactPortal">Support Portal</span><Link href="/" className="customerHomeButton" aria-label="Go to OLITEC home"><HomeIcon/><span>Home</span></Link></div></header>}
-// The support footer was intentionally removed from customer-facing pages.
+
+export function PortalHeader(){
+  return <header className="customerHeader">
+    <Link href="/" className="customerLogo" aria-label="OLITEC home"><img className="olitecOfficialLogo" src="/olitec-logo.svg" alt="OLITEC" /></Link>
+    <div className="customerHeaderRight">
+      <nav className="customerQuickNav" aria-label="Customer service navigation">
+        <Link href="/register">Register</Link>
+        <Link href="/warranty">Warranty</Link>
+        <Link href="/service/complaint/start">Complaint</Link>
+        <Link href="/service/track">Track</Link>
+      </nav>
+      <span className="olitecExactPortal">Support Portal</span>
+      <Link href="/" className="customerHomeButton" aria-label="Go to OLITEC home"><HomeIcon/><span>Home</span></Link>
+    </div>
+  </header>
+}
+// The support footer is intentionally removed from customer-facing pages.
 export function PortalFooter(){return null}
