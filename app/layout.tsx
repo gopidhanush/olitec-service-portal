@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import './admin-polish.css'
 import './customer-portal.css'
 import './supporting-pages.css'
 import './reference-page-overrides.css'
