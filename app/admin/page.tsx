@@ -3,10 +3,62 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-export default function AdminHomePage(){
- const [loggedIn,setLoggedIn]=useState(false);const [loading,setLoading]=useState(true)
- useEffect(()=>{supabase.auth.getSession().then(({data})=>{setLoggedIn(Boolean(data.session));setLoading(false)})},[])
- if(loading)return <main style={{minHeight:'100vh',display:'grid',placeItems:'center',fontFamily:'Inter,system-ui'}}>Loading…</main>
- if(!loggedIn)return <main style={{minHeight:'100vh',display:'grid',placeItems:'center',padding:24,fontFamily:'Inter,system-ui',background:'#f7f9fb'}}><section style={{width:'100%',maxWidth:620,background:'#fff',border:'1px solid #e6e9ef',borderRadius:24,padding:32,textAlign:'center'}}><div style={{fontSize:32,fontWeight:800,color:'#172033'}}>OLITEC</div><p style={{color:'#718096'}}>Administration</p><h1 style={{fontSize:28,color:'#172033'}}>Service & Product Management</h1><p style={{color:'#64748b'}}>Sign in through either administration module to continue.</p><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginTop:24}}><button style={{padding:15,border:0,borderRadius:12,background:'#ff7a00',color:'#fff',fontWeight:800,cursor:'pointer'}} onClick={()=>window.location.href='/admin/service'}>Service Admin →</button><button style={{padding:15,border:'1px solid #dfe3ea',borderRadius:12,background:'#fff',color:'#172033',fontWeight:800,cursor:'pointer'}} onClick={()=>window.location.href='/admin/products'}>Product Admin →</button></div></section></main>
- return <main style={{minHeight:'100vh',padding:40,fontFamily:'Inter,system-ui',background:'#f7f9fb'}}><div style={{maxWidth:1100,margin:'0 auto'}}><div style={{fontSize:32,fontWeight:800}}>OLITEC</div><p style={{color:'#718096'}}>Administration</p><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,marginTop:30}}><button onClick={()=>window.location.href='/admin/service'} style={{textAlign:'left',padding:28,border:'1px solid #e6e9ef',borderRadius:22,background:'#fff',cursor:'pointer'}}><strong style={{fontSize:21}}>Service Complaints</strong><p style={{color:'#718096'}}>Manage complaints, assign service status and close completed cases.</p></button><button onClick={()=>window.location.href='/admin/products'} style={{textAlign:'left',padding:28,border:'1px solid #e6e9ef',borderRadius:22,background:'#fff',cursor:'pointer'}}><strong style={{fontSize:21}}>Product Master</strong><p style={{color:'#718096'}}>Add product models, upload product images and generate production serial numbers.</p></button></div></div></main>
+export default function AdminHomePage() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setLoggedIn(Boolean(data.session))
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return <main className="adminPage" style={{ display: 'grid', placeItems: 'center', minHeight: '100vh' }}>Loading…</main>
+
+  if (!loggedIn) {
+    return (
+      <main className="adminPage adminLoginPage">
+        <section className="adminLoginCard" style={{ maxWidth: 700 }}>
+          <img src="/olitec-logo.svg" alt="OLITEC" style={{ width: 190, height: 'auto', margin: '0 auto 14px', display: 'block' }} />
+          <div className="adminSubtitle" style={{ textAlign: 'center' }}>Administration</div>
+          <h1 style={{ textAlign: 'center' }}>Service &amp; Product Management</h1>
+          <p style={{ textAlign: 'center' }}>Sign in through either administration module to continue.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 24 }}>
+            <button className="adminPrimaryButton" onClick={() => { window.location.href = '/admin/service' }}>Service Admin →</button>
+            <button className="adminSecondaryButton" onClick={() => { window.location.href = '/admin/products' }}>Product Admin →</button>
+          </div>
+        </section>
+      </main>
+    )
+  }
+
+  return (
+    <main className="adminPage">
+      <div className="adminShell">
+        <header className="adminHeader">
+          <div>
+            <img src="/olitec-logo.svg" alt="OLITEC" style={{ width: 170, height: 'auto', display: 'block' }} />
+            <div className="adminSubtitle">Administration</div>
+          </div>
+          <button className="adminDarkButton" onClick={async () => { await supabase.auth.signOut(); setLoggedIn(false) }}>Sign out</button>
+        </header>
+        <section className="adminPanel" style={{ marginTop: 24 }}>
+          <div className="adminPanelHead">
+            <div><h2>Service &amp; Product Management</h2><p>Choose the administration area you need.</p></div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, padding: 18 }}>
+            <button className="adminComplaintRow" onClick={() => { window.location.href = '/admin/service' }} style={{ textAlign: 'left' }}>
+              <div><strong>Service Complaints</strong><small>Receive, assign, track and close customer complaints.</small></div>
+              <div><span className="statusPill status-received">Open Service Admin →</span></div>
+            </button>
+            <button className="adminComplaintRow" onClick={() => { window.location.href = '/admin/products' }} style={{ textAlign: 'left' }}>
+              <div><strong>Product Master</strong><small>Create products separately from production serial-number batches.</small></div>
+              <div><span className="statusPill status-resolved">Open Product Admin →</span></div>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  )
 }
