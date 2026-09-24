@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import './admin-polish.css'
 import './admin-product-responsive.css'
@@ -27,6 +27,15 @@ import './global-page-frame.css'
 import './final-customer-fixes.css'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
+
+// Explicit mobile viewport prevents iOS/Android from rendering the portal at a desktop
+// layout scale and then visually zooming/cropping the page.
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
