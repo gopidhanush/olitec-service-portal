@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { PortalHeader } from '@/components/PortalChrome'
-import { createWarrantyPdf, WarrantyPdfItem } from '@/lib/warranty-pdf'
+import { createWarrantyPdf } from '@/lib/warranty-pdf'
+import type { WarrantyPdfItem } from '@/lib/warranty-pdf'
 
 type Product = { serial_number:string; model_code:string; product_name:string; capacity_kw:number; manufacturing_date:string|null; product_image:string|null }
 type Warranty = { registration_number:string; serial_number:string; model_code:string; product_name:string|null; capacity_kw:number; warranty_start_date:string; warranty_end_date:string; status:string; product_image?:string|null }
