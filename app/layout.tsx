@@ -22,6 +22,7 @@ import './customer-final-clean.css'
 import './customer-portal-final-fix.css'
 import './multi-product-portal.css'
 import './global-page-frame.css'
+import './final-customer-fixes.css'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
 
