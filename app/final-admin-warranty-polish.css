@@ -1,0 +1,188 @@
+/* Final OLITEC admin + warranty polish. Loaded last so it is the single visual override layer. */
+.adminPage,
+.productAdminPage {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.adminPage .adminShell {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.adminHomePage .adminHomeShell {
+  width: min(1240px, calc(100% - 48px));
+}
+
+.adminHomePage .adminHeader,
+.adminPage .adminHeader {
+  min-height: 64px;
+}
+
+.adminHomeHero {
+  border-radius: 20px;
+}
+
+.adminHomeModules {
+  gap: 20px;
+}
+
+.adminHomeModule {
+  min-height: 220px;
+  padding: 26px;
+}
+
+.adminStaffPanel {
+  overflow: hidden;
+}
+
+.adminStaffRow {
+  min-width: 0;
+}
+
+.adminStaffControls {
+  min-width: 0;
+}
+
+.adminStats {
+  gap: 10px;
+}
+
+.adminStat {
+  min-width: 0;
+}
+
+.adminPanel {
+  overflow: hidden;
+}
+
+.adminPanel:has(.adminTableHead) {
+  overflow-x: auto;
+}
+
+.adminTableHead,
+.adminComplaintRow {
+  min-width: 900px;
+}
+
+.adminOverlay {
+  z-index: 100;
+}
+
+.adminDrawer {
+  width: min(680px, 100%);
+}
+
+.productAdminPage [style*="grid-template-columns"] {
+  min-width: 0;
+}
+
+.productAdminPage input,
+.productAdminPage select,
+.productAdminPage button {
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  .adminPage .adminShell,
+  .adminHomePage .adminHomeShell {
+    width: min(100% - 28px, 760px);
+  }
+
+  .adminHomeModules {
+    grid-template-columns: 1fr;
+  }
+
+  .adminHomeModule {
+    min-height: 0;
+  }
+
+  .adminHeader,
+  .adminHomeHeader {
+    align-items: flex-start;
+  }
+
+  .adminHeaderActions {
+    width: 100%;
+  }
+
+  .adminHeaderActions button {
+    flex: 1 1 150px;
+  }
+}
+
+@media (max-width: 640px) {
+  .adminPage .adminShell,
+  .adminHomePage .adminHomeShell {
+    width: calc(100% - 24px);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .adminHomeHero {
+    padding: 22px 18px;
+  }
+
+  .adminHomeHero h1 {
+    font-size: 24px;
+  }
+
+  .adminHomeModule {
+    padding: 20px;
+  }
+
+  .adminStaffControls {
+    width: 100%;
+  }
+
+  .adminPage .adminHeaderActions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .adminPage .adminHeaderActions button {
+    width: 100%;
+    min-width: 0;
+    padding-inline: 8px;
+    font-size: 11px;
+  }
+
+  .adminStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adminPanelHead {
+    padding: 16px;
+  }
+
+  .adminTableHead,
+  .adminComplaintRow {
+    min-width: 760px;
+  }
+}
+
+/* Product imagery must remain contained; never crop or zoom the uploaded model image. */
+.warrantyResult img,
+.customerVerifyImage img,
+.cleanProductImage img,
+.rfProductImage img {
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+@media (max-width: 640px) {
+  .customerVerifyImage,
+  .cleanProductImage,
+  .rfProductImage {
+    overflow: hidden !important;
+  }
+
+  .customerVerifyImage img,
+  .cleanProductImage img,
+  .rfProductImage img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+  }
+}
