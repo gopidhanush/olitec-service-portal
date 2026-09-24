@@ -1,9 +1,9 @@
 'use client'
 
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   page:{minHeight:'100vh',background:'#f7f9fb',color:'#172033'}, shell:{maxWidth:1440,margin:'0 auto',padding:'28px 34px 50px'}, header:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:20,marginBottom:24}, logo:{fontSize:30,fontWeight:800,letterSpacing:'.04em'}, sub:{fontSize:14,color:'#718096',marginTop:4}, actions:{display:'flex',gap:10}, button:{border:'1px solid #e2e8f0',borderRadius:11,padding:'10px 15px',fontWeight:700,cursor:'pointer',background:'#fff',color:'#172033'}, primary:{border:0,borderRadius:12,padding:'13px 18px',fontWeight:800,cursor:'pointer',background:'#ff7a00',color:'#fff'}, grid:{display:'grid',gridTemplateColumns:'minmax(360px,480px) 1fr',gap:18,alignItems:'start'}, card:{background:'#fff',border:'1px solid #e6e9ef',borderRadius:22,padding:24,boxShadow:'0 10px 35px rgba(23,32,51,.05)'}, label:{display:'block',fontSize:12,fontWeight:800,color:'#475569',margin:'15px 0 7px'}, input:{width:'100%',height:48,padding:'12px 14px',border:'1px solid #dfe3ea',borderRadius:12,background:'#fff',color:'#172033'}, tableHead:{display:'grid',gridTemplateColumns:'1.1fr 1.6fr .8fr 1fr 1.4fr',gap:12,padding:'11px 14px',background:'#fafbfc',color:'#98a2b3',fontSize:10,textTransform:'uppercase',letterSpacing:'.07em',fontWeight:800}, row:{display:'grid',gridTemplateColumns:'1.1fr 1.6fr .8fr 1fr 1.4fr',gap:12,alignItems:'center',padding:'14px',borderTop:'1px solid #eef1f5',fontSize:12}, alert:{padding:'12px 15px',borderRadius:13,fontSize:13,marginBottom:15}, image:{width:52,height:52,objectFit:'cover',borderRadius:10,border:'1px solid #e6e9ef',background:'#f7f9fb'}
 }
 
