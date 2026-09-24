@@ -1,0 +1,44 @@
+/* Final OLITEC customer-portal cleanup: navigation, centering, mobile forms and support-block removal. */
+.customerQuickNav{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.customerQuickNav a{color:#49627f;font-size:11px;font-weight:800;text-decoration:none}
+.customerQuickNav a:hover{color:#07183d}
+.customerQuickNav a.active{color:#07183d}
+
+.portalSupport,.customerSupport,.supportBlock,.needHelp,.need-help,.customerNeedHelp,.customerHelpBlock,.helpSupportBlock{display:none!important}
+
+.customerHeaderRight{display:flex!important;align-items:center;justify-content:flex-end;gap:20px;margin-left:auto;min-width:0}
+.customerHeaderRight .olitecExactPortal{flex:0 0 auto}
+
+.customerSuccessPage .cleanMain,.customerComplaintSuccessPage .cleanMain{display:flex;flex-direction:column;align-items:center}
+.customerSuccessPage .customerSuccess,.customerComplaintSuccessPage .customerSuccess{width:min(100%,900px);margin-left:auto;margin-right:auto}
+.customerSuccessPage .registrationProductsSummary{width:100%}
+.customerComplaintSuccessPage .customerSuccess{text-align:center}
+.customerComplaintSuccessPage .cleanInfoList{text-align:left;width:100%}
+
+.customerInput,.customerSection input,.customerSection select,.customerSection textarea{-webkit-appearance:none;appearance:none}
+input[type="date"]{min-height:50px;line-height:1.2!important;padding-top:0!important;padding-bottom:0!important;display:flex;align-items:center;vertical-align:middle}
+.customerSection input[type="date"],.rfField input[type="date"]{text-align:center}
+
+@media (max-width:760px){
+  .customerHeader{flex-wrap:wrap;align-items:center!important}
+  .customerHeaderRight{width:100%;order:3;margin-left:0;justify-content:flex-start;gap:12px;overflow-x:auto;overflow-y:hidden;padding:4px 0 8px;scrollbar-width:none}
+  .customerHeaderRight::-webkit-scrollbar{display:none}
+  .customerQuickNav{flex:0 0 auto;gap:14px;overflow:visible}
+  .customerQuickNav a{font-size:11px}
+  .customerHeaderRight .olitecExactPortal{display:none}
+  .customerHomeButton{flex:0 0 auto}
+
+  /* iOS/Android browsers zoom form controls when their font is below 16px. */
+  .customerPage input,.customerPage select,.customerPage textarea,.rfPage input,.rfPage select,.rfPage textarea,.rrPage input,.rrPage select,.rrPage textarea{font-size:16px!important;line-height:1.25!important}
+  input[type="date"]{height:52px!important;min-height:52px!important;padding:0 14px!important;line-height:52px!important;text-align:center!important}
+  .rfField input[type="date"]{text-align:center!important}
+  .customerSuccessPage .customerSuccess,.customerComplaintSuccessPage .customerSuccess{width:100%}
+}
+
+@media (min-width:761px){
+  .customerSuccessPage .customerSuccess,.customerComplaintSuccessPage .customerSuccess{max-width:900px}
+}
+
+@media print{
+  .customerQuickNav,.customerHeaderRight,.portalSupport,.needHelp,.need-help{display:none!important}
+}
