@@ -1,0 +1,54 @@
+/* Final OLITEC admin home card alignment.
+   The Product Master card uses the shared .product class elsewhere in the
+   portal. That global class sets a 92px/1fr grid, which incorrectly squeezes
+   the Product Master description into a narrow column. Keep the admin module
+   cards on their own normal block flow. */
+
+.adminHomePage .adminHomeModule.product {
+  display: block !important;
+  width: 100% !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+  align-items: initial !important;
+  justify-items: initial !important;
+}
+
+.adminHomePage .adminHomeModule.product .adminModuleTop {
+  width: 100% !important;
+}
+
+.adminHomePage .adminHomeModule.product h2,
+.adminHomePage .adminHomeModule.product p,
+.adminHomePage .adminHomeModule.product .adminModuleAction {
+  display: block !important;
+  width: 100% !important;
+}
+
+.adminHomePage .adminHomeModule.product p {
+  max-width: 600px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  line-height: 1.6 !important;
+}
+
+.adminHomePage .adminHomeModule.product .adminModuleAction {
+  width: max-content !important;
+  max-width: 100% !important;
+  margin-top: 22px !important;
+}
+
+@media (max-width: 760px) {
+  .adminHomePage .adminHomeModule.product {
+    display: block !important;
+    padding: 21px 19px !important;
+  }
+
+  .adminHomePage .adminHomeModule.product p {
+    max-width: none !important;
+    line-height: 1.5 !important;
+  }
+
+  .adminHomePage .adminHomeModule.product .adminModuleAction {
+    margin-top: 18px !important;
+  }
+}
