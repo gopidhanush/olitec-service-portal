@@ -38,7 +38,6 @@ export default function AdminHomePage() {
             </button>
           </div>
         </section>
-        <div className="adminFooter">OLITEC · Administration</div>
       </main>
     )
   }
