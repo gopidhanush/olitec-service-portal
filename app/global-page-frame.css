@@ -1,24 +1,33 @@
-/* Shared OLITEC customer portal page frame.
-   The white portal surface stays inside one consistent outer boundary on every page. */
+/* OLITEC — one identical outer boundary for every customer-facing page. */
 
 html,
 body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
   min-height: 100%;
+  background: #303030;
 }
 
+/* Fixed viewport frame prevents any route-level 100vh/overflow rule from
+   hiding the top or bottom boundary. The page content scrolls only inside
+   the white portal surface. */
 .site-frame {
+  position: fixed;
+  inset: 0;
   width: 100%;
-  height: 100vh;
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   padding: 10px;
   box-sizing: border-box;
   background: #303030;
   overflow: hidden;
+  z-index: 0;
 }
 
 .site-frame-content {
   width: 100%;
-  height: calc(100vh - 20px);
+  height: calc(100dvh - 20px);
   min-height: 0;
   box-sizing: border-box;
   background: #fff;
@@ -28,11 +37,9 @@ body {
   scrollbar-gutter: stable;
 }
 
-/* Every route is a child of the same frame. Do not let route-level 100vh
-   rules push the outer frame below the viewport. Pages that are taller than
-   the viewport scroll INSIDE the white portal surface, preserving the same
-   visible boundary on all four sides. */
+/* Route roots must stay inside the frame. */
 .site-frame-content > * {
+  width: 100%;
   box-sizing: border-box;
   min-height: 100% !important;
 }
@@ -41,19 +48,28 @@ body {
 .site-frame-content > .olitecHomePage {
   width: 100%;
   min-height: 100% !important;
+  margin-top: 0 !important;
 }
 
-.site-frame-content > .customerPage {
-  margin-top: 0 !important;
+/* Make the boundary unambiguous even when a route has a white header. */
+.site-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #303030;
+  z-index: -1;
 }
 
 @media (max-width: 600px) {
   .site-frame {
     padding: 8px;
+    height: 100dvh;
+    min-height: 100dvh;
   }
 
   .site-frame-content {
-    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
     border-radius: 8px;
   }
 }
