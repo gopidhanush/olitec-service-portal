@@ -20,6 +20,18 @@ import './registration-layout-master.css'
 import './customer-final-clean.css'
 import './customer-portal-final-fix.css'
 import './multi-product-portal.css'
+import './global-page-frame.css'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html> }
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en">
+      <body>
+        <div className="site-frame">
+          <div className="site-frame-content">{children}</div>
+        </div>
+      </body>
+    </html>
+  )
+}
