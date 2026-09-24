@@ -1,0 +1,37 @@
+/* iOS/mobile form stability fixes */
+@media (max-width: 760px) {
+  .customerPage input,
+  .customerPage select,
+  .customerPage textarea,
+  .rfPage input,
+  .rfPage select,
+  .rfPage textarea,
+  .rrPage input,
+  .rrPage select,
+  .rrPage textarea {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  input[type="date"] {
+    min-height: 52px !important;
+    height: 52px !important;
+    line-height: normal !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    box-sizing: border-box !important;
+    vertical-align: middle !important;
+  }
+
+  .rfField input[type="date"],
+  .customerSection input[type="date"] {
+    display: block;
+    width: 100%;
+  }
+
+  .rfPage,
+  .rrPage,
+  .customerPage {
+    -webkit-text-size-adjust: 100%;
+  }
+}
