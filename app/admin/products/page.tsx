@@ -32,6 +32,7 @@ function errorText(error: any) {
     PRODUCT_MODEL_NOT_FOUND: 'Select a valid product model first.',
     PRODUCTION_MONTH_REQUIRED: 'Select a production month.',
     BATCH_REQUEST_ALREADY_USED: 'This serial-number generation request has already been used. Start a new batch.',
+    BATCH_ALREADY_GENERATED_FOR_PRODUCTION_MONTH: 'A serial-number batch has already been generated for this model and production month. It cannot be generated again.',
     SERIAL_NUMBER_CONFLICT: 'Serial number conflict detected. No duplicate serial number was created.',
   }
   const key = Object.keys(map).find(k => message.includes(k))
@@ -48,6 +49,8 @@ function csvDownload(rows: Generated[], filename: string) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url)
 }
+
+const emptyForm = { model_code: '', product_name: '', capacity_kw: '', mrp: '', warranty_years: '5' }
 
 export default function AdminProductsPage() {
   const [email, setEmail] = useState('')
@@ -68,7 +71,8 @@ export default function AdminProductsPage() {
   const [redownloadBatch, setRedownloadBatch] = useState<Batch | null>(null)
   const [reauthPassword, setReauthPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
-  const [form, setForm] = useState({ model_code: '', product_name: '', capacity_kw: '', mrp: '', warranty_years: '5' })
+  const [editingModel, setEditingModel] = useState<ProductModel | null>(null)
+  const [form, setForm] = useState(emptyForm)
   const [serialForm, setSerialForm] = useState({ model_id: '', production_month: new Date().toISOString().slice(0, 7), quantity: '1' })
 
   useEffect(() => {
@@ -97,7 +101,33 @@ export default function AdminProductsPage() {
 
   async function logout() { await supabase.auth.signOut(); setLoggedIn(false); setRows([]); setBatches([]) }
   function setField(key: string, value: string) { setForm(v => ({ ...v, [key]: value })) }
-  function chooseImage(file: File | null) { setImage(file); if (preview) URL.revokeObjectURL(preview); setPreview(file ? URL.createObjectURL(file) : '') }
+  function chooseImage(file: File | null) { setImage(file); if (preview.startsWith('blob:')) URL.revokeObjectURL(preview); setPreview(file ? URL.createObjectURL(file) : '') }
+
+  function beginEdit(model: ProductModel) {
+    setEditingModel(model)
+    setForm({
+      model_code: model.model_code,
+      product_name: model.product_name,
+      capacity_kw: model.capacity_kw == null ? '' : String(model.capacity_kw),
+      mrp: model.mrp == null ? '' : String(model.mrp),
+      warranty_years: String(model.warranty_years || Math.round(model.warranty_months / 12) || 5),
+    })
+    setImage(null)
+    setPreview(model.image_url || '')
+    setError('')
+    setMessage('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function cancelEdit() {
+    setEditingModel(null)
+    setForm(emptyForm)
+    setImage(null)
+    if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
+    setPreview('')
+    setError('')
+    setMessage('')
+  }
 
   async function createProduct(event: FormEvent) {
     event.preventDefault(); setLoading(true); setError(''); setMessage('')
@@ -120,8 +150,8 @@ export default function AdminProductsPage() {
         p_image_url: imageUrl,
       })
       if (error) throw error
-      setMessage(`Product ${form.model_code} saved successfully. Serial numbers were not generated.`)
-      setForm({ model_code: '', product_name: '', capacity_kw: '', mrp: '', warranty_years: '5' }); setImage(null); setPreview('')
+      setMessage(editingModel ? `Product ${form.model_code} updated successfully.` : `Product ${form.model_code} created successfully. Serial numbers were not generated.`)
+      cancelEdit()
       await loadData()
     } catch (err) { setError(errorText(err)) } finally { setLoading(false) }
   }
@@ -220,25 +250,28 @@ export default function AdminProductsPage() {
         {tab === 'products' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(360px, 500px) 1fr', gap: 18, alignItems: 'start' }}>
           <section style={styles.card}>
             <div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>PRODUCT ENTRY</div>
-            <h2 style={{ margin: '6px 0' }}>Create Product</h2>
-            <p style={{ color: '#718096', fontSize: 13 }}>Add the product master first. MRP is stored for administration only and is never exposed through customer warranty/service data.</p>
+            <h2 style={{ margin: '6px 0' }}>{editingModel ? 'Edit Product' : 'Create Product'}</h2>
+            <p style={{ color: '#718096', fontSize: 13 }}>{editingModel ? 'Update the product master. MRP remains visible only inside administration.' : 'Add the product master first. MRP is stored for administration only and is never exposed through customer warranty/service data.'}</p>
             <form onSubmit={createProduct}>
-              <label style={styles.label}>Model number *</label><input style={styles.input} value={form.model_code} onChange={e => setField('model_code', e.target.value.toUpperCase())} placeholder="e.g. OL-5KTL" required />
+              <label style={styles.label}>Model number *</label>
+              <input style={{ ...styles.input, background: editingModel ? '#f4f6f8' : '#fff' }} value={form.model_code} onChange={e => setField('model_code', e.target.value.toUpperCase())} placeholder="e.g. OL-5KTL" required disabled={!!editingModel} />
+              {editingModel && <div style={{ fontSize: 11, color: '#718096', marginTop: 5 }}>Model number cannot be changed here because existing serial numbers use this model code.</div>}
               <label style={styles.label}>Product name *</label><input style={styles.input} value={form.product_name} onChange={e => setField('product_name', e.target.value)} placeholder="e.g. OLITEC Solar Inverter" required />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 <div><label style={styles.label}>Capacity (kW)</label><input style={styles.input} type="number" min="0" step="0.1" value={form.capacity_kw} onChange={e => setField('capacity_kw', e.target.value)} /></div>
                 <div><label style={styles.label}>MRP (₹) *</label><input style={styles.input} type="number" min="1" step="0.01" value={form.mrp} onChange={e => setField('mrp', e.target.value)} required /></div>
               </div>
               <label style={styles.label}>Warranty (years) *</label><input style={styles.input} type="number" min="1" max="20" value={form.warranty_years} onChange={e => setField('warranty_years', e.target.value)} required />
-              <label style={styles.label}>Product image</label><input style={{ ...styles.input, height: 'auto', padding: 10 }} type="file" accept="image/jpeg,image/png,image/webp" onChange={e => chooseImage(e.target.files?.[0] || null)} />
-              {preview && <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}><img src={preview} alt="Preview" style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 12, border: '1px solid #e5e7eb' }} /><span style={{ fontSize: 12, color: '#64748b' }}>{image?.name}</span></div>}
-              <button style={{ ...styles.primary, width: '100%', marginTop: 20 }} disabled={loading}>{loading ? 'Saving Product…' : 'Save Product →'}</button>
+              <label style={styles.label}>Product image {editingModel ? '(optional)' : ''}</label><input style={{ ...styles.input, height: 'auto', padding: 10 }} type="file" accept="image/jpeg,image/png,image/webp" onChange={e => chooseImage(e.target.files?.[0] || null)} />
+              {preview && <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}><img src={preview} alt="Preview" style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 12, border: '1px solid #e5e7eb' }} /><span style={{ fontSize: 12, color: '#64748b' }}>{image?.name || 'Current product image'}</span></div>}
+              <button style={{ ...styles.primary, width: '100%', marginTop: 20 }} disabled={loading}>{loading ? (editingModel ? 'Updating Product…' : 'Saving Product…') : (editingModel ? 'Update Product →' : 'Save Product →')}</button>
+              {editingModel && <button type="button" style={{ ...styles.button, width: '100%', marginTop: 10 }} onClick={cancelEdit} disabled={loading}>Cancel Edit</button>}
             </form>
           </section>
 
           <section style={styles.card}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}><div><div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>PRODUCT MASTER</div><h2 style={{ margin: '6px 0' }}>Products</h2></div><span style={{ color: '#64748b', fontSize: 12 }}>{uniqueModels.length} model{uniqueModels.length === 1 ? '' : 's'}</span></div>
-            <div style={{ overflowX: 'auto', marginTop: 18 }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}><thead><tr>{['Product', 'Model', 'Capacity', 'MRP', 'Warranty', 'Units'].map(h => <th key={h} style={{ textAlign: 'left', padding: 11, borderBottom: '1px solid #e9edf2', color: '#8a94a6', fontSize: 10, textTransform: 'uppercase' }}>{h}</th>)}</tr></thead><tbody>{uniqueModels.map(model => <tr key={model.model_id}><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>{model.image_url ? <img src={model.image_url} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 9 }} /> : <div style={{ width: 48, height: 48, borderRadius: 9, background: '#f4f6f8' }} />}<strong>{model.product_name}</strong></div></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><strong>{model.model_code}</strong></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.capacity_kw ?? '—'} kW</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5', fontWeight: 800 }}>₹{Number(model.mrp || 0).toLocaleString('en-IN')}</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.warranty_years || Math.round(model.warranty_months / 12)} years</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{rows.filter(r => r.model_id === model.model_id && r.product_id).length}</td></tr>)}</tbody></table></div>
+            <div style={{ overflowX: 'auto', marginTop: 18 }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}><thead><tr>{['Product', 'Model', 'Capacity', 'MRP', 'Warranty', 'Units', 'Action'].map(h => <th key={h} style={{ textAlign: 'left', padding: 11, borderBottom: '1px solid #e9edf2', color: '#8a94a6', fontSize: 10, textTransform: 'uppercase' }}>{h}</th>)}</tr></thead><tbody>{uniqueModels.map(model => <tr key={model.model_id}><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>{model.image_url ? <img src={model.image_url} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 9 }} /> : <div style={{ width: 48, height: 48, borderRadius: 9, background: '#f4f6f8' }} />}<strong>{model.product_name}</strong></div></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><strong>{model.model_code}</strong></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.capacity_kw ?? '—'} kW</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5', fontWeight: 800 }}>₹{Number(model.mrp || 0).toLocaleString('en-IN')}</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.warranty_years || Math.round(model.warranty_months / 12)} years</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{rows.filter(r => r.model_id === model.model_id && r.product_id).length}</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><button style={styles.button} onClick={() => beginEdit(model)}>Edit</button></td></tr>)}</tbody></table></div>
           </section>
         </div>}
 
@@ -246,7 +279,7 @@ export default function AdminProductsPage() {
           <section style={styles.card}>
             <div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>SERIAL NUMBER GENERATOR</div>
             <h2 style={{ margin: '6px 0' }}>Generate Production Batch</h2>
-            <p style={{ color: '#718096', fontSize: 13 }}>Select an existing product, production month and quantity. The production date is stored as month/year only. A completed batch cannot be regenerated with the same request.</p>
+            <p style={{ color: '#718096', fontSize: 13 }}>Select an existing product, production month and quantity. The production date is stored as month/year only. A completed model/month batch cannot be generated again.</p>
             <form onSubmit={generateBatch}>
               <label style={styles.label}>Product model *</label><select style={styles.input} value={serialForm.model_id} onChange={e => setSerialForm(v => ({ ...v, model_id: e.target.value }))} required disabled={batchLocked}><option value="">Select product model</option>{uniqueModels.map(model => <option key={model.model_id} value={model.model_id}>{model.model_code} — {model.product_name}</option>)}</select>
               <label style={styles.label}>Production month *</label><input style={styles.input} type="month" value={serialForm.production_month} onChange={e => setSerialForm(v => ({ ...v, production_month: e.target.value }))} required disabled={batchLocked} />
