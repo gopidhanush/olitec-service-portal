@@ -1,49 +1,59 @@
 /* Shared OLITEC customer portal page frame.
-   Keeps every customer-facing page inside the same outer boundary as Home. */
+   The white portal surface stays inside one consistent outer boundary on every page. */
+
+html,
+body {
+  min-height: 100%;
+}
 
 .site-frame {
+  width: 100%;
+  height: 100vh;
   min-height: 100vh;
-  padding: 10px 4px;
+  padding: 10px;
   box-sizing: border-box;
   background: #303030;
+  overflow: hidden;
 }
 
 .site-frame-content {
-  min-height: calc(100vh - 20px);
+  width: 100%;
+  height: calc(100vh - 20px);
+  min-height: 0;
   box-sizing: border-box;
   background: #fff;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: auto;
   position: relative;
+  scrollbar-gutter: stable;
 }
 
-/* The inner pages previously used 100vh themselves, which removed the
-   visible bottom boundary. Keep their content inside the shared frame. */
+/* Every route is a child of the same frame. Do not let route-level 100vh
+   rules push the outer frame below the viewport. Pages that are taller than
+   the viewport scroll INSIDE the white portal surface, preserving the same
+   visible boundary on all four sides. */
+.site-frame-content > * {
+  box-sizing: border-box;
+  min-height: 100% !important;
+}
+
 .site-frame-content > .customerPage,
 .site-frame-content > .olitecHomePage {
-  min-height: calc(100vh - 20px) !important;
+  width: 100%;
+  min-height: 100% !important;
 }
 
 .site-frame-content > .customerPage {
-  width: 100%;
-}
-
-.site-frame-content > .olitecHomePage {
-  width: 100%;
+  margin-top: 0 !important;
 }
 
 @media (max-width: 600px) {
   .site-frame {
-    padding: 8px 3px;
+    padding: 8px;
   }
 
   .site-frame-content {
-    min-height: calc(100vh - 16px);
+    height: calc(100vh - 16px);
     border-radius: 8px;
-  }
-
-  .site-frame-content > .customerPage,
-  .site-frame-content > .olitecHomePage {
-    min-height: calc(100vh - 16px) !important;
   }
 }
