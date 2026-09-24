@@ -1,0 +1,49 @@
+/* Shared OLITEC customer portal page frame.
+   Keeps every customer-facing page inside the same outer boundary as Home. */
+
+.site-frame {
+  min-height: 100vh;
+  padding: 10px 4px;
+  box-sizing: border-box;
+  background: #303030;
+}
+
+.site-frame-content {
+  min-height: calc(100vh - 20px);
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* The inner pages previously used 100vh themselves, which removed the
+   visible bottom boundary. Keep their content inside the shared frame. */
+.site-frame-content > .customerPage,
+.site-frame-content > .olitecHomePage {
+  min-height: calc(100vh - 20px) !important;
+}
+
+.site-frame-content > .customerPage {
+  width: 100%;
+}
+
+.site-frame-content > .olitecHomePage {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .site-frame {
+    padding: 8px 3px;
+  }
+
+  .site-frame-content {
+    min-height: calc(100vh - 16px);
+    border-radius: 8px;
+  }
+
+  .site-frame-content > .customerPage,
+  .site-frame-content > .olitecHomePage {
+    min-height: calc(100vh - 16px) !important;
+  }
+}
