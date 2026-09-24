@@ -7,308 +7,41 @@ type ProductModel = { model_id: string; model_code: string; product_name: string
 type ProductRow = ProductModel & { product_id: string | null; serial_number: string | null; qr_code: string | null; manufacturing_date: string | null; batch_number: string | null; product_status: string | null }
 type Generated = { model_code: string; serial_number: string; qr_code: string; production_month: string; batch_number: string }
 type Batch = { batch_number: string; model_code: string; product_name: string; production_month: string; quantity: number; created_by: string; created_at: string; downloaded_at: string | null; download_count: number }
+const SUPER_ADMIN_EMAIL = 'admin@gsons.co.in'
 
 const styles: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', background: '#f7f9fb', color: '#172033' },
-  shell: { maxWidth: 1500, margin: '0 auto', padding: '28px 34px 60px' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, marginBottom: 24 },
-  actions: { display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' },
-  button: { border: '1px solid #dfe5ec', borderRadius: 11, padding: '10px 15px', fontWeight: 800, cursor: 'pointer', background: '#fff', color: '#172033' },
-  primary: { border: 0, borderRadius: 12, padding: '13px 18px', fontWeight: 800, cursor: 'pointer', background: '#ff7a00', color: '#fff' },
-  card: { background: '#fff', border: '1px solid #e4e9ef', borderRadius: 22, padding: 24, boxShadow: '0 10px 35px rgba(23,32,51,.05)' },
-  label: { display: 'block', fontSize: 12, fontWeight: 800, color: '#475569', margin: '15px 0 7px' },
-  input: { width: '100%', height: 48, padding: '12px 14px', border: '1px solid #dfe3ea', borderRadius: 12, background: '#fff', color: '#172033' },
-  tab: { border: '1px solid #dfe5ec', borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#fff', color: '#172033' },
-  activeTab: { border: 0, borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#172033', color: '#fff' },
+  page: { minHeight: '100vh', background: '#f7f9fb', color: '#172033' }, shell: { maxWidth: 1500, margin: '0 auto', padding: '28px 34px 60px' }, header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, marginBottom: 24 }, actions: { display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }, button: { border: '1px solid #dfe5ec', borderRadius: 11, padding: '10px 15px', fontWeight: 800, cursor: 'pointer', background: '#fff', color: '#172033' }, primary: { border: 0, borderRadius: 12, padding: '13px 18px', fontWeight: 800, cursor: 'pointer', background: '#ff7a00', color: '#fff' }, card: { background: '#fff', border: '1px solid #e4e9ef', borderRadius: 22, padding: 24, boxShadow: '0 10px 35px rgba(23,32,51,.05)' }, label: { display: 'block', fontSize: 12, fontWeight: 800, color: '#475569', margin: '15px 0 7px' }, input: { width: '100%', height: 48, padding: '12px 14px', border: '1px solid #dfe3ea', borderRadius: 12, background: '#fff', color: '#172033' }, tab: { border: '1px solid #dfe5ec', borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#fff', color: '#172033' }, activeTab: { border: 0, borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#172033', color: '#fff' },
 }
+function errorText(error: any) { const message = error?.message || 'Something went wrong.'; const map: Record<string,string> = { MODEL_NUMBER_REQUIRED:'Model number is required.', PRODUCT_NAME_REQUIRED:'Product name is required.', MRP_REQUIRED:'MRP is required.', INVALID_WARRANTY_YEARS:'Warranty must be between 1 and 20 years.', PRODUCT_MODEL_NOT_FOUND:'Select a valid product model first.', PRODUCTION_MONTH_REQUIRED:'Select a production month.', BATCH_REQUEST_ALREADY_USED:'This serial-number generation request has already been used. Start a new batch.', BATCH_ALREADY_GENERATED_FOR_PRODUCTION_MONTH:'A serial-number batch has already been generated for this model and production month. It cannot be generated again.', SERIAL_NUMBER_CONFLICT:'Serial number conflict detected. No duplicate serial number was created.', PRODUCT_ADMIN_ACCESS_REQUIRED:'Your account does not have Product Admin permission.', SUPER_ADMIN_REQUIRED:'Only the Super Admin can reprint a serial-number batch.' }; const key=Object.keys(map).find(k=>message.includes(k)); return key?map[key]:message }
+function monthValue(value:string){return value?`${value}-01`:''}
+function displayMonth(value:string){return value?new Date(value+'T00:00:00').toLocaleDateString('en-IN',{month:'long',year:'numeric'}):'—'}
+function csvDownload(rows:Generated[],filename:string){const header='Model,Serial Number,QR Code,Production Month,Batch Number';const lines=rows.map(r=>[r.model_code,r.serial_number,r.qr_code,displayMonth(r.production_month),r.batch_number].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));const blob=new Blob([header+'\n'+lines.join('\n')],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
+const emptyForm={model_code:'',product_name:'',capacity_kw:'',mrp:'',warranty_years:'5'}
 
-function errorText(error: any) {
-  const message = error?.message || 'Something went wrong.'
-  const map: Record<string, string> = {
-    MODEL_NUMBER_REQUIRED: 'Model number is required.',
-    PRODUCT_NAME_REQUIRED: 'Product name is required.',
-    MRP_REQUIRED: 'MRP is required.',
-    INVALID_WARRANTY_YEARS: 'Warranty must be between 1 and 20 years.',
-    PRODUCT_MODEL_NOT_FOUND: 'Select a valid product model first.',
-    PRODUCTION_MONTH_REQUIRED: 'Select a production month.',
-    BATCH_REQUEST_ALREADY_USED: 'This serial-number generation request has already been used. Start a new batch.',
-    BATCH_ALREADY_GENERATED_FOR_PRODUCTION_MONTH: 'A serial-number batch has already been generated for this model and production month. It cannot be generated again.',
-    SERIAL_NUMBER_CONFLICT: 'Serial number conflict detected. No duplicate serial number was created.',
-  }
-  const key = Object.keys(map).find(k => message.includes(k))
-  return key ? map[key] : message
-}
-
-function monthValue(value: string) { return value ? `${value}-01` : '' }
-function displayMonth(value: string) { return value ? new Date(value + 'T00:00:00').toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) : '—' }
-
-function csvDownload(rows: Generated[], filename: string) {
-  const header = 'Model,Serial Number,QR Code,Production Month,Batch Number'
-  const lines = rows.map(r => [r.model_code, r.serial_number, r.qr_code, displayMonth(r.production_month), r.batch_number].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
-  const blob = new Blob([header + '\n' + lines.join('\n')], { type: 'text/csv;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url)
-}
-
-const emptyForm = { model_code: '', product_name: '', capacity_kw: '', mrp: '', warranty_years: '5' }
-
-export default function AdminProductsPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
-  const [rows, setRows] = useState<ProductRow[]>([])
-  const [batches, setBatches] = useState<Batch[]>([])
-  const [tab, setTab] = useState<'products' | 'serials'>('products')
-  const [image, setImage] = useState<File | null>(null)
-  const [preview, setPreview] = useState('')
-  const [generated, setGenerated] = useState<Generated[]>([])
-  const [generatedDownloaded, setGeneratedDownloaded] = useState(false)
-  const [batchLocked, setBatchLocked] = useState(false)
-  const [requestKey, setRequestKey] = useState('')
-  const [redownloadBatch, setRedownloadBatch] = useState<Batch | null>(null)
-  const [reauthPassword, setReauthPassword] = useState('')
-  const [authEmail, setAuthEmail] = useState('')
-  const [editingModel, setEditingModel] = useState<ProductModel | null>(null)
-  const [form, setForm] = useState(emptyForm)
-  const [serialForm, setSerialForm] = useState({ model_id: '', production_month: new Date().toISOString().slice(0, 7), quantity: '1' })
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) { setLoggedIn(true); loadData(); setAuthEmail(data.session.user.email || '') }
-    })
-  }, [])
-
-  async function loadData() {
-    setLoading(true); setError('')
-    const [catalog, batchResult] = await Promise.all([
-      supabase.rpc('admin_get_product_catalog'),
-      supabase.rpc('admin_get_product_batches'),
-    ])
-    if (catalog.error) setError(errorText(catalog.error)); else setRows((catalog.data || []) as ProductRow[])
-    if (batchResult.error) setError(errorText(batchResult.error)); else setBatches((batchResult.data || []) as Batch[])
-    setLoading(false)
-  }
-
-  async function login(event: FormEvent) {
-    event.preventDefault(); setLoading(true); setError('')
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setError(errorText(error)); setLoading(false); return }
-    setLoggedIn(true); setAuthEmail(data.user?.email || email); await loadData()
-  }
-
-  async function logout() { await supabase.auth.signOut(); setLoggedIn(false); setRows([]); setBatches([]) }
-  function setField(key: string, value: string) { setForm(v => ({ ...v, [key]: value })) }
-  function chooseImage(file: File | null) { setImage(file); if (preview.startsWith('blob:')) URL.revokeObjectURL(preview); setPreview(file ? URL.createObjectURL(file) : '') }
-
-  function beginEdit(model: ProductModel) {
-    setEditingModel(model)
-    setForm({
-      model_code: model.model_code,
-      product_name: model.product_name,
-      capacity_kw: model.capacity_kw == null ? '' : String(model.capacity_kw),
-      mrp: model.mrp == null ? '' : String(model.mrp),
-      warranty_years: String(model.warranty_years || Math.round(model.warranty_months / 12) || 5),
-    })
-    setImage(null)
-    setPreview(model.image_url || '')
-    setError('')
-    setMessage('')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  function cancelEdit() {
-    setEditingModel(null)
-    setForm(emptyForm)
-    setImage(null)
-    if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
-    setPreview('')
-    setError('')
-    setMessage('')
-  }
-
-  async function createProduct(event: FormEvent) {
-    event.preventDefault(); setLoading(true); setError(''); setMessage('')
-    try {
-      let imageUrl: string | null = null
-      if (image) {
-        if (image.size > 5 * 1024 * 1024) throw new Error('Product image must be 5 MB or smaller.')
-        if (!['image/jpeg', 'image/png', 'image/webp'].includes(image.type)) throw new Error('Use JPG, PNG or WebP for the product image.')
-        const path = `models/${Date.now()}-${image.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`
-        const upload = await supabase.storage.from('products').upload(path, image, { upsert: false, contentType: image.type })
-        if (upload.error) throw upload.error
-        imageUrl = supabase.storage.from('products').getPublicUrl(path).data.publicUrl
-      }
-      const { error } = await supabase.rpc('admin_create_product_model', {
-        p_model_code: form.model_code,
-        p_product_name: form.product_name,
-        p_capacity_kw: form.capacity_kw ? Number(form.capacity_kw) : null,
-        p_mrp: Number(form.mrp),
-        p_warranty_years: Number(form.warranty_years),
-        p_image_url: imageUrl,
-      })
-      if (error) throw error
-      setMessage(editingModel ? `Product ${form.model_code} updated successfully.` : `Product ${form.model_code} created successfully. Serial numbers were not generated.`)
-      cancelEdit()
-      await loadData()
-    } catch (err) { setError(errorText(err)) } finally { setLoading(false) }
-  }
-
-  const uniqueModels = useMemo(() => Array.from(new Map(rows.map(r => [r.model_id, r])).values()), [rows])
-
-  async function generateBatch(event: FormEvent) {
-    event.preventDefault(); if (batchLocked) return
-    setLoading(true); setError(''); setMessage(''); setGenerated([]); setGeneratedDownloaded(false)
-    try {
-      const key = requestKey || crypto.randomUUID(); if (!requestKey) setRequestKey(key)
-      const { data, error } = await supabase.rpc('admin_generate_serial_batch', {
-        p_model_id: serialForm.model_id,
-        p_production_month: monthValue(serialForm.production_month),
-        p_quantity: Number(serialForm.quantity),
-        p_request_key: key,
-      })
-      if (error) throw error
-      const result = (data || []) as Generated[]
-      setGenerated(result); setBatchLocked(true)
-      setMessage(`${result.length} serial numbers generated. This batch is now locked against accidental regeneration.`)
-      await loadData()
-    } catch (err) { setError(errorText(err)) } finally { setLoading(false) }
-  }
-
-  function startNewBatch() {
-    setGenerated([]); setGeneratedDownloaded(false); setBatchLocked(false); setRequestKey(crypto.randomUUID()); setMessage(''); setError('')
-  }
-
-  async function downloadGenerated() {
-    if (!generated.length || generatedDownloaded) return
-    setLoading(true); setError('')
-    try {
-      const { error } = await supabase.rpc('admin_mark_serial_batch_downloaded', { p_batch_number: generated[0].batch_number })
-      if (error) throw error
-      csvDownload(generated, `OLITEC-${generated[0].model_code}-${generated[0].batch_number}.csv`)
-      setGeneratedDownloaded(true)
-      setMessage('Serial-number batch downloaded. Further downloads require re-authentication.')
-      await loadData()
-    } catch (err) { setError(errorText(err)) } finally { setLoading(false) }
-  }
-
-  async function protectedRedownload() {
-    if (!redownloadBatch || !reauthPassword) return
-    setLoading(true); setError('')
-    try {
-      const { error: loginError } = await supabase.auth.signInWithPassword({ email: authEmail, password: reauthPassword })
-      if (loginError) throw new Error('Authentication failed. Enter the authorised admin password again.')
-      const { data, error } = await supabase.rpc('admin_get_serial_batch_for_redownload', { p_batch_number: redownloadBatch.batch_number })
-      if (error) throw error
-      const generatedRows = (data || []) as Generated[]
-      csvDownload(generatedRows, `OLITEC-${redownloadBatch.model_code}-${redownloadBatch.batch_number}-REDOWNLOAD.csv`)
-      setMessage(`Batch ${redownloadBatch.batch_number} re-downloaded after authentication.`)
-      setRedownloadBatch(null); setReauthPassword(''); await loadData()
-    } catch (err) { setError(errorText(err)) } finally { setLoading(false) }
-  }
-
-  if (!loggedIn) return (
-    <div style={{ ...styles.page, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <section style={{ ...styles.card, width: '100%', maxWidth: 560 }}>
-        <img src="/olitec-logo.svg" alt="OLITEC" style={{ width: 190, display: 'block', margin: '0 auto 12px' }} />
-        <div style={{ textAlign: 'center', color: '#718096' }}>Product Administration</div>
-        <h1 style={{ textAlign: 'center', marginBottom: 8 }}>Manage Products &amp; Serial Numbers</h1>
-        <p style={{ textAlign: 'center', color: '#718096' }}>Product creation and production serial generation are separate controlled operations.</p>
-        <form onSubmit={login}>
-          <label style={styles.label}>Staff email</label><input style={styles.input} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-          <label style={styles.label}>Password</label><input style={styles.input} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-          {error && <div style={{ marginTop: 14, padding: 12, borderRadius: 12, background: '#fff0f0', color: '#b42318' }}>{error}</div>}
-          <button style={{ ...styles.primary, width: '100%', marginTop: 18 }} disabled={loading}>{loading ? 'Signing in…' : 'Sign in →'}</button>
-        </form>
-        <button style={{ ...styles.button, width: '100%', marginTop: 10 }} onClick={() => { window.location.href = '/admin' }}>← Back to Admin Home</button>
-      </section>
-    </div>
-  )
-
-  return (
-    <div style={styles.page}>
-      <div style={styles.shell}>
-        <header style={styles.header}>
-          <div><img src="/olitec-logo.svg" alt="OLITEC" style={{ width: 170, display: 'block' }} /><div style={{ color: '#718096', fontSize: 14, marginTop: 5 }}>Product Administration</div></div>
-          <div style={styles.actions}>
-            <button style={styles.button} onClick={() => { window.location.href = '/admin' }}>← Admin Home</button>
-            <button style={styles.button} onClick={loadData}>↻ Refresh</button>
-            <button style={{ ...styles.button, background: '#172033', color: '#fff' }} onClick={logout}>Sign out</button>
-          </div>
-        </header>
-
-        {error && <div style={{ padding: 13, borderRadius: 13, background: '#fff0f0', color: '#b42318', border: '1px solid #ffd4d1', marginBottom: 15 }}>{error}</div>}
-        {message && <div style={{ padding: 13, borderRadius: 13, background: '#edf9f0', color: '#258b42', border: '1px solid #d4efd9', marginBottom: 15 }}>✓ {message}</div>}
-
-        <div style={{ display: 'flex', gap: 10, marginBottom: 18 }}>
-          <button style={tab === 'products' ? styles.activeTab : styles.tab} onClick={() => setTab('products')}>Product Master</button>
-          <button style={tab === 'serials' ? styles.activeTab : styles.tab} onClick={() => setTab('serials')}>Serial Number Generator</button>
-        </div>
-
-        {tab === 'products' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(360px, 500px) 1fr', gap: 18, alignItems: 'start' }}>
-          <section style={styles.card}>
-            <div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>PRODUCT ENTRY</div>
-            <h2 style={{ margin: '6px 0' }}>{editingModel ? 'Edit Product' : 'Create Product'}</h2>
-            <p style={{ color: '#718096', fontSize: 13 }}>{editingModel ? 'Update the product master. MRP remains visible only inside administration.' : 'Add the product master first. MRP is stored for administration only and is never exposed through customer warranty/service data.'}</p>
-            <form onSubmit={createProduct}>
-              <label style={styles.label}>Model number *</label>
-              <input style={{ ...styles.input, background: editingModel ? '#f4f6f8' : '#fff' }} value={form.model_code} onChange={e => setField('model_code', e.target.value.toUpperCase())} placeholder="e.g. OL-5KTL" required disabled={!!editingModel} />
-              {editingModel && <div style={{ fontSize: 11, color: '#718096', marginTop: 5 }}>Model number cannot be changed here because existing serial numbers use this model code.</div>}
-              <label style={styles.label}>Product name *</label><input style={styles.input} value={form.product_name} onChange={e => setField('product_name', e.target.value)} placeholder="e.g. OLITEC Solar Inverter" required />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                <div><label style={styles.label}>Capacity (kW)</label><input style={styles.input} type="number" min="0" step="0.1" value={form.capacity_kw} onChange={e => setField('capacity_kw', e.target.value)} /></div>
-                <div><label style={styles.label}>MRP (₹) *</label><input style={styles.input} type="number" min="1" step="0.01" value={form.mrp} onChange={e => setField('mrp', e.target.value)} required /></div>
-              </div>
-              <label style={styles.label}>Warranty (years) *</label><input style={styles.input} type="number" min="1" max="20" value={form.warranty_years} onChange={e => setField('warranty_years', e.target.value)} required />
-              <label style={styles.label}>Product image {editingModel ? '(optional)' : ''}</label><input style={{ ...styles.input, height: 'auto', padding: 10 }} type="file" accept="image/jpeg,image/png,image/webp" onChange={e => chooseImage(e.target.files?.[0] || null)} />
-              {preview && <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}><img src={preview} alt="Preview" style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 12, border: '1px solid #e5e7eb' }} /><span style={{ fontSize: 12, color: '#64748b' }}>{image?.name || 'Current product image'}</span></div>}
-              <button style={{ ...styles.primary, width: '100%', marginTop: 20 }} disabled={loading}>{loading ? (editingModel ? 'Updating Product…' : 'Saving Product…') : (editingModel ? 'Update Product →' : 'Save Product →')}</button>
-              {editingModel && <button type="button" style={{ ...styles.button, width: '100%', marginTop: 10 }} onClick={cancelEdit} disabled={loading}>Cancel Edit</button>}
-            </form>
-          </section>
-
-          <section style={styles.card}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}><div><div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>PRODUCT MASTER</div><h2 style={{ margin: '6px 0' }}>Products</h2></div><span style={{ color: '#64748b', fontSize: 12 }}>{uniqueModels.length} model{uniqueModels.length === 1 ? '' : 's'}</span></div>
-            <div style={{ overflowX: 'auto', marginTop: 18 }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}><thead><tr>{['Product', 'Model', 'Capacity', 'MRP', 'Warranty', 'Units', 'Action'].map(h => <th key={h} style={{ textAlign: 'left', padding: 11, borderBottom: '1px solid #e9edf2', color: '#8a94a6', fontSize: 10, textTransform: 'uppercase' }}>{h}</th>)}</tr></thead><tbody>{uniqueModels.map(model => <tr key={model.model_id}><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>{model.image_url ? <img src={model.image_url} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 9 }} /> : <div style={{ width: 48, height: 48, borderRadius: 9, background: '#f4f6f8' }} />}<strong>{model.product_name}</strong></div></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><strong>{model.model_code}</strong></td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.capacity_kw ?? '—'} kW</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5', fontWeight: 800 }}>₹{Number(model.mrp || 0).toLocaleString('en-IN')}</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{model.warranty_years || Math.round(model.warranty_months / 12)} years</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}>{rows.filter(r => r.model_id === model.model_id && r.product_id).length}</td><td style={{ padding: 12, borderBottom: '1px solid #eef1f5' }}><button style={styles.button} onClick={() => beginEdit(model)}>Edit</button></td></tr>)}</tbody></table></div>
-          </section>
-        </div>}
-
-        {tab === 'serials' && <div style={{ display: 'grid', gridTemplateColumns: 'minmax(360px, 500px) 1fr', gap: 18, alignItems: 'start' }}>
-          <section style={styles.card}>
-            <div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>SERIAL NUMBER GENERATOR</div>
-            <h2 style={{ margin: '6px 0' }}>Generate Production Batch</h2>
-            <p style={{ color: '#718096', fontSize: 13 }}>Select an existing product, production month and quantity. The production date is stored as month/year only. A completed model/month batch cannot be generated again.</p>
-            <form onSubmit={generateBatch}>
-              <label style={styles.label}>Product model *</label><select style={styles.input} value={serialForm.model_id} onChange={e => setSerialForm(v => ({ ...v, model_id: e.target.value }))} required disabled={batchLocked}><option value="">Select product model</option>{uniqueModels.map(model => <option key={model.model_id} value={model.model_id}>{model.model_code} — {model.product_name}</option>)}</select>
-              <label style={styles.label}>Production month *</label><input style={styles.input} type="month" value={serialForm.production_month} onChange={e => setSerialForm(v => ({ ...v, production_month: e.target.value }))} required disabled={batchLocked} />
-              <label style={styles.label}>Quantity *</label><input style={styles.input} type="number" min="1" max="10000" value={serialForm.quantity} onChange={e => setSerialForm(v => ({ ...v, quantity: e.target.value }))} required disabled={batchLocked} />
-              <button style={{ ...styles.primary, width: '100%', marginTop: 20 }} disabled={loading || batchLocked || !uniqueModels.length}>{batchLocked ? 'Batch Generated & Locked' : loading ? 'Generating…' : 'Generate Serial Numbers →'}</button>
-            </form>
-            {batchLocked && <button style={{ ...styles.button, width: '100%', marginTop: 10 }} onClick={startNewBatch}>Start New Batch</button>}
-            <div style={{ marginTop: 18, padding: 13, borderRadius: 13, background: '#f8fafc', fontSize: 12, color: '#64748b' }}><strong style={{ color: '#172033' }}>Serial format:</strong> model code without punctuation + YYMM + six-digit running sequence.<br />Example: <b style={{ color: '#172033' }}>OL5KTL2609000001</b></div>
-          </section>
-
-          <section style={styles.card}>
-            {generated.length > 0 && <div style={{ padding: 16, borderRadius: 14, background: '#f0faf3', border: '1px solid #d7efdd', marginBottom: 18 }}><strong>{generated.length} serial numbers generated</strong><div style={{ fontSize: 12, color: '#5d6b7d', marginTop: 4 }}>Batch {generated[0].batch_number} · {displayMonth(generated[0].production_month)}</div><button style={{ ...styles.primary, marginTop: 12 }} disabled={generatedDownloaded || loading} onClick={downloadGenerated}>{generatedDownloaded ? 'Downloaded — Re-download Requires Authentication' : 'Download Serial Batch CSV ↓'}</button></div>}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}><div><div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#168a45' }}>SERIAL BATCH HISTORY</div><h2 style={{ margin: '6px 0' }}>Generated Batches</h2></div><span style={{ color: '#64748b', fontSize: 12 }}>{batches.length} batch{batches.length === 1 ? '' : 'es'}</span></div>
-            <div style={{ marginTop: 15, display: 'grid', gap: 10 }}>{batches.map(batch => <div key={batch.batch_number} style={{ padding: 15, border: '1px solid #e5eaf0', borderRadius: 14, display: 'grid', gridTemplateColumns: '1.2fr 1fr .7fr 1fr auto', gap: 12, alignItems: 'center' }}><div><strong>{batch.model_code}</strong><small style={{ display: 'block', color: '#718096', marginTop: 3 }}>{batch.product_name}</small></div><div><strong>{batch.batch_number}</strong><small style={{ display: 'block', color: '#718096', marginTop: 3 }}>{displayMonth(batch.production_month)}</small></div><div><strong>{batch.quantity}</strong><small style={{ display: 'block', color: '#718096', marginTop: 3 }}>units</small></div><div><span style={{ fontSize: 12, color: batch.downloaded_at ? '#168a45' : '#64748b', fontWeight: 800 }}>{batch.downloaded_at ? 'Downloaded' : 'Not downloaded'}</span><small style={{ display: 'block', color: '#94a3b8', marginTop: 3 }}>{batch.download_count} download{batch.download_count === 1 ? '' : 's'}</small></div><button style={styles.button} onClick={() => setRedownloadBatch(batch)}>Re-download</button></div>)}{!batches.length && <div style={{ padding: 35, textAlign: 'center', color: '#718096' }}>No serial batches have been generated yet.</div>}</div>
-          </section>
-        </div>}
-
-        {redownloadBatch && <div onMouseDown={e => { if (e.target === e.currentTarget) setRedownloadBatch(null) }} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,.48)', display: 'grid', placeItems: 'center', padding: 20, zIndex: 50 }}>
-          <section style={{ ...styles.card, width: '100%', maxWidth: 500 }}>
-            <div style={{ fontSize: 11, letterSpacing: '.12em', fontWeight: 800, color: '#d86b00' }}>AUTHENTICATED RE-DOWNLOAD</div>
-            <h2 style={{ margin: '7px 0' }}>Confirm administrator identity</h2>
-            <p style={{ color: '#64748b', fontSize: 13 }}>Serial-number batches are protected from ordinary repeat downloads. Enter the authorised admin password to re-download this batch.</p>
-            <div style={{ padding: 13, borderRadius: 12, background: '#f8fafc', margin: '15px 0', fontSize: 12 }}><strong>{redownloadBatch.batch_number}</strong><br />{redownloadBatch.model_code} · {redownloadBatch.quantity} units · {displayMonth(redownloadBatch.production_month)}</div>
-            <label style={styles.label}>Admin email</label><input style={styles.input} value={authEmail} readOnly />
-            <label style={styles.label}>Admin password</label><input style={styles.input} type="password" autoFocus value={reauthPassword} onChange={e => setReauthPassword(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') protectedRedownload() }} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 18 }}><button style={styles.button} onClick={() => { setRedownloadBatch(null); setReauthPassword('') }}>Cancel</button><button style={styles.primary} disabled={loading || !reauthPassword} onClick={protectedRedownload}>{loading ? 'Authenticating…' : 'Authenticate & Download'}</button></div>
-          </section>
-        </div>}
-      </div>
-    </div>
-  )
+export default function AdminProductsPage(){
+ const [email,setEmail]=useState('');const [password,setPassword]=useState('');const [loggedIn,setLoggedIn]=useState(false);const [loading,setLoading]=useState(false);const [error,setError]=useState('');const [message,setMessage]=useState('');const [rows,setRows]=useState<ProductRow[]>([]);const [batches,setBatches]=useState<Batch[]>([]);const [tab,setTab]=useState<'products'|'serials'>('products');const [image,setImage]=useState<File|null>(null);const [preview,setPreview]=useState('');const [generated,setGenerated]=useState<Generated[]>([]);const [generatedDownloaded,setGeneratedDownloaded]=useState(false);const [batchLocked,setBatchLocked]=useState(false);const [requestKey,setRequestKey]=useState('');const [redownloadBatch,setRedownloadBatch]=useState<Batch|null>(null);const [reauthPassword,setReauthPassword]=useState('');const [authEmail,setAuthEmail]=useState(SUPER_ADMIN_EMAIL);const [editingModel,setEditingModel]=useState<ProductModel|null>(null);const [form,setForm]=useState(emptyForm);const [serialForm,setSerialForm]=useState({model_id:'',production_month:new Date().toISOString().slice(0,7),quantity:'1'})
+ useEffect(()=>{supabase.auth.getSession().then(({data})=>{if(data.session){setLoggedIn(true);setAuthEmail(SUPER_ADMIN_EMAIL);loadData()}})},[])
+ async function loadData(){setLoading(true);setError('');const [catalog,batchResult]=await Promise.all([supabase.rpc('admin_get_product_catalog'),supabase.rpc('admin_get_product_batches')]);if(catalog.error)setError(errorText(catalog.error));else setRows((catalog.data||[]) as ProductRow[]);if(batchResult.error)setError(errorText(batchResult.error));else setBatches((batchResult.data||[]) as Batch[]);setLoading(false)}
+ async function login(event:FormEvent){event.preventDefault();setLoading(true);setError('');const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error){setError(errorText(error));setLoading(false);return}setLoggedIn(true);setAuthEmail(SUPER_ADMIN_EMAIL);await loadData()}
+ async function logout(){await supabase.auth.signOut();setLoggedIn(false);setRows([]);setBatches([])}
+ function setField(key:string,value:string){setForm(v=>({...v,[key]:value}))}
+ function chooseImage(file:File|null){setImage(file);if(preview.startsWith('blob:'))URL.revokeObjectURL(preview);setPreview(file?URL.createObjectURL(file):'')}
+ function beginEdit(model:ProductModel){setEditingModel(model);setForm({model_code:model.model_code,product_name:model.product_name,capacity_kw:model.capacity_kw==null?'':String(model.capacity_kw),mrp:model.mrp==null?'':String(model.mrp),warranty_years:String(model.warranty_years||Math.round(model.warranty_months/12)||5)});setImage(null);setPreview(model.image_url||'');setError('');setMessage('');window.scrollTo({top:0,behavior:'smooth'})}
+ function cancelEdit(){setEditingModel(null);setForm(emptyForm);setImage(null);if(preview.startsWith('blob:'))URL.revokeObjectURL(preview);setPreview('');setError('');setMessage('')}
+ async function createProduct(event:FormEvent){event.preventDefault();setLoading(true);setError('');setMessage('');try{let imageUrl:string|null=null;if(image){if(image.size>5*1024*1024)throw new Error('Product image must be 5 MB or smaller.');if(!['image/jpeg','image/png','image/webp'].includes(image.type))throw new Error('Use JPG, PNG or WebP for the product image.');const path=`models/${Date.now()}-${image.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const upload=await supabase.storage.from('products').upload(path,image,{upsert:false,contentType:image.type});if(upload.error)throw upload.error;imageUrl=supabase.storage.from('products').getPublicUrl(path).data.publicUrl}const {error}=await supabase.rpc('admin_create_product_model',{p_model_code:form.model_code,p_product_name:form.product_name,p_capacity_kw:form.capacity_kw?Number(form.capacity_kw):null,p_mrp:Number(form.mrp),p_warranty_years:Number(form.warranty_years),p_image_url:imageUrl});if(error)throw error;setMessage(editingModel?`Product ${form.model_code} updated successfully.`:`Product ${form.model_code} created successfully. Serial numbers were not generated.`);cancelEdit();await loadData()}catch(err){setError(errorText(err))}finally{setLoading(false)}}
+ const uniqueModels=useMemo(()=>Array.from(new Map(rows.map(r=>[r.model_id,r])).values()),[rows])
+ async function generateBatch(event:FormEvent){event.preventDefault();if(batchLocked)return;setLoading(true);setError('');setMessage('');setGenerated([]);setGeneratedDownloaded(false);try{const key=requestKey||crypto.randomUUID();if(!requestKey)setRequestKey(key);const {data,error}=await supabase.rpc('admin_generate_serial_batch',{p_model_id:serialForm.model_id,p_production_month:monthValue(serialForm.production_month),p_quantity:Number(serialForm.quantity),p_request_key:key});if(error)throw error;const result=(data||[]) as Generated[];setGenerated(result);setBatchLocked(true);setMessage(`${result.length} serial numbers generated. This batch is now locked against accidental regeneration.`);await loadData()}catch(err){setError(errorText(err))}finally{setLoading(false)}}
+ function startNewBatch(){setGenerated([]);setGeneratedDownloaded(false);setBatchLocked(false);setRequestKey(crypto.randomUUID());setMessage('');setError('')}
+ async function downloadGenerated(){if(!generated.length||generatedDownloaded)return;setLoading(true);setError('');try{const {error}=await supabase.rpc('admin_mark_serial_batch_downloaded',{p_batch_number:generated[0].batch_number});if(error)throw error;csvDownload(generated,`OLITEC-${generated[0].model_code}-${generated[0].batch_number}.csv`);setGeneratedDownloaded(true);setMessage('Serial-number batch downloaded. Further downloads require Super Admin authentication.');await loadData()}catch(err){setError(errorText(err))}finally{setLoading(false)}}
+ async function protectedRedownload(){if(!redownloadBatch||!reauthPassword)return;setLoading(true);setError('');const {data:sessionData}=await supabase.auth.getSession();const originalSession=sessionData.session;try{const {error:loginError}=await supabase.auth.signInWithPassword({email:SUPER_ADMIN_EMAIL,password:reauthPassword});if(loginError)throw new Error('Super Admin authentication failed. Enter the Super Admin password again.');const {data,error}=await supabase.rpc('admin_get_serial_batch_for_redownload',{p_batch_number:redownloadBatch.batch_number});if(error)throw error;const generatedRows=(data||[]) as Generated[];csvDownload(generatedRows,`OLITEC-${redownloadBatch.model_code}-${redownloadBatch.batch_number}-REDOWNLOAD.csv`);setMessage(`Batch ${redownloadBatch.batch_number} re-downloaded after Super Admin authentication.`);setRedownloadBatch(null);setReauthPassword('');if(originalSession)await supabase.auth.setSession(originalSession)}catch(err){setError(errorText(err))}finally{setLoading(false)}}
+ if(!loggedIn)return <div style={{...styles.page,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}><section style={{...styles.card,width:'100%',maxWidth:560}}><img src="/olitec-logo.svg" alt="OLITEC" style={{width:190,display:'block',margin:'0 auto 12px'}}/><div style={{textAlign:'center',color:'#718096'}}>Product Administration</div><h1 style={{textAlign:'center',marginBottom:8}}>Manage Products &amp; Serial Numbers</h1><p style={{textAlign:'center',color:'#718096'}}>Product creation and production serial generation are separate controlled operations.</p><form onSubmit={login}><label style={styles.label}>Staff email</label><input style={styles.input} type="email" value={email} onChange={e=>setEmail(e.target.value)} required/><label style={styles.label}>Password</label><input style={styles.input} type="password" value={password} onChange={e=>setPassword(e.target.value)} required/>{error&&<div style={{marginTop:14,padding:12,borderRadius:12,background:'#fff0f0',color:'#b42318'}}>{error}</div>}<button style={{...styles.primary,width:'100%',marginTop:18}} disabled={loading}>{loading?'Signing in…':'Sign in →'}</button></form><button style={{...styles.button,width:'100%',marginTop:10}} onClick={()=>{window.location.href='/admin'}}>← Back to Admin Home</button></section></div>
+ return <div style={styles.page}><div style={styles.shell}><header style={styles.header}><div><img src="/olitec-logo.svg" alt="OLITEC" style={{width:170,display:'block'}}/><div style={{color:'#718096',fontSize:14,marginTop:5}}>Product Administration</div></div><div style={styles.actions}><button style={styles.button} onClick={()=>{window.location.href='/admin'}}>← Admin Home</button><button style={styles.button} onClick={loadData}>↻ Refresh</button><button style={{...styles.button,background:'#172033',color:'#fff'}} onClick={logout}>Sign out</button></div></header>
+ {error&&<div style={{padding:13,borderRadius:13,background:'#fff0f0',color:'#b42318',border:'1px solid #ffd4d1',marginBottom:15}}>{error}</div>}{message&&<div style={{padding:13,borderRadius:13,background:'#edf9f0',color:'#258b42',border:'1px solid #d4efd9',marginBottom:15}}>✓ {message}</div>}
+ <div style={{display:'flex',gap:10,marginBottom:18}}><button style={tab==='products'?styles.activeTab:styles.tab} onClick={()=>setTab('products')}>Product Master</button><button style={tab==='serials'?styles.activeTab:styles.tab} onClick={()=>setTab('serials')}>Serial Number Generator</button></div>
+ {tab==='products'&&<div style={{display:'grid',gridTemplateColumns:'minmax(360px,500px) 1fr',gap:18,alignItems:'start'}}><section style={styles.card}><div style={{fontSize:11,letterSpacing:'.12em',fontWeight:800,color:'#168a45'}}>PRODUCT ENTRY</div><h2 style={{margin:'6px 0'}}>{editingModel?'Edit Product':'Create Product'}</h2><p style={{color:'#718096',fontSize:13}}>{editingModel?'Update the product master. MRP remains visible only inside administration.':'Add the product master first. MRP is stored for administration only and is never exposed through customer warranty/service data.'}</p><form onSubmit={createProduct}><label style={styles.label}>Model number *</label><input style={{...styles.input,background:editingModel?'#f4f6f8':'#fff'}} value={form.model_code} onChange={e=>setField('model_code',e.target.value.toUpperCase())} placeholder="e.g. OL-5KTL" required disabled={!!editingModel}/>{editingModel&&<div style={{fontSize:11,color:'#718096',marginTop:5}}>Model number cannot be changed here because existing serial numbers use this model code.</div>}<label style={styles.label}>Product name *</label><input style={styles.input} value={form.product_name} onChange={e=>setField('product_name',e.target.value)} placeholder="e.g. OLITEC Solar Inverter" required/><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}><div><label style={styles.label}>Capacity (kW)</label><input style={styles.input} type="number" min="0" step="0.1" value={form.capacity_kw} onChange={e=>setField('capacity_kw',e.target.value)}/></div><div><label style={styles.label}>MRP (₹) *</label><input style={styles.input} type="number" min="1" step="0.01" value={form.mrp} onChange={e=>setField('mrp',e.target.value)} required/></div></div><label style={styles.label}>Warranty (years) *</label><input style={styles.input} type="number" min="1" max="20" value={form.warranty_years} onChange={e=>setField('warranty_years',e.target.value)} required/><label style={styles.label}>Product image {editingModel?'(optional)':''}</label><input style={{...styles.input,height:'auto',padding:10}} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>chooseImage(e.target.files?.[0]||null)}/>{preview&&<div style={{display:'flex',alignItems:'center',gap:10,marginTop:10}}><img src={preview} alt="Preview" style={{width:70,height:70,objectFit:'contain',borderRadius:12,border:'1px solid #e5e7eb',background:'#f8fafc'}}/><span style={{fontSize:12,color:'#64748b'}}>{image?.name||'Current product image'}</span></div>}<button style={{...styles.primary,width:'100%',marginTop:20}} disabled={loading}>{loading?(editingModel?'Updating Product…':'Saving Product…'):(editingModel?'Update Product →':'Save Product →')}</button>{editingModel&&<button type="button" style={{...styles.button,width:'100%',marginTop:10}} onClick={cancelEdit} disabled={loading}>Cancel Edit</button>}</form></section>
+ <section style={styles.card}><div style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center'}}><div><div style={{fontSize:11,letterSpacing:'.12em',fontWeight:800,color:'#168a45'}}>PRODUCT MASTER</div><h2 style={{margin:'6px 0'}}>Products</h2></div><span style={{color:'#64748b',fontSize:12}}>{uniqueModels.length} model{uniqueModels.length===1?'':'s'}</span></div><div style={{overflowX:'auto',marginTop:18}}><table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}><thead><tr>{['Product','Model','Capacity','MRP','Warranty','Units','Action'].map(h=><th key={h} style={{textAlign:'left',padding:11,borderBottom:'1px solid #e9edf2',color:'#8a94a6',fontSize:10,textTransform:'uppercase'}}>{h}</th>)}</tr></thead><tbody>{uniqueModels.map(model=><tr key={model.model_id}><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}><div style={{display:'flex',alignItems:'center',gap:9}}>{model.image_url?<img src={model.image_url} alt="" style={{width:48,height:48,objectFit:'contain',borderRadius:9,background:'#f4f6f8'}}/>:<div style={{width:48,height:48,borderRadius:9,background:'#f4f6f8'}}/>}<strong>{model.product_name}</strong></div></td><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}><strong>{model.model_code}</strong></td><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}>{model.capacity_kw??'—'} kW</td><td style={{padding:12,borderBottom:'1px solid #eef1f5',fontWeight:800}}>₹{Number(model.mrp||0).toLocaleString('en-IN')}</td><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}>{model.warranty_years||Math.round(model.warranty_months/12)} years</td><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}>{rows.filter(r=>r.model_id===model.model_id&&r.product_id).length}</td><td style={{padding:12,borderBottom:'1px solid #eef1f5'}}><button style={styles.button} onClick={()=>beginEdit(model)}>Edit</button></td></tr>)}</tbody></table></div></section></div>}
+ {tab==='serials'&&<div style={{display:'grid',gridTemplateColumns:'minmax(360px,500px) 1fr',gap:18,alignItems:'start'}}><section style={styles.card}><div style={{fontSize:11,letterSpacing:'.12em',fontWeight:800,color:'#168a45'}}>SERIAL NUMBER GENERATOR</div><h2 style={{margin:'6px 0'}}>Generate Production Batch</h2><p style={{color:'#718096',fontSize:13}}>Select an existing product, production month and quantity. The production date is stored as month/year only. A completed model/month batch cannot be generated again.</p><form onSubmit={generateBatch}><label style={styles.label}>Product model *</label><select style={styles.input} value={serialForm.model_id} onChange={e=>setSerialForm(v=>({...v,model_id:e.target.value}))} required disabled={batchLocked}><option value="">Select product model</option>{uniqueModels.map(model=><option key={model.model_id} value={model.model_id}>{model.model_code} — {model.product_name}</option>)}</select><label style={styles.label}>Production month *</label><input style={styles.input} type="month" value={serialForm.production_month} onChange={e=>setSerialForm(v=>({...v,production_month:e.target.value}))} required disabled={batchLocked}/><label style={styles.label}>Quantity *</label><input style={styles.input} type="number" min="1" max="10000" value={serialForm.quantity} onChange={e=>setSerialForm(v=>({...v,quantity:e.target.value}))} required disabled={batchLocked}/><button style={{...styles.primary,width:'100%',marginTop:20}} disabled={loading||batchLocked||!uniqueModels.length}>{batchLocked?'Batch Generated & Locked':loading?'Generating…':'Generate Serial Numbers →'}</button></form>{batchLocked&&<button style={{...styles.button,width:'100%',marginTop:10}} onClick={startNewBatch}>Start New Batch</button>}<div style={{marginTop:18,padding:13,borderRadius:13,background:'#f8fafc',fontSize:12,color:'#64748b'}}><strong style={{color:'#172033'}}>Serial format:</strong> model code without punctuation + YYMM + six-digit running sequence.<br/>Example: <b style={{color:'#172033'}}>OL5KTL2609000001</b></div></section>
+ <section style={styles.card}>{generated.length>0&&<div style={{padding:16,borderRadius:14,background:'#f0faf3',border:'1px solid #d7efdd',marginBottom:18}}><strong>{generated.length} serial numbers generated</strong><div style={{fontSize:12,color:'#5d6b7d',marginTop:4}}>Batch {generated[0].batch_number} · {displayMonth(generated[0].production_month)}</div><button style={{...styles.primary,marginTop:12}} disabled={generatedDownloaded||loading} onClick={downloadGenerated}>{generatedDownloaded?'Downloaded — Re-download Requires Super Admin':'Download Serial Batch CSV ↓'}</button></div>}<div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:10}}><div><div style={{fontSize:11,letterSpacing:'.12em',fontWeight:800,color:'#168a45'}}>SERIAL BATCH HISTORY</div><h2 style={{margin:'6px 0'}}>Generated Batches</h2></div><span style={{color:'#64748b',fontSize:12}}>{batches.length} batch{batches.length===1?'':'es'}</span></div><div style={{marginTop:15,display:'grid',gap:10}}>{batches.map(batch=><div key={batch.batch_number} style={{padding:15,border:'1px solid #e5eaf0',borderRadius:14,display:'grid',gridTemplateColumns:'1.2fr 1fr .7fr 1fr auto',gap:12,alignItems:'center'}}><div><strong>{batch.model_code}</strong><small style={{display:'block',color:'#718096',marginTop:3}}>{batch.product_name}</small></div><div><strong>{batch.batch_number}</strong><small style={{display:'block',color:'#718096',marginTop:3}}>{displayMonth(batch.production_month)}</small></div><div><strong>{batch.quantity}</strong><small style={{display:'block',color:'#718096',marginTop:3}}>units</small></div><div><span style={{fontSize:12,color:batch.downloaded_at?'#168a45':'#64748b',fontWeight:800}}>{batch.downloaded_at?'Downloaded':'Not downloaded'}</span><small style={{display:'block',color:'#94a3b8',marginTop:3}}>{batch.download_count} download{batch.download_count===1?'':'s'}</small></div><button style={styles.button} onClick={()=>setRedownloadBatch(batch)}>Re-download</button></div>)}{!batches.length&&<div style={{padding:35,textAlign:'center',color:'#718096'}}>No serial batches have been generated yet.</div>}</div></section></div>}
+ {redownloadBatch&&<div onMouseDown={e=>{if(e.target===e.currentTarget)setRedownloadBatch(null)}} style={{position:'fixed',inset:0,background:'rgba(15,23,42,.48)',display:'grid',placeItems:'center',padding:20,zIndex:50}}><section style={{...styles.card,width:'100%',maxWidth:500}}><div style={{fontSize:11,letterSpacing:'.12em',fontWeight:800,color:'#d86b00'}}>SUPER ADMIN AUTHENTICATION</div><h2 style={{margin:'7px 0'}}>Confirm Super Admin identity</h2><p style={{color:'#64748b',fontSize:13}}>Serial-number batches can only be reprinted after authentication with the Super Admin account.</p><div style={{padding:13,borderRadius:12,background:'#f8fafc',margin:'15px 0',fontSize:12}}><strong>{redownloadBatch.batch_number}</strong><br/>{redownloadBatch.model_code} · {redownloadBatch.quantity} units · {displayMonth(redownloadBatch.production_month)}</div><label style={styles.label}>Super Admin email</label><input style={styles.input} value={authEmail} readOnly/><label style={styles.label}>Super Admin password</label><input style={styles.input} type="password" autoFocus value={reauthPassword} onChange={e=>setReauthPassword(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')protectedRedownload()}}/><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginTop:18}}><button style={styles.button} onClick={()=>{setRedownloadBatch(null);setReauthPassword('')}}>Cancel</button><button style={styles.primary} disabled={loading||!reauthPassword} onClick={protectedRedownload}>{loading?'Authenticating…':'Authenticate & Reprint'}</button></div></section></div>}
+ </div></div>
 }
