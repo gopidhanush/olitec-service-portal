@@ -26,6 +26,8 @@ import './multi-product-portal.css'
 import './global-page-frame.css'
 import './final-customer-fixes.css'
 import './final-admin-warranty-polish.css'
+import './mobile-navigation-final.css'
+import MobileNavigationController from '@/components/MobileNavigationController'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
 
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
+        <MobileNavigationController />
         <div className="site-frame">
           <div className="site-frame-content">{children}</div>
         </div>

@@ -1,0 +1,47 @@
+/* Final mobile navigation */
+.customerMobileMenuButton{display:none;width:40px;height:40px;border:1px solid #dfe7ee;border-radius:12px;background:#fff;color:#07183d;align-items:center;justify-content:center;padding:8px;box-shadow:0 5px 16px rgba(9,32,68,.06)}
+.customerMobileMenuButton svg{width:22px;height:22px}
+
+.olitecMobileMenuRoot{display:none}
+
+@media(max-width:760px){
+  .customerHeader{min-height:70px!important;padding:12px 16px!important;align-items:center!important}
+  .customerHeaderRight{display:flex!important;align-items:center!important;gap:9px!important;margin-left:auto!important}
+  .customerQuickNav,.olitecExactPortal{display:none!important}
+  .customerHomeButton{display:inline-flex!important;height:40px!important;min-width:40px!important;padding:0 13px!important;border:1px solid #dfe7ee!important;border-radius:999px!important;background:#fff!important;align-items:center!important;justify-content:center!important;gap:7px!important;color:#07183d!important;font-size:11px!important;font-weight:850!important;box-shadow:0 5px 16px rgba(9,32,68,.06)!important}
+  .customerHomeButton svg{width:17px!important;height:17px!important;flex:0 0 auto}
+  .customerMobileMenuButton{display:inline-flex!important}
+
+  .olitecMobileMenuRoot{display:block;position:fixed;inset:0;z-index:99999}
+  .olitecMobileMenuBackdrop{position:absolute;inset:0;background:rgba(4,16,38,.34);backdrop-filter:blur(3px)}
+  .olitecMobileMenuPanel{position:absolute;top:0;right:0;width:min(330px,88vw);height:100%;padding:18px 16px 24px;background:#fff;border-left:1px solid #e2e8ee;box-shadow:-18px 0 50px rgba(7,24,61,.16);display:flex;flex-direction:column}
+  .olitecMobileMenuHead{display:flex;align-items:center;justify-content:space-between;padding:4px 3px 18px;border-bottom:1px solid #edf1f4}
+  .olitecMobileMenuHead img{width:130px;height:auto;display:block}
+  .olitecMobileMenuClose{width:38px;height:38px;border:1px solid #dfe7ee;border-radius:12px;background:#fff;color:#07183d;font-size:26px;line-height:1;cursor:pointer}
+  .olitecMobileMenuLinks{display:flex;flex-direction:column;gap:7px;padding:18px 0}
+  .olitecMobileMenuLinks a{display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 15px;border:1px solid #e3e9ef;border-radius:14px;color:#07183d;background:#fbfcfd;font-size:14px;font-weight:850;text-decoration:none}
+  .olitecMobileMenuLinks a span{font-size:19px;color:#1aaa55}
+  .olitecMobileMenuHome{margin-top:auto;min-height:52px;border-radius:14px;background:#07183d;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:850;text-decoration:none}
+  .olitecMobileMenuHome span{font-size:19px}
+  body.mobile-menu-open{overflow:hidden}
+
+  /* QR lookup action */
+  .customerQrLookupButton{margin-top:12px!important;background:#07183d!important;color:#fff!important;border:0!important}
+  .customerQrLookupButton span{font-size:18px!important}
+  .customerLookupScanner{margin-top:12px!important;padding:10px!important;border:1px solid #e1e8ee!important;border-radius:16px!important;background:#f8fafc!important}
+
+  /* Closed complaint feedback */
+  .customerFeedbackCard{text-align:left!important}
+  .customerFeedbackStars{display:flex;gap:7px;margin:12px 0 4px}
+  .customerFeedbackStar{width:40px;height:40px;border:1px solid #dce5ec;border-radius:12px;background:#fff;color:#8795a7;font-size:19px;font-weight:800;cursor:pointer}
+  .customerFeedbackStar.selected{background:#fff1cf;border-color:#f0c96a;color:#c37a00}
+  .customerFeedbackTextarea{width:100%;min-height:105px;resize:vertical;padding:12px 13px;border:1px solid #d9e2ea;border-radius:13px;background:#fff;color:var(--portal-ink);outline:none;font:inherit;font-size:13px;box-sizing:border-box}
+  .customerFeedbackTextarea:focus{border-color:#8acba3;box-shadow:0 0 0 3px rgba(32,169,87,.1)}
+  .customerFeedbackMessage{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:11px;line-height:1.4}
+  .customerFeedbackMessage.success{background:#eaf8ef;color:#147a43}
+  .customerFeedbackMessage.error{background:#fff1f0;color:#a93226}
+}
+
+@media(min-width:761px){
+  .customerMobileMenuButton{display:none!important}
+}
