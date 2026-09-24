@@ -1,0 +1,377 @@
+/* FINAL OLITEC customer mobile header + admin home layout.
+   Loaded last so older responsive overrides cannot split the header across rows. */
+
+@media (max-width: 760px) {
+  /* Customer pages: one consistent header row on every page */
+  .customerPage:not(.customerHome) .customerHeader,
+  .customerPage .customerHeader {
+    width: calc(100% - 24px) !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    margin: 0 auto !important;
+    padding: 10px 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    position: relative !important;
+    z-index: 50 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .customerPage:not(.customerHome) .customerLogo,
+  .customerPage .customerLogo {
+    width: 122px !important;
+    max-width: 122px !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-self: center !important;
+    flex: 0 0 auto !important;
+    line-height: 0 !important;
+  }
+
+  .customerPage .customerLogo img,
+  .customerPage .olitecOfficialLogo {
+    display: block !important;
+    width: 122px !important;
+    height: auto !important;
+  }
+
+  .customerPage .customerHeaderRight {
+    width: auto !important;
+    height: 44px !important;
+    margin: 0 0 0 auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+
+  .customerPage .customerQuickNav,
+  .customerPage .olitecExactPortal {
+    display: none !important;
+  }
+
+  .customerPage .customerHomeButton {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 72px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    margin: 0 !important;
+    padding: 0 13px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    border: 1px solid #dfe7ee !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    color: #07183d !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    font-weight: 850 !important;
+    box-shadow: 0 5px 16px rgba(9,32,68,.06) !important;
+    white-space: nowrap !important;
+    flex: 0 0 auto !important;
+  }
+
+  .customerPage .customerHomeButton svg {
+    width: 17px !important;
+    height: 17px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .customerPage .customerMobileMenuButton {
+    display: inline-flex !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    margin: 0 !important;
+    padding: 9px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid #dfe7ee !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: #07183d !important;
+    box-shadow: 0 5px 16px rgba(9,32,68,.06) !important;
+    flex: 0 0 auto !important;
+  }
+
+  .customerPage .customerMobileMenuButton svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  /* Keep the page body below the header instead of allowing header controls to
+     overlap compact result banners/back links. */
+  .customerPage .customerMain {
+    width: calc(100% - 24px) !important;
+    margin: 0 auto !important;
+    padding: 0 0 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  .customerPage .customerBack {
+    position: relative !important;
+    z-index: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 34px !important;
+    margin: 0 0 7px !important;
+    padding: 4px 2px !important;
+    box-sizing: border-box !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Consistent spacing for the compact warranty / complaint / tracking
+     result pages. */
+  .customerPage .compactHero,
+  .customerPage .cleanHeroBanner {
+    margin-top: 0 !important;
+  }
+
+  /* Make mobile menu cover the full viewport without moving the page behind it. */
+  .olitecMobileMenuRoot {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important;
+  }
+
+  .olitecMobileMenuPanel {
+    width: min(330px, 88vw) !important;
+    max-width: 330px !important;
+    height: 100dvh !important;
+    padding: 18px 16px 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ADMIN HOME — compact, balanced mobile dashboard */
+  .adminHomePage {
+    min-height: 100dvh !important;
+    overflow-x: hidden !important;
+  }
+
+  .adminHomePage .adminHomeShell {
+    width: min(100%, 720px) !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    padding: 18px 14px 28px !important;
+    box-sizing: border-box !important;
+  }
+
+  .adminHomePage .adminHomeHeader {
+    width: 100% !important;
+    margin: 0 0 18px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+
+  .adminHomePage .adminBrandBlock {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  .adminHomePage .adminBrandBlock .adminHomeLogo,
+  .adminHomePage .adminHomeLogo {
+    width: 142px !important;
+    max-width: 142px !important;
+    height: auto !important;
+  }
+
+  .adminHomePage .adminBrandBlock .adminSubtitle {
+    margin-top: 3px !important;
+    font-size: 11px !important;
+  }
+
+  .adminHomePage .adminHeaderActions {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 7px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .adminHomePage .adminTopBadge {
+    max-width: 150px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .adminHomePage .adminDarkButton {
+    min-height: 40px !important;
+    padding: 0 13px !important;
+    white-space: nowrap !important;
+  }
+
+  .adminHomePage .adminAlert {
+    margin-bottom: 12px !important;
+  }
+
+  .adminHomePage .adminHomeHero {
+    width: 100% !important;
+    margin: 0 0 12px !important;
+    padding: 21px 19px !important;
+    box-sizing: border-box !important;
+    border-radius: 18px !important;
+  }
+
+  .adminHomePage .adminHomeHero h1 {
+    font-size: 23px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -.035em !important;
+    margin: 4px 0 7px !important;
+  }
+
+  .adminHomePage .adminHomeHero p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  .adminHomePage .adminHomeModules {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .adminHomePage .adminHomeModule {
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 21px 19px !important;
+    box-sizing: border-box !important;
+    border-radius: 18px !important;
+  }
+
+  .adminHomePage .adminModuleTop {
+    margin-bottom: 16px !important;
+  }
+
+  .adminHomePage .adminHomeModule h2 {
+    font-size: 20px !important;
+    line-height: 1.08 !important;
+    margin-bottom: 7px !important;
+  }
+
+  .adminHomePage .adminHomeModule p {
+    max-width: none !important;
+    min-height: 0 !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+  }
+
+  .adminHomePage .adminModuleAction {
+    margin-top: 18px !important;
+    font-size: 12px !important;
+  }
+
+  .adminHomePage .adminStaffPanel {
+    margin-top: 12px !important;
+  }
+
+  .adminHomePage .adminPanelHead {
+    padding: 16px !important;
+  }
+
+  .adminHomePage .adminStaffRow {
+    padding: 15px !important;
+  }
+
+  .adminHomePage .adminStaffControls {
+    width: 100% !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .adminHomePage .adminHomeFooterRow {
+    padding-top: 14px !important;
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .customerPage:not(.customerHome) .customerHeader,
+  .customerPage .customerHeader {
+    width: calc(100% - 16px) !important;
+    height: 60px !important;
+    min-height: 60px !important;
+  }
+
+  .customerPage .customerLogo,
+  .customerPage .customerLogo img,
+  .customerPage .olitecOfficialLogo {
+    width: 112px !important;
+    max-width: 112px !important;
+  }
+
+  .customerPage .customerHomeButton {
+    min-width: 68px !important;
+    padding: 0 10px !important;
+  }
+
+  .customerPage .customerHomeButton span {
+    font-size: 10px !important;
+  }
+
+  .customerPage .customerMobileMenuButton {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+
+  .adminHomePage .adminHomeShell {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .adminHomePage .adminHomeHeader {
+    align-items: flex-start !important;
+  }
+
+  .adminHomePage .adminTopBadge {
+    display: none !important;
+  }
+}
+
+@media (min-width: 761px) {
+  .customerPage .customerMobileMenuButton {
+    display: none !important;
+  }
+
+  .adminHomePage .adminHomeShell {
+    max-width: 1240px !important;
+  }
+
+  .adminHomePage .adminHomeModules {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+  }
+
+  .adminHomePage .adminHomeModule {
+    min-height: 270px !important;
+    padding: 30px !important;
+  }
+
+  .adminHomePage .adminHomeModule p {
+    max-width: 600px !important;
+    min-height: 0 !important;
+    line-height: 1.6 !important;
+  }
+}
