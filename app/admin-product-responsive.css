@@ -1,0 +1,17 @@
+/* Responsive refinements for the existing Product Admin inline layout */
+@media(max-width:1050px){
+  div[style*="f7f9fb"] div[style*="grid-template-columns: minmax(360px, 500px) 1fr"]{grid-template-columns:1fr!important}
+  div[style*="f7f9fb"] div[style*="grid-template-columns: 1.2fr 1fr .7fr 1fr auto"]{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:760px){
+  div[style*="f7f9fb"]{padding:20px 14px 34px!important}
+  div[style*="f7f9fb"] header{align-items:flex-start!important;flex-wrap:wrap!important}
+  div[style*="f7f9fb"] header>div:last-child{width:100%;justify-content:flex-start!important}
+  div[style*="f7f9fb"] header>div:last-child button{flex:1;min-width:0}
+  div[style*="f7f9fb"] div[style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+}
+@media(max-width:620px){
+  div[style*="f7f9fb"] div[style*="grid-template-columns: 1.2fr 1fr .7fr 1fr auto"]{grid-template-columns:1fr!important}
+  div[style*="f7f9fb"] section[style*="padding: 24px"]{padding:18px!important}
+  div[style*="f7f9fb"] table{min-width:720px}
+}
