@@ -28,6 +28,7 @@ import './final-customer-fixes.css'
 import './final-admin-warranty-polish.css'
 import './mobile-navigation-final.css'
 import './final-mobile-admin-layout.css'
+import './admin-home-final.css'
 import MobileNavigationController from '@/components/MobileNavigationController'
 
 export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
