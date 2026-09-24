@@ -1,8 +1,7 @@
 -- OLITEC customer service complaint / warranty lookup backend
--- These definitions keep the existing RPC argument names for backward compatibility,
--- while allowing customers to use registration number OR serial number.
+-- Customers can use a registration number or product serial number.
+-- A serial number with an open complaint cannot receive another complaint until closed.
 
--- Update warranty verification to accept either registration number or serial number.
 create or replace function public.get_warranty_verification(p_registration_number text)
 returns table (registration_number text, serial_number text, model_code text, product_name text, capacity_kw numeric,
   warranty_months integer, warranty_start_date date, warranty_end_date date, status text)
@@ -14,70 +13,15 @@ as $$
   where (upper(trim(wr.registration_number)) = upper(trim(p_registration_number))
       or upper(trim(wr.serial_number)) = upper(trim(p_registration_number)))
     and wr.status <> 'cancelled'
-  limit 1;
+  order by wr.serial_number;
 $$;
 revoke all on function public.get_warranty_verification(text) from public;
 grant execute on function public.get_warranty_verification(text) to anon, authenticated;
 
--- Update service context so complaint registration can start from either identifier.
-create or replace function public.get_service_context(p_registration_number text)
-returns table (
-  registration_number text, serial_number text, model_code text, product_name text, capacity_kw numeric,
-  full_name text, mobile text, email text, address text, city text, state text, pin_code text,
-  purchase_date date, warranty_start_date date, warranty_end_date date, warranty_status text
-)
-language sql security definer set search_path = public
-as $$
-  select wr.registration_number, wr.serial_number, wr.model_code, wr.product_name, wr.capacity_kw,
-         wr.full_name, wr.mobile, wr.email, wr.address, wr.city, wr.state, wr.pin_code,
-         wr.purchase_date, wr.warranty_start_date, wr.warranty_end_date, wr.status
-  from public.warranty_registrations wr
-  where (upper(trim(wr.registration_number)) = upper(trim(p_registration_number))
-      or upper(trim(wr.serial_number)) = upper(trim(p_registration_number)))
-    and wr.status <> 'cancelled'
-  limit 1;
-$$;
-revoke all on function public.get_service_context(text) from public;
-grant execute on function public.get_service_context(text) to anon, authenticated;
+-- Run sql/complaint_serial_guard.sql after this file in an existing database.
+-- It recreates get_service_context with complaint status and adds the server-side
+-- active-complaint guard to create_service_complaint.
 
--- Create complaint from either registration number or serial number.
-create or replace function public.create_service_complaint(p_registration_number text, p_complaint jsonb)
-returns table (complaint_number text, registration_number text, serial_number text, status text)
-language plpgsql security definer set search_path = public
-as $$
-declare v_registration public.warranty_registrations%rowtype; v_complaint_number text; v_id bigint;
-begin
-  select wr.* into v_registration from public.warranty_registrations wr
-  where (upper(trim(wr.registration_number)) = upper(trim(p_registration_number))
-      or upper(trim(wr.serial_number)) = upper(trim(p_registration_number)))
-    and wr.status <> 'cancelled' limit 1;
-  if v_registration.id is null then raise exception 'REGISTRATION_NOT_FOUND'; end if;
-  if nullif(p_complaint->>'complaint_type','') is null then raise exception 'COMPLAINT_TYPE_REQUIRED'; end if;
-  if nullif(p_complaint->>'problem_description','') is null then raise exception 'PROBLEM_DESCRIPTION_REQUIRED'; end if;
-  select 'OLC-' || to_char(current_date, 'YYYY') || '-' || lpad((coalesce(max(sc.id),0) + 1)::text, 6, '0') into v_complaint_number from public.service_complaints sc;
-  insert into public.service_complaints (
-    complaint_number, registration_number, serial_number, model_code, product_name, full_name, mobile, email,
-    address, city, state, pin_code, complaint_type, problem_description, purchase_date, preferred_visit_date,
-    preferred_contact_time, service_address, service_city, service_state, service_pin, status
-  ) values (
-    v_complaint_number, v_registration.registration_number, v_registration.serial_number, v_registration.model_code,
-    v_registration.product_name, v_registration.full_name, v_registration.mobile, v_registration.email,
-    v_registration.address, v_registration.city, v_registration.state, v_registration.pin_code,
-    p_complaint->>'complaint_type', p_complaint->>'problem_description', v_registration.purchase_date,
-    nullif(p_complaint->>'preferred_visit_date','')::date, nullif(p_complaint->>'preferred_contact_time',''),
-    coalesce(nullif(p_complaint->>'service_address',''), v_registration.address),
-    coalesce(nullif(p_complaint->>'service_city',''), v_registration.city),
-    coalesce(nullif(p_complaint->>'service_state',''), v_registration.state),
-    coalesce(nullif(p_complaint->>'service_pin',''), v_registration.pin_code), 'received'
-  ) returning id into v_id;
-  return query select sc.complaint_number, sc.registration_number, sc.serial_number, sc.status from public.service_complaints sc where sc.id = v_id;
-exception when unique_violation then raise exception 'COMPLAINT_CONFLICT';
-end;
-$$;
-revoke all on function public.create_service_complaint(text, jsonb) from public;
-grant execute on function public.create_service_complaint(text, jsonb) to anon, authenticated;
-
--- Complaint status can be checked using complaint number, registration number, or serial number.
 create or replace function public.get_complaint_tracking(p_complaint_number text)
 returns table (
   complaint_number text, registration_number text, serial_number text, model_code text, product_name text,
