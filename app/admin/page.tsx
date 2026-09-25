@@ -151,8 +151,15 @@ export default function AdminHomePage() {
 
         {!canProduct && !canService && <section className="adminPanel"><div className="adminEmpty"><strong>No module access has been assigned yet.</strong><p>Ask the Super Admin to approve your account and assign Service Admin or Product Admin access.</p></div></section>}
 
-        {permissions?.super_admin && <section className="adminPanel adminStaffPanel">
-          <div className="adminPanelHead"><div><div className="adminEyebrow">SUPER ADMIN</div><h2>Staff Access</h2><p>Approve staff accounts and assign Service Admin or Product Admin permissions.</p></div><span className="adminCount">{users.length} account{users.length === 1 ? '' : 's'}</span></div>
+        {permissions?.super_admin && <details className="adminPanel adminStaffPanel adminSuperAdminControls">
+          <summary className="adminSuperAdminSummary">
+            <div>
+              <div className="adminEyebrow">SUPER ADMIN</div>
+              <h2>Staff &amp; Permissions</h2>
+              <p>Manage staff approval and module access.</p>
+            </div>
+            <span className="adminCount">{users.length} account{users.length === 1 ? '' : 's'} <b>⌄</b></span>
+          </summary>
           <div className="adminStaffList">
             {users.map(user => <div key={user.email} className="adminStaffRow">
               <div className="adminStaffIdentity"><strong>{user.display_name || user.email}</strong><small>{user.email}{user.super_admin ? ' · Super Admin' : ''}</small></div>
@@ -167,7 +174,7 @@ export default function AdminHomePage() {
             </div>)}
           </div>
           <div className="adminStaffNote">Super Admin: <strong>{SUPER_ADMIN_EMAIL}</strong>. Serial-number reprints are protected by this account's password.</div>
-        </section>}
+        </details>}
 
         <div className="adminHomeFooterRow"><span>OLITEC Administration</span><span>{permissions?.email}</span></div>
       </div>
