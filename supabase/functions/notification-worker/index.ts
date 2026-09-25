@@ -5,16 +5,17 @@ const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,
 
 Deno.serve(async req=>{
   if(req.method==='OPTIONS')return new Response('ok',{headers:cors})
-  const token=Deno.env.get('NOTIFICATION_WORKER_TOKEN')
-  if(!token||req.headers.get('x-worker-token')!==token)return json({error:'Unauthorized'},401)
   const supabase=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
+  let expectedToken=Deno.env.get('NOTIFICATION_WORKER_TOKEN')||''
+  try{
+    const {data}=await supabase.rpc('get_olitec_notification_worker_token')
+    if(typeof data==='string'&&data)expectedToken=data
+  }catch{}
+  if(!expectedToken||req.headers.get('x-worker-token')!==expectedToken)return json({error:'Unauthorized'},401)
   const resendKey=Deno.env.get('RESEND_API_KEY')
   if(!resendKey)return json({error:'RESEND_API_KEY is not configured'},500)
   const from=Deno.env.get('EMAIL_FROM')||'OLITEC Service <connect@olitec.in>'
   const portal=Deno.env.get('CUSTOMER_PORTAL_URL')||'https://olitec-service-portal-weld.vercel.app'
-
-  // Service-admin recipient is read from the database so it can be changed from
-  // the admin configuration without rebuilding or redeploying the customer portal.
   let configuredAdminEmail:string|undefined
   try{
     const {data:setting}=await supabase.from('notification_settings').select('value').eq('key','service_admin_email').maybeSingle()
