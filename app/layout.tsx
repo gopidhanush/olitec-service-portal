@@ -31,7 +31,15 @@ import './final-mobile-admin-layout.css'
 import './admin-home-final.css'
 import MobileNavigationController from '@/components/MobileNavigationController'
 
-export const metadata: Metadata = { title: 'OLITEC — Product Registration', description: 'OLITEC solar inverter product registration and warranty portal' }
+export const metadata: Metadata = {
+  title: 'OLITEC — Product Registration',
+  description: 'OLITEC solar inverter product registration and warranty portal',
+  icons: {
+    icon: '/olitec-favicon.svg',
+    shortcut: '/olitec-favicon.svg',
+    apple: '/olitec-favicon.svg',
+  },
+}
 
 export const viewport: Viewport = {
   width: 'device-width',
