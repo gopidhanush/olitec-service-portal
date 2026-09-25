@@ -10,7 +10,7 @@ Deno.serve(async req=>{
   const supabase=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const resendKey=Deno.env.get('RESEND_API_KEY')
   if(!resendKey)return json({error:'RESEND_API_KEY is not configured'},500)
-  const from=Deno.env.get('EMAIL_FROM')||'OLITEC Service <service@olitec.in>'
+  const from=Deno.env.get('EMAIL_FROM')||'OLITEC Service <connect@olitec.in>'
   const portal=Deno.env.get('CUSTOMER_PORTAL_URL')||'https://olitec-service-portal-weld.vercel.app'
   const {data:events,error}=await supabase.from('notification_events').select('*').eq('status','pending').order('created_at').limit(20)
   if(error)return json({error:error.message},500)
