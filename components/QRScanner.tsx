@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { BrowserQRCodeReader } from '@zxing/browser'
 
 type QRScannerProps = { onScan?: (value: string) => void; onClose?: () => void }
 
@@ -116,6 +115,8 @@ export default function QRScanner({ onScan, onClose }: QRScannerProps) {
     async function startZXing() {
       try {
         if (!videoRef.current) return
+        const { BrowserQRCodeReader } = await import('@zxing/browser')
+        if (!mounted || !videoRef.current) return
         const reader = new BrowserQRCodeReader()
         const fastReader = reader as unknown as { timeBetweenDecodingAttempts?: number }
         fastReader.timeBetweenDecodingAttempts = 80
