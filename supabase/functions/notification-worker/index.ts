@@ -36,7 +36,14 @@ Deno.serve(async req=>{
     try{
       let subject='',heading='',body='',cta='',ctaUrl=''
       let additionalRecipient:string|undefined
-      if(event.event_type==='product_registered'){
+      if(event.event_type==='staff_registered'){
+        const staffEmail=String(event.staff_email||event.recipient_email||'').trim()
+        if(!staffEmail)throw new Error('Staff email not found')
+        subject=`New OLITEC staff account registered — ${staffEmail}`
+        heading='New staff account requires approval.'
+        body=`<p>A new staff administration account has been registered for the OLITEC Service &amp; Product Management portal.</p><p><b>Staff email:</b> ${staffEmail}</p><p>The account is currently inactive and will remain locked until the Super Admin approves it and assigns the required module access.</p>`
+        cta='Open Admin Portal';ctaUrl=`${portal}/admin`
+      }else if(event.event_type==='product_registered'){
         const {data:rows}=await supabase.from('warranty_registrations').select('registration_number,serial_number,model_code,product_name,warranty_start_date,warranty_end_date,full_name,email').eq('registration_number',event.registration_number).order('id')
         const first=rows?.[0]
         if(!first)throw new Error('Registration not found')
