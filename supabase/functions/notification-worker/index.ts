@@ -25,8 +25,8 @@ Deno.serve(async req=>{
   }
 
   const configuredAdminEmail=await settingValue('service_admin_email') || Deno.env.get('SERVICE_ADMIN_EMAIL')?.trim() || undefined
-  const productManagerEmail=await settingValue('product_manager_email') || Deno.env.get('PRODUCT_MANAGER_EMAIL')?.trim() || undefined
-  const serviceInchargeEmail=await settingValue('service_incharge_email') || Deno.env.get('SERVICE_INCHARGE_EMAIL')?.trim() || undefined
+  const productManagerEmail=await settingValue('product_manager_email') || Deno.env.get('PRODUCT_MANAGER_EMAIL')?.trim() || 'admin@olitec.in'
+  const serviceInchargeEmail=await settingValue('service_incharge_email') || Deno.env.get('SERVICE_INCHARGE_EMAIL')?.trim() || 'service@olitec.in'
 
   const {data:events,error}=await supabase.from('notification_events').select('*').eq('status','pending').order('created_at').limit(20)
   if(error)return json({error:error.message},500)
