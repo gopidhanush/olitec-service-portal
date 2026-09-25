@@ -12,6 +12,16 @@ Deno.serve(async req=>{
   if(!resendKey)return json({error:'RESEND_API_KEY is not configured'},500)
   const from=Deno.env.get('EMAIL_FROM')||'OLITEC Service <connect@olitec.in>'
   const portal=Deno.env.get('CUSTOMER_PORTAL_URL')||'https://olitec-service-portal-weld.vercel.app'
+
+  // Service-admin recipient is read from the database so it can be changed from
+  // the admin configuration without rebuilding or redeploying the customer portal.
+  let configuredAdminEmail:string|undefined
+  try{
+    const {data:setting}=await supabase.from('notification_settings').select('value').eq('key','service_admin_email').maybeSingle()
+    configuredAdminEmail=typeof setting?.value==='string'&&setting.value.trim()?setting.value.trim():undefined
+  }catch{}
+  configuredAdminEmail ||= Deno.env.get('SERVICE_ADMIN_EMAIL')?.trim() || undefined
+
   const {data:events,error}=await supabase.from('notification_events').select('*').eq('status','pending').order('created_at').limit(20)
   if(error)return json({error:error.message},500)
   const results=[]
@@ -38,11 +48,13 @@ Deno.serve(async req=>{
       }
       const logo=Deno.env.get('LOGO_URL')||`${portal}/olitec-logo.svg`
       const html=`<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17233b"><div style="padding:28px 0;border-bottom:1px solid #e8edf3"><img src="${logo}" style="width:150px;height:auto" /></div><div style="padding:28px 0"><h1 style="font-size:28px;margin:0 0 18px">${heading}</h1>${body}<p style="margin-top:26px"><a href="${ctaUrl}" style="display:inline-block;padding:13px 18px;border-radius:8px;background:#07183d;color:white;text-decoration:none;font-weight:bold">${cta} →</a></p></div></div>`
-      const to=[event.recipient_email,event.admin_email].filter(Boolean)
-      const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${resendKey}`,'Content-Type':'application/json'},body:JSON.stringify({from,to,subject,html})})
+      const to=[event.recipient_email,configuredAdminEmail,event.admin_email].filter((value):value is string=>typeof value==='string'&&value.trim().length>0)
+      const uniqueTo=[...new Set(to.map(value=>value.trim()))]
+      if(!uniqueTo.length)throw new Error('No notification recipient configured')
+      const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${resendKey}`,'Content-Type':'application/json'},body:JSON.stringify({from,to:uniqueTo,subject,html})})
       const rb=await response.text();if(!response.ok)throw new Error(rb||`Resend returned ${response.status}`)
       await supabase.from('notification_events').update({status:'sent',sent_at:new Date().toISOString(),last_error:null}).eq('id',event.id)
-      results.push({id:event.id,status:'sent'})
+      results.push({id:event.id,status:'sent',recipients:uniqueTo})
     }catch(error){
       const message=error instanceof Error?error.message:String(error)
       await supabase.from('notification_events').update({status:'failed',last_error:message}).eq('id',event.id)
