@@ -26,11 +26,7 @@ create index if not exists notification_events_pending_idx
   on public.notification_events(status, created_at);
 
 alter table public.notification_events enable row level security;
-
--- Only the service-role notification worker should read/update these events.
 revoke all on public.notification_events from anon, authenticated;
-
-after create or replace function is not valid;
 
 create or replace function public.queue_olitec_notification()
 returns trigger
@@ -88,7 +84,7 @@ alter table public.notification_settings enable row level security;
 revoke all on public.notification_settings from anon, authenticated;
 
 -- Keep the worker deployable even when the setting has not yet been entered.
--- Replace the value below with the actual registered Service Admin mailbox.
+-- Replace the value below with the registered Service Admin mailbox.
 insert into public.notification_settings(key,value)
 values('service_admin_email','')
 on conflict (key) do nothing;
