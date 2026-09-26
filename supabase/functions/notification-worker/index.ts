@@ -15,9 +15,21 @@ const jsonResponse = (body: unknown, status = 200) =>
     },
   })
 
+const escapeHtml = (value: unknown) =>
+  String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed' }, 405)
   }
 
   const supabase = createClient(
@@ -129,7 +141,7 @@ Deno.serve(async (request) => {
         heading = 'New staff account requires approval.'
         body = `
           <p>A new staff administration account has been registered for the OLITEC Service &amp; Product Management portal.</p>
-          <p><b>Staff email:</b> ${staffEmail}</p>
+          <p><b>Staff email:</b> ${escapeHtml(staffEmail)}</p>
           <p>The account is currently inactive and will remain locked until the Super Admin approves it and assigns the required module access.</p>
         `
         cta = 'Open Admin Portal'
@@ -151,9 +163,9 @@ Deno.serve(async (request) => {
         subject = `OLITEC warranty registration confirmed — ${event.registration_number}`
         heading = 'Your OLITEC product is registered.'
         body = `
-          <p>Hello ${first.full_name},</p>
+          <p>Hello ${escapeHtml(first.full_name)},</p>
           <p>Your OLITEC product registration has been successfully completed.</p>
-          <p><b>Registration number:</b> ${event.registration_number}</p>
+          <p><b>Registration number:</b> ${escapeHtml(event.registration_number)}</p>
           <table style="width:100%;border-collapse:collapse">
             <tr>
               <th align="left">Model</th>
@@ -164,9 +176,9 @@ Deno.serve(async (request) => {
               .map(
                 (row) => `
                   <tr>
-                    <td style="padding:8px 0">${row.model_code || 'OLITEC Product'}</td>
-                    <td style="padding:8px 0">${row.serial_number}</td>
-                    <td style="padding:8px 0">${row.warranty_start_date} to ${row.warranty_end_date}</td>
+                    <td style="padding:8px 0">${escapeHtml(row.model_code || 'OLITEC Product')}</td>
+                    <td style="padding:8px 0">${escapeHtml(row.serial_number)}</td>
+                    <td style="padding:8px 0">${escapeHtml(row.warranty_start_date)} to ${escapeHtml(row.warranty_end_date)}</td>
                   </tr>
                 `,
               )
@@ -191,38 +203,38 @@ Deno.serve(async (request) => {
         const closed = event.event_type === 'complaint_closed'
 
         subject = closed
-          ? `OLITEC service complaint closed — ${complaint.complaint_number}`
-          : `OLITEC service complaint received — ${complaint.complaint_number}`
+          ? `OLITEC service complaint closed — ${event.complaint_number}`
+          : `OLITEC service complaint received — ${event.complaint_number}`
         heading = closed
           ? 'Your service complaint has been closed.'
           : 'Your service complaint has been received.'
 
         body = `
-          <p>Hello ${complaint.full_name},</p>
+          <p>Hello ${escapeHtml(complaint.full_name)},</p>
           <p>${
             closed
               ? 'Your OLITEC service complaint has been completed.'
               : 'We have received your OLITEC service complaint.'
           }</p>
           <p>
-            <b>Complaint number:</b> ${complaint.complaint_number}<br>
-            <b>Registration:</b> ${complaint.registration_number || '—'}<br>
-            <b>Product:</b> ${complaint.model_code || 'OLITEC Product'}<br>
-            <b>Serial number:</b> ${complaint.serial_number}<br>
-            <b>Status:</b> ${complaint.status}
+            <b>Complaint number:</b> ${escapeHtml(complaint.complaint_number)}<br>
+            <b>Registration:</b> ${escapeHtml(complaint.registration_number || '—')}<br>
+            <b>Product:</b> ${escapeHtml(complaint.model_code || 'OLITEC Product')}<br>
+            <b>Serial number:</b> ${escapeHtml(complaint.serial_number)}<br>
+            <b>Status:</b> ${escapeHtml(complaint.status)}
           </p>
           ${
             complaint.assigned_engineer_name
-              ? `<p><b>Engineer:</b> ${complaint.assigned_engineer_name}${
+              ? `<p><b>Engineer:</b> ${escapeHtml(complaint.assigned_engineer_name)}${
                   complaint.assigned_engineer_mobile
-                    ? ` · ${complaint.assigned_engineer_mobile}`
+                    ? ` · ${escapeHtml(complaint.assigned_engineer_mobile)}`
                     : ''
                 }</p>`
               : ''
           }
           ${
             closed && complaint.action_taken
-              ? `<p><b>Action taken:</b> ${complaint.action_taken}</p>`
+              ? `<p><b>Action taken:</b> ${escapeHtml(complaint.action_taken)}</p>`
               : ''
           }
         `
@@ -242,15 +254,15 @@ Deno.serve(async (request) => {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
             <tr>
               <td style="padding:24px 0;border-bottom:1px solid #e8edf3">
-                <img src="${logo}" alt="OLITEC" width="120" height="32" style="display:block;width:120px;height:32px;max-width:120px;object-fit:contain;border:0" />
+                <img src="${escapeHtml(logo)}" alt="OLITEC" width="120" height="32" style="display:block;width:120px;height:32px;max-width:120px;object-fit:contain;border:0" />
               </td>
             </tr>
           </table>
           <div style="padding:28px 0">
-            <h1 style="font-size:28px;line-height:1.2;margin:0 0 18px">${heading}</h1>
+            <h1 style="font-size:28px;line-height:1.2;margin:0 0 18px">${escapeHtml(heading)}</h1>
             ${body}
             <p style="margin-top:26px">
-              <a href="${ctaUrl}" style="display:inline-block;padding:13px 18px;border-radius:8px;background:#07183d;color:white;text-decoration:none;font-weight:bold">${cta} →</a>
+              <a href="${escapeHtml(ctaUrl)}" style="display:inline-block;padding:13px 18px;border-radius:8px;background:#07183d;color:white;text-decoration:none;font-weight:bold">${escapeHtml(cta)} →</a>
             </p>
           </div>
         </div>
