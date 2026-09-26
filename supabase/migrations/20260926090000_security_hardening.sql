@@ -30,7 +30,7 @@ begin
     where n.nspname = 'public'
       and p.prosecdef = true
   loop
-    execute format('revoke execute on function %I.%I(%s) from anon, authenticated', r.schema_name, r.proname, r.args);
+    execute format('revoke execute on function %I.%I(%s) from public, anon, authenticated', r.schema_name, r.proname, r.args);
   end loop;
 end $$;
 
@@ -62,15 +62,15 @@ grant execute on function public.update_service_complaint_status(text, text, tex
 
 -- Trigger/helper functions must never be callable through the public Data API.
 -- They are invoked internally by database triggers or other SECURITY DEFINER code.
-revoke execute on function public.queue_olitec_notification() from anon, authenticated;
-revoke execute on function public.handle_new_admin_auth_user() from anon, authenticated;
-revoke execute on function public.ol_admin_allowed() from anon, authenticated;
-revoke execute on function public.ol_product_admin_allowed() from anon, authenticated;
-revoke execute on function public.ol_service_admin_allowed() from anon, authenticated;
-revoke execute on function public.ol_super_admin_allowed() from anon, authenticated;
-revoke execute on function public.create_product_registration_notification() from anon, authenticated;
-revoke execute on function public.create_complaint_notification() from anon, authenticated;
-revoke execute on function public.create_complaint_closed_notification() from anon, authenticated;
+revoke execute on function public.queue_olitec_notification() from public, anon, authenticated;
+revoke execute on function public.handle_new_admin_auth_user() from public, anon, authenticated;
+revoke execute on function public.ol_admin_allowed() from public, anon, authenticated;
+revoke execute on function public.ol_product_admin_allowed() from public, anon, authenticated;
+revoke execute on function public.ol_service_admin_allowed() from public, anon, authenticated;
+revoke execute on function public.ol_super_admin_allowed() from public, anon, authenticated;
+revoke execute on function public.create_product_registration_notification() from public, anon, authenticated;
+revoke execute on function public.create_complaint_notification() from public, anon, authenticated;
+revoke execute on function public.create_complaint_closed_notification() from public, anon, authenticated;
 
 -- Customer invoice uploads remain private and write-only from the customer portal.
 drop policy if exists "OLITEC public invoice upload" on storage.objects;
