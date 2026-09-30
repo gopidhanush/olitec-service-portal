@@ -11,14 +11,12 @@ const tabs = [
 
 export default function ProductAdminNav({ active }: { active: ProductAdminTab }) {
   return (
-    <nav style={{ display: 'flex', gap: 10, marginBottom: 18, flexWrap: 'wrap' }} aria-label="Product administration">
+    <nav className="productAdminNav" aria-label="Product administration">
       {tabs.map(tab => (
         <button
           key={tab.key}
           type="button"
-          style={tab.key === active
-            ? { border: 0, borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#172033', color: '#fff' }
-            : { border: '1px solid #dfe5ec', borderRadius: 12, padding: '11px 18px', fontWeight: 800, cursor: 'pointer', background: '#fff', color: '#172033' }}
+          className={tab.key === active ? 'productAdminNavTab active' : 'productAdminNavTab'}
           onClick={() => { window.location.href = tab.href }}
         >
           {tab.label}
