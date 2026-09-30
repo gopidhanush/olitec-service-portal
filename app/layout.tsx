@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   icons: { icon: '/olitec-favicon.svg', shortcut: '/olitec-favicon.svg', apple: '/olitec-favicon.svg' },
 }
 
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, maximumScale: 1, viewportFit: 'cover' }
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body><MobileNavigationController/><div className="site-frame"><div className="site-frame-content">{children}</div></div></body></html>
