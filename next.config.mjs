@@ -6,6 +6,13 @@ const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=()' },
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
+  { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+]
+
+const noStoreHeaders = [
+  { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
 ]
 
 const nextConfig = {
@@ -15,6 +22,22 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: securityHeaders,
+      },
+      {
+        source: '/admin/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/service/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/register/:path*',
+        headers: noStoreHeaders,
+      },
+      {
+        source: '/warranty/:path*',
+        headers: noStoreHeaders,
       },
     ]
   },
