@@ -1,0 +1,186 @@
+/* Product administration responsive layer.
+   Desktop keeps the existing dense tables. Mobile gets a compact, touch-friendly layout. */
+
+.productAdminNav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.productAdminNavTab {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #dfe5ec;
+  border-radius: 12px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  line-height: 1.15;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.productAdminNavTab.active {
+  border-color: #172033;
+  background: #172033;
+  color: #fff;
+}
+
+.productAdminNavTab:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 760px) {
+  body:has(.productAdminNav) {
+    overflow-x: hidden;
+  }
+
+  body:has(.productAdminNav) .site-frame,
+  body:has(.productAdminNav) .site-frame-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* The admin shell currently uses inline desktop padding. Reduce it without
+     changing the desktop design. */
+  body:has(.productAdminNav) div[style*="34px"] {
+    box-sizing: border-box !important;
+  }
+
+  body:has(.productAdminNav) div[style*="28px 34px 60px"],
+  body:has(.productAdminNav) div[style*="20px 34px 22px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 14px 12px 28px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Compact, consistent admin header. */
+  body:has(.productAdminNav) header {
+    width: 100% !important;
+    margin-bottom: 14px !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+
+  body:has(.productAdminNav) header img {
+    width: 132px !important;
+    max-width: 132px !important;
+    height: auto !important;
+  }
+
+  body:has(.productAdminNav) header > div:first-child > div {
+    font-size: 11px !important;
+    margin-top: 3px !important;
+  }
+
+  body:has(.productAdminNav) header > div:last-child {
+    display: flex !important;
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+  }
+
+  body:has(.productAdminNav) header > div:last-child button {
+    min-height: 40px !important;
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Four tabs remain visible together instead of wrapping into an awkward
+     desktop-style navigation bar. */
+  .productAdminNav {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+
+  .productAdminNavTab {
+    width: 100%;
+    min-height: 43px;
+    padding: 8px 7px;
+    border-radius: 11px;
+    font-size: 11px;
+    line-height: 1.18;
+  }
+
+  /* Stack inline desktop grids into a natural mobile flow. This covers
+     product entry, batch generation, filters and detail cards. */
+  body:has(.productAdminNav) div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Keep filters easy to use on touch screens. */
+  body:has(.productAdminNav) input,
+  body:has(.productAdminNav) select,
+  body:has(.productAdminNav) textarea {
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  body:has(.productAdminNav) section[style*="borderRadius: 22px"],
+  body:has(.productAdminNav) section[style*="borderRadius:22px"],
+  body:has(.productAdminNav) section[style*="borderRadius: 20px"],
+  body:has(.productAdminNav) section[style*="borderRadius:20px"] {
+    border-radius: 16px !important;
+    padding: 15px !important;
+  }
+
+  body:has(.productAdminNav) h1 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+
+  body:has(.productAdminNav) h2 {
+    font-size: 20px !important;
+  }
+
+  /* Report page should scroll with the document on mobile instead of being
+     trapped inside a fixed 100vh desktop shell. */
+  body:has(.productAdminNav) div[style*="height: 100vh"],
+  body:has(.productAdminNav) div[style*="height:100vh"] {
+    height: auto !important;
+    min-height: 100dvh !important;
+    overflow: visible !important;
+  }
+
+  /* Wide audit tables remain available with a deliberate horizontal scroll,
+     rather than squeezing unreadable columns into the phone width. */
+  body:has(.productAdminNav) table {
+    font-size: 12px !important;
+  }
+
+  body:has(.productAdminNav) table th,
+  body:has(.productAdminNav) table td {
+    padding: 10px 9px !important;
+  }
+
+  body:has(.productAdminNav) [style*="overflowX: 'auto'"] {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 390px) {
+  .productAdminNavTab {
+    min-height: 41px;
+    padding: 7px 5px;
+    font-size: 10.5px;
+  }
+
+  body:has(.productAdminNav) header img {
+    width: 118px !important;
+    max-width: 118px !important;
+  }
+
+  body:has(.productAdminNav) header > div:last-child button {
+    padding: 7px 8px !important;
+    font-size: 10px !important;
+  }
+}
