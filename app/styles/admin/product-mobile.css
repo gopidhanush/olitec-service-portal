@@ -1,6 +1,4 @@
-/* OLITEC Product Administration — mobile-first responsive layer.
-   Desktop remains unchanged. Mobile gets a dedicated touch layout instead of
-   shrinking the desktop UI. */
+/* OLITEC Product Administration — mobile-first responsive layer. */
 
 .productAdminNav {
   display: grid;
@@ -47,7 +45,7 @@
     overflow-x: hidden;
   }
 
-  /* Main admin shell: comfortable phone margins and normal document scroll. */
+  /* Comfortable phone margins and normal page scrolling. */
   body:has(.productAdminNav) div[style*="28px 34px 60px"],
   body:has(.productAdminNav) div[style*="20px 34px 22px"] {
     width: 100% !important;
@@ -59,7 +57,7 @@
     overflow: visible !important;
   }
 
-  /* Compact, single-row admin header. */
+  /* Compact admin header. */
   body:has(.productAdminNav) header {
     width: 100% !important;
     margin-bottom: 14px !important;
@@ -102,8 +100,7 @@
     white-space: nowrap !important;
   }
 
-  /* Four-section navigation: two compact rows, always visible and consistent
-     on every Product Administration page. */
+  /* Same four-tab navigation on every Product Administration page. */
   .productAdminNav {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -121,26 +118,22 @@
     letter-spacing: -.01em;
   }
 
-  /* All desktop grids become a natural single-column mobile flow. */
+  /* Desktop grids become a natural mobile flow. */
   body:has(.productAdminNav) div[style*="grid-template-columns"] {
     grid-template-columns: 1fr !important;
   }
 
-  /* Touch targets and readable controls. */
-  body:has(.productAdminNav) input,
-  body:has(.productAdminNav) select,
-  body:has(.productAdminNav) textarea,
-  body:has(.productAdminNav) button {
-    font-size: 14px;
-  }
-
+  /* Touch-friendly controls. */
   body:has(.productAdminNav) input,
   body:has(.productAdminNav) select,
   body:has(.productAdminNav) textarea {
     min-height: 46px !important;
+    font-size: 14px !important;
+    max-width: 100% !important;
   }
 
   body:has(.productAdminNav) button {
+    font-size: 14px;
     min-height: 44px;
   }
 
@@ -164,104 +157,33 @@
     line-height: 1.15 !important;
   }
 
-  /* Result/status banners should never create an oversized desktop block. */
-  body:has(.productAdminNav) div[style*="background:'#fff0f0'"],
-  body:has(.productAdminNav) div[style*="background: '#fff0f0'"] {
-    font-size: 12px !important;
-    line-height: 1.4 !important;
-  }
-
-  /* Product master and registration tables become readable cards. */
+  /* All admin tables use deliberate horizontal scrolling on phones. This is
+     preferable to shrinking 7–12 columns into unreadable text. */
   body:has(.productAdminNav) table {
-    width: 100% !important;
-    min-width: 0 !important;
-    font-size: 13px !important;
-  }
-
-  body:has(.productAdminNav) table thead {
-    display: none !important;
-  }
-
-  body:has(.productAdminNav) table tbody,
-  body:has(.productAdminNav) table tr,
-  body:has(.productAdminNav) table td {
-    display: block !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  body:has(.productAdminNav) table tr {
-    padding: 13px 0 !important;
-    border-bottom: 1px solid #e8edf2 !important;
-  }
-
-  body:has(.productAdminNav) table tr:last-child { border-bottom: 0 !important; }
-
-  body:has(.productAdminNav) table td {
-    padding: 4px 0 !important;
-    border: 0 !important;
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-  }
-
-  /* Product Master table labels. */
-  body:has(.productAdminNav) table td:nth-child(1)::before { content: 'PRODUCT'; }
-  body:has(.productAdminNav) table td:nth-child(2)::before { content: 'MODEL'; }
-  body:has(.productAdminNav) table td:nth-child(3)::before { content: 'CAPACITY'; }
-  body:has(.productAdminNav) table td:nth-child(4)::before { content: 'MRP'; }
-  body:has(.productAdminNav) table td:nth-child(5)::before { content: 'WARRANTY'; }
-  body:has(.productAdminNav) table td:nth-child(6)::before { content: 'UNITS'; }
-  body:has(.productAdminNav) table td:nth-child(7)::before { content: 'ACTION'; }
-
-  /* Registration History table labels. */
-  body:has(.productAdminNav) table td:nth-child(1)::before { content: 'REGISTRATION'; }
-  body:has(.productAdminNav) table td:nth-child(2)::before { content: 'CUSTOMER'; }
-  body:has(.productAdminNav) table td:nth-child(3)::before { content: 'PRODUCTS'; }
-  body:has(.productAdminNav) table td:nth-child(4)::before { content: 'REGISTERED'; }
-  body:has(.productAdminNav) table td:nth-child(5)::before { content: 'WARRANTY'; }
-  body:has(.productAdminNav) table td:nth-child(6)::before { content: 'COMPLAINTS'; }
-  body:has(.productAdminNav) table td:nth-child(7)::before { content: 'ACTION'; }
-
-  body:has(.productAdminNav) table td::before {
-    display: block;
-    margin-bottom: 2px;
-    color: #7890a8;
-    font-size: 9px;
-    font-weight: 850;
-    letter-spacing: .08em;
-    line-height: 1.2;
-  }
-
-  /* The serial audit has many columns, so it remains a true table with
-     intentional horizontal scrolling rather than unreadable card stacking. */
-  body:has(.productAdminNav) div[style*="overflow:'auto'"],
-  body:has(.productAdminNav) div[style*="overflow: 'auto'"] {
-    overflow-x: auto !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-
-  /* Restore table layout for the serial report specifically. */
-  body:has(.productAdminNav) table:has(th:nth-child(12)) {
     width: max-content !important;
-    min-width: 1250px !important;
+    min-width: 700px !important;
+    font-size: 12px !important;
   }
 
-  body:has(.productAdminNav) table:has(th:nth-child(12)) thead { display: table-header-group !important; }
-  body:has(.productAdminNav) table:has(th:nth-child(12)) tbody { display: table-row-group !important; }
-  body:has(.productAdminNav) table:has(th:nth-child(12)) tr { display: table-row !important; padding: 0 !important; }
-  body:has(.productAdminNav) table:has(th:nth-child(12)) td,
-  body:has(.productAdminNav) table:has(th:nth-child(12)) th {
-    display: table-cell !important;
-    width: auto !important;
-    min-width: unset !important;
+  body:has(.productAdminNav) table th,
+  body:has(.productAdminNav) table td {
     padding: 10px 9px !important;
     white-space: nowrap !important;
   }
-  body:has(.productAdminNav) table:has(th:nth-child(12)) td::before { display: none !important; }
 
-  /* Normal document scrolling on the report page. */
+  /* Make the table itself scrollable where a page has no dedicated wrapper. */
+  body:has(.productAdminNav) table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Serial report keeps its full audit width. */
+  body:has(.productAdminNav) table:has(th:nth-child(12)) {
+    min-width: 1250px !important;
+  }
+
+  /* Report page must scroll as a normal document on mobile. */
   body:has(.productAdminNav) div[style*="height: 100vh"],
   body:has(.productAdminNav) div[style*="height:100vh"] {
     height: auto !important;
@@ -269,15 +191,17 @@
     overflow: visible !important;
   }
 
-  /* Filter bars: each control gets its own comfortable row. */
-  body:has(.productAdminNav) select,
-  body:has(.productAdminNav) input {
-    max-width: 100% !important;
+  /* Keep large report tables inside their own scroll area. */
+  body:has(.productAdminNav) div[style*="overflow:'auto'"],
+  body:has(.productAdminNav) div[style*="overflow: 'auto'"] {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Avoid giant desktop action rows on phones. */
-  body:has(.productAdminNav) section button[style*="padding"] {
-    max-width: 100%;
+  /* Buttons in card headers wrap naturally instead of pushing the page wider. */
+  body:has(.productAdminNav) section > div:first-child {
+    min-width: 0 !important;
   }
 }
 
